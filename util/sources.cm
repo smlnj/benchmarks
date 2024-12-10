@@ -1,0 +1,22 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2024 The Fellowship of SML/NJ (https://www.smlnj.org)
+ * All rights reserved.
+ *
+ * Utilities for SML/NJ benchmarks
+ *)
+
+Library
+
+  signature BMARK
+
+  structure Timing
+
+is
+
+  $/basis.cm
+  $/smlnj-lib.cm
+
+  bmark.sig
+
+  timeit.sml

@@ -8,6 +8,9 @@ signature BMARK =
   sig
 (* TODO: add some form of benchmark description *)
 
+    (* the short name for the benchmark *)
+    val name : string
+
     (* run the benchmark program for timing purposes (no output) *)
     val doit : unit -> unit
 
