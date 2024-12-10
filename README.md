@@ -35,10 +35,21 @@ the third release of the C version written by Joshua E. Barnes.
 ### `fft`
 
 ### `knuth-bendix`
+An implementation of the Knuth-Bendix completion algorithm written by
+Gerard Heut (in CAML).  The input is some axioms of geometry.
 
 ### `lexgen`
+A lexical-analyzer generator, implemented by James Mattson and David Tarditi
+at Princeton.  The input is the lexical specification for Standard ML.
+
+This program was one of the original **SML/NJ** benchmarks.
 
 ### `life`
+Conway's game of life from Chris Reade's book
+> *Elements of Functional Programming* <br/>
+> Addison-Wesley, 1989
+
+This program was one of the original **SML/NJ** benchmarks.
 
 ### `logic`
 
@@ -46,13 +57,24 @@ the third release of the C version written by Joshua E. Barnes.
 
 ### `mlyacc`
 
+A LALR(1) parser generator, implemented by David Tarditi
+at Princeton.  The input is the Standard ML grammar
+
+This program was one of the original **SML/NJ** benchmarks.
+
 ### `nucleic`
 
 ### `ray`
 
 ### `simple`
+A spherical fluid-dynamics program written as a Fortran benchmark by Crowley *et al* at
+Lawrence Livermore Labs in 1978.  It was first ported to Id by Ekanadham and Arvind,
+and then to Standard ML by Lal George.
+
+This program was one of the original **SML/NJ** benchmarks.
 
 ### `tsp`
 
 ### `vliw`
 
+A Very-Long-Instruction-Word instruction scheduler written by John Danskin.
