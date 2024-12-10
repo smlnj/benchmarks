@@ -34,6 +34,10 @@ the third release of the C version written by Joshua E. Barnes.
 
 ### `fft`
 
+### `id-ray`
+This is a port of a ray tracer written in the Id programming language
+as part of the Impala benchmark suite.
+
 ### `knuth-bendix`
 An implementation of the Knuth-Bendix completion algorithm written by
 Gerard Heut (in CAML).  The input is some axioms of geometry.
@@ -42,18 +46,28 @@ Gerard Heut (in CAML).  The input is some axioms of geometry.
 A lexical-analyzer generator, implemented by James Mattson and David Tarditi
 at Princeton.  The input is the lexical specification for Standard ML.
 
-This program was one of the original **SML/NJ** benchmarks.
+This program was one of the original **SML/NJ** benchmarks described in
+Appel's *Compiling with Continuations*.
 
 ### `life`
 Conway's game of life from Chris Reade's book
 > *Elements of Functional Programming* <br/>
 > Addison-Wesley, 1989
 
-This program was one of the original **SML/NJ** benchmarks.
+This program was one of the original **SML/NJ** benchmarks described in
+Appel's *Compiling with Continuations*.
 
 ### `logic`
 
 ### `mandelbrot`
+
+### `mazefun`
+
+A SML port of the [`mazefun`](http://www.larcenists.org/R7src/mazefun.scm)
+rectangular-maze generator.  The original Scheme program was written by
+Marc Feeley and ported to Standard ML by Kavon Farvardin as part of the
+Manticore Project.  We generate a 15x15 maze 10,000 times (the original
+benchmark generated a 11x11 maze).
 
 ### `mlyacc`
 
@@ -71,10 +85,14 @@ A spherical fluid-dynamics program written as a Fortran benchmark by Crowley *et
 Lawrence Livermore Labs in 1978.  It was first ported to Id by Ekanadham and Arvind,
 and then to Standard ML by Lal George.
 
-This program was one of the original **SML/NJ** benchmarks.
+This program was one of the original **SML/NJ** benchmarks described in
+Appel's *Compiling with Continuations*.
 
 ### `tsp`
 
 ### `vliw`
 
 A Very-Long-Instruction-Word instruction scheduler written by John Danskin.
+
+This program was one of the original **SML/NJ** benchmarks described in
+Appel's *Compiling with Continuations*.
