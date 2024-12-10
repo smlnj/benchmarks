@@ -1,0 +1,21 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2024 The Fellowship of SML/NJ (https://www.smlnj.org)
+ * All rights reserved.
+ *)
+
+Library
+
+  structure Main
+
+is
+
+  $/basis.cm
+  $/smlnj-lib.cm
+
+  ../../util/sources.cm
+
+  control.sml
+  array2.sml
+  simple.sml
+  main.sml
