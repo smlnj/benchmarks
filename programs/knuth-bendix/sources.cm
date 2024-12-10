@@ -14,7 +14,4 @@ is
 
   ../../util/sources.cm
 
-  control.sml
-  array2.sml
-  simple.sml
   main.sml

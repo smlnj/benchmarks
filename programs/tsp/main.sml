@@ -12,7 +12,7 @@ structure Main : sig
 
   end = struct
 
-    val name = "TSP"
+    val name = "tsp"
 
     val problemSz = ref 32767
     val divideSz = ref 150

@@ -23,9 +23,12 @@ will show command line options.
 ## The Benchmark Programs
 
 The following is a brief description of each benchmark program.
-The programs are listed in alphabetical order.
+The programs are listed by directory name in alphabetical order.
 
 ### `barnes-hut`
+
+This program is a port of the "Barnes-Hut" N-Body code.  It is based on
+the third release of the C version written by Joshua E. Barnes.
 
 ### `boyer`
 
