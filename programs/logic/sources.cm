@@ -2,20 +2,20 @@
  *
  * COPYRIGHT (c) 2024 The Fellowship of SML/NJ (https://www.smlnj.org)
  * All rights reserved.
- *
- * Utilities for SML/NJ benchmarks
  *)
 
 Library
 
-  signature BMARK
-
-  structure Timing
+  structure Main
 
 is
 
   $/basis.cm
 
-  bmark.sig
+  ../../util/sources.cm
 
-  timeit.sml
+  term.sml
+  trail.sml
+  unify.sml
+  data.sml
+  main.sml
