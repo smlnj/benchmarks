@@ -123,3 +123,15 @@ A Very-Long-Instruction-Word instruction scheduler written by John Danskin.
 
 This program was one of the original **SML/NJ** benchmarks described in
 Appel's *Compiling with Continuations*.
+
+## Scripts
+
+### `make-all.sh`
+
+The `make-all.sh` script is used to create a single compilation unit for the
+benchmark sources.
+
+### `runit.sh`
+
+The `runit.sh` script is used to run one or more benchmark programs.
+
