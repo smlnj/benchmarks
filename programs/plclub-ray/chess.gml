@@ -268,4 +268,4 @@ blackKing 0.5 0.0 3.5 translate union
 0.0 0.0 -1.0 point
 1.0 1.0 1.0 point pointlight /l
 
-0.33 0.33 0.33 point [ l ] scene 3 60.0 400 300 "chess.ppm" render
+0.33 0.33 0.33 point [ l ] scene 3 60.0 1024 768 "chess.ppm" render
