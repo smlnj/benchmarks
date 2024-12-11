@@ -1,0 +1,30 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2024 The Fellowship of SML/NJ (https://www.smlnj.org)
+ * All rights reserved.
+ *
+ * This is a port of the PLClub OCaml winning entry to the 2000 ICFP
+ * programming contest.  The original port to SML was done by Stephen
+ * Weeks for the MLton benchmarks.  In this version, the code has been
+ * split up into separate files and some of the OCaml names have been
+ * changed to the corresponding SML names (e.g., "float" ==> "real").
+ *)
+
+Library
+
+  structure Main
+
+is
+
+  $/basis.cm
+  ../../util/sources.cm
+
+  caml.sml
+  eval.sml
+  lex.sml
+  main.sml
+  math.sml
+  matrix.sml
+  ppm.sml
+  program.sml
+  render.sml

@@ -78,6 +78,17 @@ This program was one of the original **SML/NJ** benchmarks.
 
 ### `nucleic`
 
+### `plclub-ray`
+
+This is a port of the PLClub OCaml winning entry to the 2000 ICFP
+programming contest.  The original port to SML was done by Stephen
+Weeks for the MLton benchmarks.  In this version, the code has been
+split up into separate files and some of the OCaml names have been
+changed to the corresponding SML names (*e.g.*, `float` replaced by
+`real`).  The test input is the chess board scene by Leif Kornstaedt
+and it is rendered 10 times.
+
+
 ### `ray`
 
 ### `simple`
@@ -89,6 +100,9 @@ This program was one of the original **SML/NJ** benchmarks described in
 Appel's *Compiling with Continuations*.
 
 ### `tsp`
+
+This is a *travelling-sales-person* solver that was ported to Standard ML
+from the original Olden benchmarks by John Reppy.
 
 ### `vliw`
 
