@@ -45,6 +45,14 @@ the third release of the C version written by Joshua E. Barnes.
 
 ### `boyer`
 
+### `dlx`
+
+This program is a partial implementation of the RISC instruction
+set described in Patterson's and Hennessy's _Computer Architecture_.
+The benchmark is taken from the [MLton](http://mlton.org) sources,
+where it is in the file `DLXSimulator.sml`.  The original version
+was written by Matthew Fluet.
+
 ### `fft`
 
 ### `id-ray`

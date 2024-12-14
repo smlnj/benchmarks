@@ -1,0 +1,35 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2024 The Fellowship of SML/NJ (https://www.smlnj.org)
+ * All rights reserved.
+ *)
+
+Library
+
+  structure Main
+
+is
+
+  $/basis.cm
+
+  ../../util/sources.cm
+
+  alu.sig
+  alu.sml
+  cache-spec.sig
+  cached-memory.fun
+  dlx-simulator.sml
+  dlx.sig
+  dlx.fun
+  examples.sml
+  imm-array.sml
+  imm-array2.sml
+  l1-cache-spec1.sml
+  l1-cache1.sml
+  memory.sig
+  memory.sml
+  rand.sml
+  register-file.sig
+  register-file.sml
+
+  main.sml

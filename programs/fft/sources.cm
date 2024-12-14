@@ -9,8 +9,8 @@ Library
   structure Main
 
 is
-   $/basis.cm
+  $/basis.cm
 
-   ../../util/sources.cm
+  ../../util/sources.cm
 
-   main.sml
+  main.sml
