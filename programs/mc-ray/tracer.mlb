@@ -1,0 +1,43 @@
+(* tracer.mlb
+ *
+ * COPYRIGHT (c) 2019 John Reppy (http://cs.uchicago.edu/~jhr)
+ * All rights reserved.
+ *)
+
+local
+
+  $(SML_LIB)/basis/basis.mlb
+
+  ann "sequenceNonUnit error" in
+    rand-sig.sml
+    rand-64.sml
+    rgb.sml
+    color.sml
+    image.sml
+    vec3-sig.sml
+    vec3.sml
+    interval.sml
+    ray.sml
+    camera.sml
+    aabb.sml
+    material.sml
+    object.sml
+    bvh.sml
+    sphere.sml
+    trace.sml
+  end
+
+in
+
+structure BVH
+structure Camera
+structure Color
+structure Image
+structure Material
+structure Object
+structure RGB
+structure Sphere
+structure Trace
+structure Vec3
+
+end

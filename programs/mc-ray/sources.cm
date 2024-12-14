@@ -1,0 +1,36 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2024 The Fellowship of SML/NJ (https://www.smlnj.org)
+ * All rights reserved.
+ *)
+
+Library
+
+  structure Main
+
+is
+
+  $/basis.cm
+
+  $/basis.cm
+
+  ../../util/sources.cm
+
+  aabb.sml
+  camera.sml
+  color.sml
+  image.sml
+  interval.sml
+  material.sml
+  object.sml
+  rand.sig
+  rand-64.sml
+  random-scene.sml
+  ray.sml
+  rgb.sml
+  sphere.sml
+  trace.sml
+  vec3.sig
+  vec3.sml
+
+  main.sml

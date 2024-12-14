@@ -85,12 +85,15 @@ benchmark generated a 11x11 maze).
 ### `mc-ray`
 
 A SML implementation of a Monte Carlo ray tracer (aka path tracer) based
-on the "Ray Tracing in One Weekend" books by Peter Shirley.
+on the [*Ray Tracing in One Weekend*](https://raytracing.github.io)
+books by Peter Shirley.  The SML version was written by John Reppy and
+renders a 150x100 image of scene of 124 random spheres using 50 samples
+per pixel.
 
 ### `mlyacc`
 
 A LALR(1) parser generator, implemented by David Tarditi
-at Princeton.  The input is the Standard ML grammar
+at Princeton.  The input is the Standard ML grammar.
 
 This program was one of the original **SML/NJ** benchmarks.
 

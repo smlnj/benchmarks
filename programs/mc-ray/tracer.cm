@@ -1,0 +1,47 @@
+(* tracer.cm
+ *
+ * COPYRIGHT (c) 2019 John Reppy (http://cs.uchicago.edu/~jhr)
+ * All rights reserved.
+ *)
+
+Library
+
+  structure AABB
+  structure BVH
+  structure Camera
+  structure Color
+  structure Image
+  structure Interval
+  structure Material
+  structure Object
+  structure Rand
+  structure Ray
+  structure RGB
+  structure Sphere
+  structure Trace
+  structure Vec3
+
+is
+
+  $/basis.cm
+
+  aabb.sml
+  bvh.sml
+  camera.sml
+  color.sml
+  image.sml
+  interval.sml
+  material.sml
+  object.sml
+  rand-sig.sml
+#if defined(SIZE_32)
+  rand-32.sml
+#else (* SIZE_64 *)
+  rand-64.sml
+#endif
+  ray.sml
+  rgb.sml
+  sphere.sml
+  trace.sml
+  vec3-sig.sml
+  vec3.sml
