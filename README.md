@@ -82,6 +82,11 @@ Marc Feeley and ported to Standard ML by Kavon Farvardin as part of the
 Manticore Project.  We generate a 15x15 maze 10,000 times (the original
 benchmark generated a 11x11 maze).
 
+### `mc-ray`
+
+A SML implementation of a Monte Carlo ray tracer (aka path tracer) based
+on the "Ray Tracing in One Weekend" books by Peter Shirley.
+
 ### `mlyacc`
 
 A LALR(1) parser generator, implemented by David Tarditi

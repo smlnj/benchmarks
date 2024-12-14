@@ -3,7 +3,40 @@
  * COPYRIGHT (c) 2019 The Fellowship of SML/NJ (http://www.smlnj.org)
  * All rights reserved.
  *
- * Random number generator taken from Paulson, pp. 170-171.
+ * Park-Miller RNG (MINSTD) for 64-bit architectures.  This implementation is
+ * from
+ *      https://en.wikipedia.org/wiki/Lehmer_random_number_generator
+ *)
+
+structure Rand : RAND =
+  struct
+
+    type rand = Word.word (* restricted to 31 bits *)
+
+    (* mask to 31-bits *)
+    val mask : word = 0wx7fffffff
+
+    fun mkRandom seed = let
+          val state = ref (Word.andb(seed, mask))
+          fun rand () = let
+                val product = !state * 0w48271
+                val x = Word.andb(product, mask) + Word.>>(product, 0w31)
+                val x = Word.andb(x, mask) + Word.>>(x, 0w31)
+                in
+                  state := x;
+                  x
+                end
+          in
+            rand
+          end
+
+    val scale : Real64.real = 1.0 / 2147483647.0 (* 2147483647 == 07fffffff *)
+
+    fun norm (r : rand) = scale * Real64.fromLargeInt (Word.toLargeIntX r)
+
+  end
+
+(* original 32-bit version from Paulson, pp. 170-171.
  * Recommended by Stephen K. Park and Keith W. Miller,
  * Random number generators: good ones are hard to find,
  * CACM 31 (1988), 1192-1201
@@ -11,11 +44,6 @@
  * CACM 36 (1993), 105-110
  * Updated to use on Word31.
  *
- * Note: The Random structure provides a better generator.
- *
- * TODO: provide a proper 64-bit implementation.
- *)
-
 structure Rand : RAND =
   struct
 
@@ -70,3 +98,4 @@ structure Rand : RAND =
             end
 
   end (* Rand *)
+*)
