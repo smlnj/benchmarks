@@ -121,12 +121,20 @@ and it is rendered 10 times.
 ### `ray`
 
 ### `simple`
+
 A spherical fluid-dynamics program written as a Fortran benchmark by Crowley *et al* at
 Lawrence Livermore Labs in 1978.  It was first ported to Id by Ekanadham and Arvind,
 and then to Standard ML by Lal George.
 
 This program was one of the original **SML/NJ** benchmarks described in
 Appel's *Compiling with Continuations*.
+
+### smith-nf
+
+Computes the [Smith Normal Form](https://en.wikipedia.org/wiki/Smith_normal_form)
+for a 35x35 integer matrix using `IntInf.int` for the matrix elements.  The
+benchmark is taken from the [MLton](http://mlton.org) sources and was written
+by Henry Cejtin.
 
 ### `tsp`
 
