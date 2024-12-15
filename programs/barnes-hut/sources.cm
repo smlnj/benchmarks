@@ -1,0 +1,28 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2024 The Fellowship of SML/NJ (https://www.smlnj.org)
+ * All rights reserved.
+ *)
+
+Library
+
+  structure Main
+
+is
+
+  $/basis.cm
+  $/smlnj-lib.cm
+
+  ../../util/sources.cm
+
+  rand.sig
+  rand.sml
+  vector.sig
+  space.sml
+  load.sml
+  grav.sml
+  data-io.sml
+  barnes-hut3d.sml
+  vector3.sml
+
+  main.sml
