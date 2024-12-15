@@ -1,0 +1,45 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2024 The Fellowship of SML/NJ (https://www.smlnj.org)
+ * All rights reserved.
+ *)
+
+Library
+
+  structure Main
+
+is
+
+  $/basis.cm
+
+  ../../util/sources.cm
+
+  base.sig
+  stream.sml
+  lrtable.sml
+  join.sml
+  parser.sml
+  utils.sig
+  sigs.sml
+  hdr.sml
+  yacc.grm.sig
+  yacc.grm.sml
+  yacc.lex.sml
+  parse.sml
+  utils.sml
+  grammar.sml
+  core.sml
+  coreutils.sml
+  graph.sml
+  look.sml
+  lalr.sml
+  mklrtable.sml
+  mkprstruct.sml
+  shrink.sml
+  verbose.sml
+  absyn.sig
+  absyn.sml
+  yacc.sml
+  link.sml
+
+  main.sml
