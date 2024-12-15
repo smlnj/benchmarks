@@ -56,9 +56,12 @@ mkall () {
 
   copy "$root/util" bmark.sig "$out"
 
-  for srcFile in $(cat $bmarkDir/FILES) ; do
-    copy "$bmarkDir" "$srcFile" "$out"
-  done
+  if [ -f $bmarkDir/FILES ] ; then
+    # copy the listed source files in FILES
+    for srcFile in $(cat $bmarkDir/FILES) ; do
+      copy "$bmarkDir" "$srcFile" "$out"
+    done
+  fi
 
   echo "in" >> $out
   cat $bmarkDir/main.sml >> $out
