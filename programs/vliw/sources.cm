@@ -1,0 +1,40 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2024 The Fellowship of SML/NJ (https://www.smlnj.org)
+ * All rights reserved.
+ *)
+
+Library
+
+  structure Main
+
+is
+
+  $/basis.cm
+
+  ../../util/sources.cm
+
+  ref.sml
+  stringmap.sml
+  str-pak.sml
+  sort-obj.sig
+  sort.fun
+  int-sort.sml
+  set.sml
+  abs-mach.sml
+  abs-mach-imp.sml
+  read-abs.sml
+  print-abs.sml
+  break-inst.sml
+  out-filter.sml
+  delay.sml
+  ntypes.sml
+  dag.sml
+  node.sml
+  compress.sml
+  readi.sml
+  simlabs.sig
+  set-env.sml
+  sim-stuff.sml
+
+  main.sml
