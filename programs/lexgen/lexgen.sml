@@ -133,7 +133,9 @@ as our token, when we should have "a" as our token.
 
 structure LexGen: LEXGEN =
    struct
-   open Array List
+   val array = Array.array
+   val update = Array.update
+   val sub = Array.sub
    infix 9 sub
 
    datatype token = CHARS of bool array | QMARK | STAR | PLUS | BAR
@@ -559,7 +561,7 @@ fun GetExp () : exp =
 					    name)
 
 	and newline = fn () => let val c = array(!CharSetSize,false) in
-		update(c,10,true); c
+                update(c,10,true); c
 		end
 
 	and endline = fn e => trail(e,CLASS(newline(),0))
@@ -934,7 +936,7 @@ fun leafdata(e:(int list * exp) list) =
 	and trailmark = ref ~1;
 	val rec add = fn
 		  (nil,x) => ()
-		| (hd::tl,x) => (update(fp,hd,union(fp sub hd,x));
+                | (hd::tl,x) => (update(fp,hd,union(fp sub hd,x));
 			add(tl,x))
 	and moredata = fn
 		  CLOSURE(e1) =>
@@ -942,10 +944,10 @@ fun leafdata(e:(int list * exp) list) =
 		| ALT(e1,e2) => (moredata(e1); moredata(e2))
 		| CAT(e1,e2) => (moredata(e1); moredata(e2);
 			add(lastpos(e1),firstpos(e2)))
-		| CLASS(x,i) => update(leaf,i,CLASS(x,i))
-		| TRAIL(i) => (update(leaf,i,TRAIL(i)); if !trailmark = ~1
+                | CLASS(x,i) => update(leaf,i,CLASS(x,i))
+                | TRAIL(i) => (update(leaf,i,TRAIL(i)); if !trailmark = ~1
 			then trailmark := i else ())
-		| END(i) => (update(leaf,i,END(i)); if !trailmark <> ~1
+                | END(i) => (update(leaf,i,END(i)); if !trailmark <> ~1
 			then (tcpairs := (!trailmark,i)::(!tcpairs);
 			trailmark := ~1) else ())
 		| _ => ()
