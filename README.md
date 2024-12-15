@@ -83,6 +83,11 @@ Appel's *Compiling with Continuations*.
 
 ### `mandelbrot`
 
+A simple program that computes the [Mandelbrot](https://en.wikipedia.org/wiki/Mandelbrot_set)
+iteration for a 2048×2048 grid with a maximum count of 1024.  The program
+was written by John Reppy and serves as a good test of compiling nested loops
+wrwitten as nested tail-recursive functions.
+
 ### `mazefun`
 
 A SML port of the [`mazefun`](http://www.larcenists.org/R7src/mazefun.scm)
