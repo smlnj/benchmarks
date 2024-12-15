@@ -28,9 +28,10 @@ Each benchmark directory has a file `main.sml` that defines
 structure Main : BMARK = ...
 ```
 
-It also contains a `sources.cm` file for compiling the benchmark
-and a list of the SML source files other than `main.sml` in `FILES`.
-The `bin/make-all.sh` script uses the `FILES` list to construct a
+It also contains a `sources.cm` file for compiling the benchmark.
+For benchmarks that have more than one source file, the list of source
+files (other than `main.sml`) can be found in `FILES`.
+The `bin/make-all.sh` script uses this list to construct a
 single-file version of the program.
 
 ## The Benchmark Programs
