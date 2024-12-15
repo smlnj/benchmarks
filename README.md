@@ -107,6 +107,10 @@ This program was one of the original **SML/NJ** benchmarks.
 
 ### `nucleic`
 
+The ["Pseudoknot"](https://doi.org/10.1017/S0956796800001891) benchmark,
+which is a floating-point intensive program taken from molecular
+biology.  The original program was written in Scheme by Marc Feeley.
+
 ### `plclub-ray`
 
 This is a port of the PLClub OCaml winning entry to the 2000 ICFP
