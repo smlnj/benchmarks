@@ -14,7 +14,7 @@ is
 
   ../../util/sources.cm
 
-  rand-sig.sml
+  rand.sig
   rand.sml
   tree.sml
   build.sml

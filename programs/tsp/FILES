@@ -1,5 +1,5 @@
 tree.sml
 tsp.sml
-rand-sig.sml
+rand.sig
 rand.sml
 build.sml
