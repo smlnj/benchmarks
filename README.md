@@ -20,19 +20,27 @@ Executing
 
 will show command line options.
 
-## Benchmark Structure
+## Benchmark Directory Structure
 
-Each benchmark directory has a file `main.sml` that defines
+Each benchmark directory contains the following files (not all of which
+may be present):
 
-```sml
-structure Main : BMARK = ...
-```
+* `main.sml` -- a SML file that defines the `Main` structure.
 
-It also contains a `sources.cm` file for compiling the benchmark.
-For benchmarks that have more than one source file, the list of source
-files (other than `main.sml`) can be found in `FILES`.
-The `bin/make-all.sh` script uses this list to construct a
-single-file version of the program.
+* `sources.cm` -- a CM file for building the benchmark program.
+
+* `FILES` -- an optional list of additional source files (other than
+  `main.sml`) in compilation order.  The `bin/make-all.sh` script
+  uses this list to construct a single-file version of the program.
+  This file is omitted for benchmarks that have `main.sml` as their
+  only source file
+
+* `ANSWER` -- an optional text file containing the correct output from
+  running the `Main.testit` function.  Some benchmarks currently do not
+  have test output; for these benchmarks, the `ANSWER` file is omitted.
+
+* `DATA` -- an optional directory containing any input data files required
+  by the benchmark program.
 
 ## The Benchmark Programs
 
@@ -159,6 +167,14 @@ This program was one of the original **SML/NJ** benchmarks described in
 Appel's *Compiling with Continuations*.
 
 ## Scripts
+
+### `cloc.sh`
+
+The `cloc.sh` script can be used to count the number of source lines in
+the benchmark programs.  It uses the [`cloc`](https://github.com/AlDanial/cloc)
+program and reports the number of blank, comment, and code lines.  It
+applies `cloc` to the result of `make-all.sh`, so the result includes the
+`BMARK` signature and three extra lines of code for the `local` declaration.
 
 ### `make-all.sh`
 

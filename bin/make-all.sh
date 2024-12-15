@@ -7,9 +7,10 @@
 #
 # create the `all.sml` version of a benchmark
 #
-set -x
+
 cmd="make-all.sh"
 mlton=no
+quiet=no
 
 # get the path of the benchmark root directory
 here=$(pwd)
@@ -24,11 +25,18 @@ if [ ! -d $root/programs ] ; then
   exit 1
 fi
 
+say() {
+  if [ x"quiet" = xno ] ; then
+    echo $@
+  fi
+}
+
 usage() {
   echo "usage: $cmd [ options ] <benchmark> ..."
   echo "options:"
-  echo "    -h,-help      print this message and exit"
-  echo "    -mlton        create a file that can be compiled by MLton"
+  echo "    -h,-help  print this message and exit"
+  echo "    -mlton    create a file that can be compiled by MLton"
+  echo "    -quiet    run in quiet mode"
   exit $1
 }
 
@@ -45,11 +53,11 @@ copy() {
 mkall () {
   bmark="$1"
   bmarkDir="$root/programs/$bmark"
-  if [! -d "$bmarkDir" ] ; then
+  if [ ! -d "$bmarkDir" ] ; then
     echo "$cmd: missing benchmark directory '$bmarkDir'"
     exit 1
   fi
-  echo "***** $bmark"
+  say "***** $bmark"
   out="$bmarkDir/all.sml"
   echo "(* $out -- all sources for $bmark *)" > $out
   echo "local" >> $out
@@ -68,7 +76,7 @@ mkall () {
   echo "end; (* local *)" >> $out
 
   if [ x"$mlton" = xyes ] ; then
-    echo "val _ = Main.doit();"
+    echo "val _ = Main.doit();" >> $out
   fi
 }
 
@@ -79,6 +87,7 @@ while [ "$#" != "0" ]; do
   arg=$1
   case "$arg" in
     -mlton) shift; mlton=yes ;;
+    -quiet) shift; quiet=yes ;;
     -h|-help) usage 0 ;;
     -*) echo "$cmd: unknown option '$arg'"; usage 1 ;;
     *) break ;;
@@ -86,6 +95,10 @@ while [ "$#" != "0" ]; do
 done
 
 bmarks=$@
+if [ x"$bmarks" = x ] ; then
+  usage 1
+fi
+
 for b in $bmarks ; do
   mkall $b
 done
