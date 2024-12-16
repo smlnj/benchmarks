@@ -3,36 +3,32 @@
  * COPYRIGHT (c) 2019 The Fellowship of SML/NJ (http://www.smlnj.org)
  * All rights reserved.
  *
- * Park-Miller RNG (MINSTD) for 64-bit architectures.  This implementation is
- * from
- *      https://en.wikipedia.org/wiki/Lehmer_random_number_generator
+ * This is the random number generator from the original Barnes-Hut C
+ * code translated to SML.
  *)
 
 structure Rand : RAND =
   struct
 
-    type rand = Word.word (* restricted to 31 bits *)
+    val kA : Real64.real = 16807.0
+    val kM : Real64.real = 2147483647.0
 
-    (* mask to 31-bits *)
-    val mask : word = 0wx7fffffff
+    val seed = ref 123.0
 
-    val seed : rand ref = ref 0w123
-
-    fun srand s = (seed := Word.andb(s, mask))
+    fun srand s = (seed := Int.max(1.0, Int.min(s, 2147483647.0)))
 
     fun rand () = let
-          val product = !seed * 0w48271
-          val x = Word.andb(product, mask) + Word.>>(product, 0w31)
-          val x = Word.andb(x, mask) + Word.>>(x, 0w31)
+          val t = kA * !seed + 1.0
+          val r = t - kM * Real.realFloor(t / kM)
           in
-            seed := x;
-            x
+            seed := r;
+            r
           end
 
     fun xrand (xl, xh) = let
-          val r = Real64.fromLargeInt (Word.toLargeIntX (rand ()))
+          val r = rand ()
           in
-            xl + (((xh - xl) * r) / 2147483647.0)
+            return xl + (xh - xl) * r / 2147483647.0
           end
 
   end

@@ -10,9 +10,7 @@
 signature RAND =
   sig
 
-    type rand = Word.word
-
-    val srand : rand -> unit
+    val srand : real -> unit
 
     val xrand : real * real -> real
 
