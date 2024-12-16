@@ -35,6 +35,7 @@ structure Main : BMARK =
 	    })
 
     fun testit outS = let
+          val nbody = 256 (* smaller problem for testing *)
           val bodies = BarnesHut3D.testdata nbody
 	  fun output {nstep, tnow, n2bcalc, nbccalc, selfint} = BH.DataIO.output{
 		  bodies = bodies, nbody = nbody,
@@ -49,7 +50,6 @@ structure Main : BMARK =
 	    BH.go {
 		output=output, bodies=bodies, tnow=tnow, tstop=tstop,
 		dtime=dtime, eps=eps, tol=tol, rsize=rsize, rmin=rmin
-	      };
-	    BH.DataIO.stopOutput()
+	      }
           end
   end;
