@@ -7,6 +7,10 @@ the performance of SML/NJ (and other SML systems) in the published
 literature.  The original version of this suite was assembled by
 Lal George at Bell Laboratories in the late 1990s.
 
+This version of the benchmark suite adds many additional programs,
+increases the problem sizes for some programs, and modernizes the
+code for others.
+
 ## Running the Benchmarks
 
 Each directory contains a script called runit. To invoke it, the shell
