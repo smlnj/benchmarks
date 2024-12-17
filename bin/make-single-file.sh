@@ -3,12 +3,12 @@
 # COPYRIGHT (c) 2024 The Fellowship of SML/NJ (https://www.smlnj.org)
 # All rights reserved.
 #
-# usage: make-all.sh [options] <benchmark> ...
+# usage: make-single-file.sh [options] <benchmark> ...
 #
 # create the `all.sml` version of a benchmark
 #
 
-cmd="make-all.sh"
+cmd="make-single-file.sh"
 mlton=no
 quiet=no
 
@@ -26,14 +26,14 @@ if [ ! -d $root/programs ] ; then
 fi
 
 say() {
-  if [ x"quiet" = xno ] ; then
+  if [ x"$quiet" = xno ] ; then
     echo $@
   fi
 }
 
 usage() {
   echo "usage: $cmd [ options ] <benchmark> ..."
-  echo "options:"
+  echo "  options:"
   echo "    -h,-help  print this message and exit"
   echo "    -mlton    create a file that can be compiled by MLton"
   echo "    -quiet    run in quiet mode"

@@ -34,7 +34,7 @@ may be present):
 * `sources.cm` -- a CM file for building the benchmark program.
 
 * `FILES` -- an optional list of additional source files (other than
-  `main.sml`) in compilation order.  The `bin/make-all.sh` script
+  `main.sml`) in compilation order.  The `bin/make-single-file.sh` script
   uses this list to construct a single-file version of the program.
   This file is omitted for benchmarks that have `main.sml` as their
   only source file
@@ -177,12 +177,12 @@ Appel's *Compiling with Continuations*.
 The `cloc.sh` script can be used to count the number of source lines in
 the benchmark programs.  It uses the [`cloc`](https://github.com/AlDanial/cloc)
 program and reports the number of blank, comment, and code lines.  It
-applies `cloc` to the result of `make-all.sh`, so the result includes the
+applies `cloc` to the result of `make-single-file.sh`, so the result includes the
 `BMARK` signature and three extra lines of code for the `local` declaration.
 
-### `make-all.sh`
+### `make-single-file.sh`
 
-The `make-all.sh` script is used to create a single compilation unit for the
+The `make-single-file.sh` script is used to create a single compilation unit for the
 benchmark sources.
 
 ### `runit.sh`

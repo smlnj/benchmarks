@@ -7,8 +7,8 @@
 #
 
 cmd="cloc.sh"
-json="no"
 outfile=""
+outformat=""
 
 # get the path of the benchmark root directory
 here=$(pwd)
@@ -19,9 +19,10 @@ cd $here
 
 usage() {
   echo "usage: $cmd [ options ] <benchmark> ..."
-  echo "options:"
+  echo "  options:"
   echo "    -h,-help      print this message and exit"
   echo "    -json         generate output in JSON format"
+  echo "    -md           generate output in Markdown table format"
   echo "    -o <file>     direct output to a file instead out stdout"
   exit $1
 }
@@ -33,7 +34,8 @@ while [ "$#" != "0" ]; do
   arg=$1;
   case "$arg" in
     -h|-help) usage 0 ;;
-    -json) shift; json=yes ;;
+    -json) shift; outformat="-json" ;;
+    -md) shift; outformat="-md" ;;
     -o)
       shift
       if [ "$#" != 0 ] ; then
@@ -65,15 +67,15 @@ for b in $bmarks ; do
     echo "$cmd: '$bmarkdir' does not exist"
     echo 1
   fi
-  $bindir/make-all.sh -quiet $b
+  $bindir/make-single-file.sh -quiet $b
   mv $bmarkdir/all.sml $tmpdir/$b
   echo "$b" >> $tmpdir/FILES
 done
 
 # command-line arguments to the cloc command
 clocargs="--hide-rate --by-file --skip-uniqueness --list-file=FILES --quiet"
-if [ x"$json" = xyes ] ; then
-  clocargs="$clocargs --json"
+if [ x"$outformat" != x ] ; then
+  clocargs="$clocargs $outformat"
 fi
 if [ x"$outfile" != x ] ; then
   case $outfile in

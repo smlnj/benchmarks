@@ -7,21 +7,21 @@
 structure Timing : sig
 
     (* measure compile time by timing the "use" function on a file *)
-    val timeUse : TextIO.outstream * string -> unit
+    val timeUse : string -> TextIO.outstream -> unit
 
     (* measure compile time by timing the "CM.make" function on a file *)
-    val timeMake : TextIO.outstream * string -> unit
+    val timeMake : string -> TextIO.outstream -> unit
 
     (* time the running of a function *)
-    val timeIt : TextIO.outstream * (unit -> 'a) -> unit
+    val timeIt : (unit -> 'a) -> TextIO.outstream -> unit
 
     (* report the GC statistics for running a function *)
-    val gcStats : TextIO.outstream * (unit -> 'a) -> unit
+    val gcStats : (unit -> 'a) -> TextIO.outstream -> unit
 
-    (* run a function multiple times, reporting the result as a labeled
-     * JSON array of timing records.
+    (* `run (name, label, n, file, f)` opens `file` for appending and then calls
+     * the function `f` on it `n` times.
      *)
-    val time : int * TextIO.outstream * (unit -> 'a) -> unit
+    val run : string * string * int * string * (TextIO.outstream -> unit) -> unit
 
   end = struct
 
@@ -56,29 +56,29 @@ structure Timing : sig
                ", \"real\" : ", timeToStr real, "}"
              ])
 
-    fun timeUse (outstrm, file) = let
+    fun timeUse file outS = let
 	  val t0 = start()
 	  in
 	    use file;
-	    output (outstrm, stop t0);
-	    TextIO.output1 (outstrm, #"\n")
+	    output (outS, stop t0);
+	    TextIO.output1 (outS, #"\n")
 	  end
 
-    fun timeMake (outstrm, file) = let
+    fun timeMake file outS = let
 	  val t0 = start()
 	  in
 	    CM.make file;
-	    output (outstrm, stop t0);
-	    TextIO.output1 (outstrm, #"\n")
+	    output (outS, stop t0);
+	    TextIO.output1 (outS, #"\n")
 	  end
 
-    fun timeIt (outstrm, doit) = let
+    fun timeIt doit outS = let
 	  val t0 = start()
 	  in
 	    doit();
-	    TextIO.output1 (outstrm, #"\t");
-	    output (outstrm, stop t0);
-	    TextIO.flushOut outstrm
+	    TextIO.output1 (outS, #"\t");
+	    output (outS, stop t0);
+	    TextIO.flushOut outS
 	  end
 
     local
@@ -113,12 +113,12 @@ structure Timing : sig
               nGCs = List.map Word.toIntX ngcs
             } end
     in
-    fun gcStats (outstrm, doit) = let
+    fun gcStats doit outS = let
           val () = reset true
           val _ = doit()
           val {nbAlloc, nbAlloc1, nbPromote, nGCs} = read()
           in
-            TextIO.output (outstrm, String.concat[
+            TextIO.output (outS, String.concat[
                  "{ \"nursery-alloc\" : ", LargeInt.toString nbAlloc,
                  ", \"gen1-alloc\" : ", LargeInt.toString nbAlloc1,
                  ", \"gen1-promote\" : ", LargeInt.toString nbPromote,
@@ -127,17 +127,29 @@ structure Timing : sig
           end
     end (* local *)
 
-    fun time (n, outstrm, doit) = let
-	  fun loop 0 = ()
-	    | loop 1 = timeIt(outstrm, doit)
+    fun run (name, label, nruns, outfile, doit) = let
+          val outS = TextIO.openAppend outfile
+          fun pr s = TextIO.output(outS, s)
+          fun loop 0 = ()
+	    | loop 1 = (
+                doit outS;
+                pr "\n")
 	    | loop i = (
-		timeIt(outstrm, doit);
-		TextIO.output(outstrm, ",\n");
+                pr "    ";
+		doit outS;
+		pr ",\n";
 		loop(i-1))
-	  in
-	    TextIO.output (outstrm, "    \"runs\" : [\n");
-	    loop n;
-	    TextIO.output (outstrm, "      ]")
-	  end
+          in
+            pr(concat["{ \"program\" : \"", name, "\","]);
+            if (nruns = 1)
+              then (
+                pr(concat["  \"", label, "\" : "]);
+                doit outS; pr "\n")
+              else (
+                pr(concat["  \"", label, "\" : [\n"]);
+                loop nruns;
+                pr "  ]\n}\n");
+            TextIO.closeOut outS
+          end
 
   end
