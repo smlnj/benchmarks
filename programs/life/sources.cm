@@ -14,4 +14,4 @@ is
 
   ../../util/sources.cm
 
-   life.sml
+  main.sml
