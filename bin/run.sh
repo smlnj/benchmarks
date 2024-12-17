@@ -65,15 +65,15 @@ measure_execution() {
   if [ x"$single_file"=xyes ] ; then
     $bindir/make-single-file.sh -quiet $prog
     cd $progdir
-    $smlcmd @SMLquiet @SMLalloc=$allocsz -m ../../util/sources.cm <<EOF 1>> $here/$logfile 2>&1
+    $smlcmd @SMLquiet @SMLalloc=$allocsz -m ../../util/sources.cm <<EOF 1>> $logfile 2>&1
       use "all.sml";
-      Timing.run (Main.name, "runs", $nruns, "$outdir/$outfile", Timing.timeIt Main.doit);
+      Timing.run (Main.name, "runs", $nruns, "$outfile", Timing.timeIt Main.doit);
 EOF
     rm -f all.sml
   else
     cd $progdir
-    $smlcmd @SMLquiet @SMLalloc=$allocsz -m ../../util/sources.cm sources.cm <<EOF 1>> $here/$logfile 2>&1
-      Timing.run (Main.name, "runs", $nruns, "$outdir/$outfile", Timing.timeIt Main.doit);
+    $smlcmd @SMLquiet @SMLalloc=$allocsz -m ../../util/sources.cm sources.cm <<EOF 1>> $logfile 2>&1
+      Timing.run (Main.name, "runs", $nruns, "$outfile", Timing.timeIt Main.doit);
 EOF
   fi
   cd $here
@@ -155,6 +155,18 @@ done
 if [ x"$programs" = x ] ; then
   usage 1
 fi
+
+# set log file
+case $logfile in
+  /*) ;; # absolute path
+  *) logfile="$here/$logfile" ;;
+esac
+
+# set output file
+case $outfile in
+  /*) ;; # absolute path
+  *) outfile="$outdir/$outfile" ;;
+esac
 
 # do the measurements (depending on mode)
 #
