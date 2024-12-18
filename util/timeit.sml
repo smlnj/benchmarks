@@ -1,6 +1,6 @@
 (* timeit.sml
  *
- * COPYRIGHT (c) 2021 The Fellowship of SML/NJ (http://www.smlnj.org)
+ * COPYRIGHT (c) 2024 The Fellowship of SML/NJ (http://www.smlnj.org)
  * All rights reserved.
  *)
 
@@ -15,8 +15,12 @@ structure Timing : sig
     (* time the running of a function *)
     val timeIt : (unit -> 'a) -> TextIO.outstream -> unit
 
-    (* report the GC statistics for running a function *)
+    (* report the GC statistics for running a function; note that this measurement
+     * requires version 110.99.7+ or 2024.3+
+     *)
     val gcStats : (unit -> 'a) -> TextIO.outstream -> unit
+
+    val runOnce : string * (TextIO.outstream -> unit) -> unit
 
     (* `run (name, label, n, file, f)` opens `file` for appending and then calls
      * the function `f` on it `n` times.
@@ -61,7 +65,7 @@ structure Timing : sig
 	  in
 	    use file;
 	    output (outS, stop t0);
-	    TextIO.output1 (outS, #"\n")
+	    TextIO.flushOut outS
 	  end
 
     fun timeMake file outS = let
@@ -69,7 +73,7 @@ structure Timing : sig
 	  in
 	    CM.make file;
 	    output (outS, stop t0);
-	    TextIO.output1 (outS, #"\n")
+	    TextIO.flushOut outS
 	  end
 
     fun timeIt doit outS = let
@@ -126,6 +130,13 @@ structure Timing : sig
                ])
           end
     end (* local *)
+
+    fun runOnce (outfile, doit) = let
+          val outS = TextIO.openAppend outfile
+          in
+            doit outS;
+            TextIO.closeOut outS
+          end
 
     fun run (name, label, nruns, outfile, doit) = let
           val outS = TextIO.openAppend outfile

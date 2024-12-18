@@ -28,7 +28,7 @@ host=$(hostname -s)
 cmd=$0
 smlcmd=sml
 single_file=no
-mode="execution"  # can also be "compile" and "gc"
+mode="execution"  # can also be "compile", "gc", and "test"
 run_time=yes
 logfile="LOG-$timestamp"
 outfile="REPORT-$timestamp.json"
@@ -52,9 +52,10 @@ usage() {
   echo "    -single-file     measure single-file version of programs"
   echo "    -compile-time    measure and report compile time"
   echo "    -gc-stats        measure and report allocation and GC counts"
+  echo "    -check           check benchmark outputs"
   echo "    -nruns <n>       specify the number of runs per program"
   echo "    -outfile <file>  specify the output file"
-  echo "    -log <file>      specify the log file"
+  echo "    -log <file>      specify the log file (specify none to disable log)"
   exit $1
 }
 
@@ -81,11 +82,48 @@ EOF
 
 # measure compile time for a benchmark
 measure_compile() {
+  prog=$1
+  progdir="$programsdir/$prog"
+  echo "{ \"program\" : \"$1\"," >> $outfile
+  echo "  \"compile\" : [" >> $outfile
+  if [ x"$single_file"=xyes ] ; then
+    $bindir/make-single-file.sh -quiet $prog
+    cd $progdir
+    for (( i = 0 ; $i < $nruns ; ++i )) ; do
+      $smlcmd @SMLquiet @SMLalloc=$allocsz -m ../../util/sources.cm <<EOF 1>> $logfile 2>&1
+        Timing.runOnce ("$outfile", Timing.timeUse "all.sml");
+EOF
+      if (( $i == $nruns-1 )) ; then
+        echo "" >> $outfile
+      else
+        echo "," >> $outfile
+      fi
+    done
+  else
+    cd $progdir
+    for (( i = 0 ; $i < $nruns ; ++i )) ; do
+      rm -rf $root/util/.cm .cm
+      $smlcmd @SMLquiet @SMLalloc=$allocsz -m ../../util/sources.cm <<EOF 1>> $logfile 2>&1
+        Timing.runOnce ("$outfile", Timing.timeMake "sources.cm");
+EOF
+      if (( $i == $nruns-1 )) ; then
+        echo "" >> $outfile
+      else
+        echo "," >> $outfile
+      fi
+    done
+  fi
+  echo "] }" >> $outfile
   exit 1
 }
 
 # measure allocation/GC stats for a benchmark
 measure_gc_stats() {
+  exit 1
+}
+
+# check the program's output
+check_program() {
   exit 1
 }
 
@@ -103,13 +141,19 @@ while [ "$#" != "0" ]; do
         usage 1
       fi
     ;;
+    -check) shift; mode="check" ;;
     -compile-time) shift; mode="compile" ;;
     -gc_stats) shift; mode="gc" ;;
     -h|-help) usage 0 ;;
     -log)
       shift
       if [ "$#" != 0 ] ; then
-        logfile="$1"; shift
+        if [ x"$1" = xnone ] ; then
+          logfile="/dev/null"
+        else
+          logfile="$1"
+        fi
+        shift
       else
         usage 1
       fi
@@ -145,8 +189,11 @@ while [ "$#" != "0" ]; do
       if [ -d "$programsdir/$arg" ] ; then
         programs="$programs $arg"
       else
-# handle potential benchmark class
-usage 1
+        c_progs=$($bindir/list-programs.sh -compact $arg)
+        if [ "$?" != 0 ] ; then
+          usage 1
+        fi
+        programs="$programs $c_progs"
       fi
       ;;
   esac
@@ -187,6 +234,12 @@ case $mode in
     for p in $programs ; do
       say "***** $p"
       measure_gc_stats $p
+    done
+  ;;
+  check)
+    for p in $programs ; do
+      say "***** $p"
+      check_program $p
     done
   ;;
 esac
