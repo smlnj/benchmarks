@@ -18,11 +18,14 @@ cmd="list-programs.sh"
 compact=no
 all_programs=no
 
+CLASSES="FP LIST ARRAY BIGNUM FUNCTOR CLASSIC SMLNJ MLTON LARCENY"
+
 usage() {
   echo "usage: $cmd [ options ] <class> ..."
   echo "  options:"
   echo "    -h,-help      print this message and exit"
   echo "    -compact      generate sorted list of programs"
+  echo "  classes: $CLASSES"
   exit $1
 }
 
@@ -62,8 +65,6 @@ ALL="\
   tsp \
   vliw \
   "
-
-CLASSES="FP LIST ARRAY BIGNUM FUNCTOR CLASSIC SMLNJ MLTON LARCENY"
 
 FP="barnes-hut fft mandelbrot mc-ray nucleic plclub-ray smith-nf tsp"
 FP_DESC="programs that make significant use of floating-point arithmetic"
