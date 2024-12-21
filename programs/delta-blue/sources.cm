@@ -1,0 +1,29 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2024 The Fellowship of SML/NJ (https://www.smlnj.org)
+ * All rights reserved.
+ *)
+
+Library
+
+  structure Main
+
+is
+
+  $/basis.cm
+
+  ../../util/sources.cm
+
+  constraint-base.sml
+  constraint.sml
+  delta-blue.sml
+  edit-constraint.sml
+  equality-constraint.sml
+  planner.sml
+  rep-types.sml
+  scale-constraint.sml
+  stay-constraint.sml
+  strength.sml
+  variable.sml
+
+  main.sml

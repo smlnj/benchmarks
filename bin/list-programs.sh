@@ -48,6 +48,7 @@ sort_items() {
 ALL="\
   barnes-hut \
   boyer \
+  delta-blue \
   dlx \
   fft \
   knuth-bendix \
