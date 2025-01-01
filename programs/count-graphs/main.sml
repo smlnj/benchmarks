@@ -523,7 +523,6 @@ fun showIntListList outS = showList (
 
     val name = "count-graphs"
 
-
     fun testit outS = let
           fun doOne arg = (
                 pr outS (arg ^ " -> ");
@@ -544,7 +543,7 @@ fun showIntListList outS = showList (
                 (* end case *))
           in
             List.app doOne [
-                "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"
+                "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"
               ]
           end
 
