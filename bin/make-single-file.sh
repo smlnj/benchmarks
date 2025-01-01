@@ -27,7 +27,7 @@ fi
 
 say() {
   if [ x"$quiet" = xno ] ; then
-    echo $@
+    echo "$@"
   fi
 }
 
@@ -58,7 +58,11 @@ mkall () {
     exit 1
   fi
   say "***** $bmark"
-  out="$bmarkDir/all.sml"
+  if [ x"$mlton" = xyes ] ; then
+    out="$bmarkDir/all-mlton.sml"
+  else
+    out="$bmarkDir/all.sml"
+  fi
   echo "(* $out -- all sources for $bmark *)" > $out
   echo "local" >> $out
 
