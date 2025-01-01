@@ -76,7 +76,10 @@ mkall () {
   echo "end; (* local *)" >> $out
 
   if [ x"$mlton" = xyes ] ; then
-    echo "val _ = Main.doit();" >> $out
+    echo "val _ = (case CommandLine.arguments()" >> $out
+    echo "         of "-test"::_ => Main.testit TextIO.stdOut" >> $out
+    echo "          | _ => Main.doit()" >> $out
+    echo "        (* end case *));" >> $out
   fi
 }
 
