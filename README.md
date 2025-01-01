@@ -58,6 +58,8 @@ the third release of the C version written by Joshua E. Barnes.
 
 ### `boyer`
 
+### `count-graphs`
+
 ### `dlx`
 
 This program is a partial implementation of the RISC instruction

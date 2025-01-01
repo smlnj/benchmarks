@@ -70,7 +70,7 @@ ALL="\
 FP="barnes-hut fft mandelbrot mc-ray nucleic plclub-ray smith-nf tsp"
 FP_DESC="programs that make significant use of floating-point arithmetic"
 
-LIST="life"
+LIST="count-graphs life"
 LIST_DESC="programs that make significant use of lists"
 
 ARRAY="fft simple smith-nf"
