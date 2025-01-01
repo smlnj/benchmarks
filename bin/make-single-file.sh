@@ -64,7 +64,11 @@ mkall () {
     out="$bmarkDir/all.sml"
   fi
   echo "(* $out -- all sources for $bmark *)" > $out
-  echo "local" >> $out
+  if [ x"$mlton" != xyes ] ; then
+    # SML/NJ allows signatures in local, which is an extension, but
+    # MLton follows the Definition and does not
+    echo "local" >> $out
+  fi
 
   copy "$root/util" bmark.sig "$out"
 
@@ -75,13 +79,17 @@ mkall () {
     done
   fi
 
-  echo "in" >> $out
-  cat $bmarkDir/main.sml >> $out
-  echo "end; (* local *)" >> $out
+  if [ x"$mlton" = xyes ] ; then
+    cat "$bmarkDir/main.sml" >> $out
+  else
+    echo "in" >> $out
+    cat "$bmarkDir/main.sml" >> $out
+    echo "end; (* local *)" >> $out
+  fi
 
   if [ x"$mlton" = xyes ] ; then
     echo "val _ = (case CommandLine.arguments()" >> $out
-    echo "         of "-test"::_ => Main.testit TextIO.stdOut" >> $out
+    echo "         of \"-test\"::_ => Main.testit TextIO.stdOut" >> $out
     echo "          | _ => Main.doit()" >> $out
     echo "        (* end case *));" >> $out
   fi
