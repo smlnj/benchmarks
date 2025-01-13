@@ -1,4 +1,4 @@
-rand-sig.sml
+rand.sig
 rand.sml
 vector.sig
 space.sml

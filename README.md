@@ -55,33 +55,33 @@ The programs are listed by directory name in alphabetical order;
 for more detailed information, see the `README.md` file in each
 directory.
 
-| Directory                                             | LOC | Short Description                          |
-| ----------------------------------------------------- | --- | ------------------------------------------ |
-| [`barnes-hut`](programs/barnes-hut/README.md)         | xxx | Hierarchical N-body solver                 |
-| [`boyer`](programs/boyer/README.md)                   | xxx |                                            |
-| [`count-graphs`](programs/count-graphs/README.md)     | xxx |                                            |
-| [`delta-blue`](programs/delta-blue/README.md)         | xxx | Delta-Blue incremental constraint solver   |
-| [`dlx`](programs/dlx/README.md)                       | xxx |                                            |
-| [`fft`](programs/fft/README.md)                       | xxx |                                            |
-| [`id-ray`](programs/id-ray/README.md)                 | xxx | Ray tracer ported from Id                  |
-| [`knuth-bendix`](programs/knuth-bendix/README.md)     | xxx | Knuth-Bendix completion algorithm          |
-| [`lexgen`](programs/lexgen/README.md)                 | xxx | lexical-analyzer generator                 |
-| [`life`](programs/life/README.md)                     | xxx | Conway's game of life                      |
-| [`logic`](programs/logic/README.md)                   | xxx | Knuth-Bendix completion algorithm          |
-| [`mandelbrot`](programs/mandelbrot/README.md)         | xxx | Mandelbrot-set computation                 |
-| [`mandelbrot-rat`](programs/mandelbrot-rat/README.md) | xxx | Mandelbrot-set computation using rationals |
-| [`mazefun`](programs/mazefun/README.md)               | xxx | Maze generator                             |
-| [`mc-ray`](programs/mc-ray/README.md)                 | xxx | Monte-Carlo ray tracer                     |
-| [`mlyacc`](programs/mlyacc/README.md)                 | xxx |                                            |
-| [`nucleic`](programs/nucleic/README.md)               | xxx |                                            |
-| [`pia`](programs/pia/README.md)                       | xxx |                                            |
-| [`plclub-ray`](programs/plclub-ray/README.md)         | xxx | Another ray tracer                         |
-| [`ratio-regions`](programs/ratio-regions/README.md)   | xxx |                                            |
-| [`ray`](programs/ray/README.md)                       | xxx |                                            |
-| [`simple`](programs/simple/README.md)                 | xxx | A spherical fluid-dynamics program         |
-| [`smith-nf`](programs/smith-nf/README.md)             | xxx | Computes the Smith Normal Form             |
-| [`tsp`](programs/tsp/README.md)                       | xxx | A Traveling-Sales-Person solver            |
-| [`vliw`](programs/vliw/README.md)                     | xxx | A Very-Long-Instruction-Word instruction scheduler |
+| Directory                                             | LOC   | Short Description                          |
+| ----------------------------------------------------- | ----- | ------------------------------------------ |
+| [`barnes-hut`](programs/barnes-hut/README.md)         |   820 | Hierarchical N-body solver                 |
+| [`boyer`](programs/boyer/README.md)                   |   912 |                                            |
+| [`count-graphs`](programs/count-graphs/README.md)     |   399 |                                            |
+| [`delta-blue`](programs/delta-blue/README.md)         |   703 | Delta-Blue incremental constraint solver   |
+| [`dlx`](programs/dlx/README.md)                       | 1,887 |                                            |
+| [`fft`](programs/fft/README.md)                       |   166 |                                            |
+| [`id-ray`](programs/id-ray/README.md)                 |   xxx | Ray tracer ported from Id                  |
+| [`knuth-bendix`](programs/knuth-bendix/README.md)     |   430 | Knuth-Bendix completion algorithm          |
+| [`lexgen`](programs/lexgen/README.md)                 | 1,036 | lexical-analyzer generator                 |
+| [`life`](programs/life/README.md)                     |   118 | Conway's game of life                      |
+| [`logic`](programs/logic/README.md)                   |   317 | Knuth-Bendix completion algorithm          |
+| [`mandelbrot`](programs/mandelbrot/README.md)         |    49 | Mandelbrot-set computation                 |
+| [`mandelbrot-rat`](programs/mandelbrot-rat/README.md) |   xxx | Mandelbrot-set computation using rationals |
+| [`mazefun`](programs/mazefun/README.md)               |   185 | Maze generator                             |
+| [`mc-ray`](programs/mc-ray/README.md)                 |   736 | Monte-Carlo ray tracer                     |
+| [`mlyacc`](programs/mlyacc/README.md)                 | 5,566 |                                            |
+| [`nucleic`](programs/nucleic/README.md)               | 2,920 |                                            |
+| [`pia`](programs/pia/README.md)                       |   xxx |                                            |
+| [`plclub-ray`](programs/plclub-ray/README.md)         | 2,026 | Another ray tracer                         |
+| [`ratio-regions`](programs/ratio-regions/README.md)   |   xxx |                                            |
+| [`ray`](programs/ray/README.md)                       |   352 |                                            |
+| [`simple`](programs/simple/README.md)                 |   760 | A spherical fluid-dynamics program         |
+| [`smith-nf`](programs/smith-nf/README.md)             |   371 | Computes the Smith Normal Form             |
+| [`tsp`](programs/tsp/README.md)                       |   304 | A Traveling-Sales-Person solver            |
+| [`vliw`](programs/vliw/README.md)                     | 2,934 | A Very-Long-Instruction-Word instruction scheduler |
 
 ## Scripts
 

@@ -61,14 +61,21 @@ mkdir $tmpdir
 
 for b in $bmarks ; do
   bmarkdir=programs/$b
+  dst="$tmpdir/$b"
   # check the validity of the benchmark
-  if [ ! -d $bmarkdir ] ; then
+  if [ ! -d "$bmarkdir" ] ; then
     rm -rf $tmpdir
     echo "$cmd: '$bmarkdir' does not exist"
     echo 1
   fi
-  $bindir/make-single-file.sh -quiet $b
-  mv $bmarkdir/all.sml $tmpdir/$b
+  # create a single file from the benchmark sources
+  if [ -r "$bmarkdir/FILES" ] ; then
+    for f in $(cat "$bmarkdir/FILES") main.sml ; do
+      cat $bmarkdir/$f >> $dst
+    done
+  else
+    cp $bmarkdir/main.sml $dst
+  fi
   echo "$b" >> $tmpdir/FILES
 done
 
