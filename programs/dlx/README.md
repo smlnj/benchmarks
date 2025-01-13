@@ -1,9 +1,12 @@
 # DLX Simulator Benchmark
 
-This benchmark is from the MLton benchmark suite.  It has been
-restructured as separate source files with a CM file for the SML/NJ
-benchmark repository.  The original version was written by Matthew
-Fluet.
+This program is a partial implementation of the RISC instruction
+set described in Patterson's and Hennessy's _Computer Architecture_.
+The benchmark is taken from the [MLton](http://mlton.org) sources,
+where it is in the file `DLXSimulator.sml`.  The original version
+was written by Matthew Fluet.  This version has been restructured
+as separate source files with a CM file for the SML/NJ benchmark
+repository.
 
 # Description and History
 

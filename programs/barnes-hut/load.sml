@@ -61,6 +61,10 @@ functor Load (S : SPACE) : LOAD =
 	      val rsize' = 2.0 * rsize
 	      fun mksub (v, r) = let
 		    val x = intcoord (v, rmin', rsize')
+handle ex => (
+print(concat["loadTree: v = ",
+V.format {lp="(", sep=",", rp=")", cvt=Real.toString} v, "\n"]);
+raise ex)
 		    val k = subindex (x, IMAXrs1)
 		    val cell = S.mkCell ()
 		    in
@@ -82,9 +86,14 @@ functor Load (S : SPACE) : LOAD =
   (* insert a single node into the tree *)
     fun loadTree (body as S.Body{pos=posp, ...}, S.Space{rmin, rsize, root}) = let
 	  val xp = intcoord (!posp, rmin, rsize)
+handle ex => (
+print(concat["loadTree: posp = ",
+V.format {lp="(", sep=",", rp=")", cvt=Real.toString} (!posp), "\n"]);
+raise ex)
 	  fun insert (S.Empty, _) = S.mkBodyNode body
 	    | insert (n as S.Node{cell=S.BodyCell _, pos=posq, ...}, l) = let
 		val xq = intcoord (!posq, rmin, rsize)
+handle ex => raise ex
 		val k = subindex (xq, l)
 		val a = S.mkCell()
 		in
@@ -126,7 +135,7 @@ functor Load (S : SPACE) : LOAD =
   (* initialize tree structure for hack force calculation. *)
     fun makeTree (bodies, rmin, rsize) = let
 	  fun build ([], space) = space
-	    | build ((body as S.Body{mass, ...}) :: r, space) = 
+	    | build ((body as S.Body{mass, ...}) :: r, space) =
 	       if Real.==(mass, 0.0) then build (r, space)
 	       else let
 		   val box = expandBox (body, space)

@@ -1,4 +1,4 @@
-# Lexgen benchmark
+# Lexgen Benchmark
 
 This benchmark is a lexical-analyzer generator, written by James Mattson
 and David Tarditi at Princeton.  The input is the lexical specification

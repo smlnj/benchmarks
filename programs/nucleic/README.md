@@ -1,4 +1,7 @@
-This benchmark is the "Pseudoknot" program that was used to compare
+# Nucleic
+
+This benchmark is the "["Pseudoknot"](https://doi.org/10.1017/S0956796800001891)"
+program that was used to compare
 functional-language implementations.  It does some calculations
 relating to the 3D structure of nucleic acids.  The original benchmark
 was a port of a Scheme program written by Marc Feeley and was done

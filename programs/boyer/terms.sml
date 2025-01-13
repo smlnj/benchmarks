@@ -5,17 +5,23 @@
 
 signature TERMS =
   sig
-    type head;
-    datatype term =
-      Var of int
-    | Prop of head * term list;
-    datatype binding = Bind of int * term;      
+    type head
+
+    datatype term
+      = Var of int
+      | Prop of head * term list
+
+    datatype binding = Bind of int * term
+
     val get: string -> head
     and headname: head -> string
     and add_lemma: term -> unit
     and apply_subst: binding list -> term -> term
     and rewrite: term -> term
-  end;
+
+    val rewriteCount : word ref
+
+  end
 
 structure Terms:TERMS =
   struct
@@ -43,18 +49,15 @@ fun get name =
   in
     get_rec (!lemmas)
   end
-;
 
 fun add_lemma (Prop(_, [(left as Prop({props=r,...},_)), right])) =
   r := (left, right) :: !r
-;
 
 (* substitutions *)
 
 exception failure of string;
 
 datatype binding = Bind of int * term
-;
 
 fun get_binding v =
   let fun get_rec [] = raise (failure "unbound")
@@ -63,7 +66,6 @@ fun get_binding v =
   in
     get_rec
   end
-;
 
 fun apply_subst alist =
   let fun as_rec (term as Var v) =
@@ -73,7 +75,6 @@ fun apply_subst alist =
   in
     as_rec
   end
-;
 
 exception Unify;
 
@@ -96,15 +97,19 @@ and unify1_lst ([], [], unify_subst) = unify_subst
   | unify1_lst (h1::r1, h2::r2, unify_subst) =
       unify1_lst(r1, r2, unify1(h1, h2, unify_subst))
   | unify1_lst _ = raise Unify
-;
 
-fun rewrite (term as Var _) = term
-  | rewrite (Prop ((head as {props=p,...}), argl)) =
-      rewrite_with_lemmas (Prop (head, map rewrite argl),  !p)
+
+fun rewrite term = (
+      rewriteCount := !rewriteCount + 0w1;
+      case term
+       of Var _ => term
+        | Prop(head as {props=p,...}, argl) =>
+            rewrite_with_lemmas (Prop (head, map rewrite argl),  !p)
+      (* end case *))
 and rewrite_with_lemmas (term, []) = term
   | rewrite_with_lemmas (term, (t1,t2)::rest) =
         rewrite (apply_subst (unify (term, t1)) t2)
-      handle unify =>
+      handle Unify =>
         rewrite_with_lemmas (term, rest)
-;
-end;
+
+end

@@ -12,8 +12,6 @@ is
 
   $/basis.cm
 
-  $/basis.cm
-
   ../../util/sources.cm
 
   aabb.sml
