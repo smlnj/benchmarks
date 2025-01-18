@@ -47,6 +47,7 @@ sort_items() {
 
 ALL="\
   barnes-hut \
+  black-scholes \
   boyer \
   delta-blue \
   dlx \
@@ -67,7 +68,7 @@ ALL="\
   vliw \
   "
 
-FP="barnes-hut fft mandelbrot mc-ray nucleic plclub-ray smith-nf tsp"
+FP="barnes-hut black-scholes fft mandelbrot mc-ray nucleic plclub-ray smith-nf tsp"
 FP_DESC="programs that make significant use of floating-point arithmetic"
 
 LIST="count-graphs life"

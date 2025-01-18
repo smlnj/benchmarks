@@ -58,6 +58,7 @@ directory.
 | Directory                                             | LOC   | Short Description                          |
 | ----------------------------------------------------- | ----- | ------------------------------------------ |
 | [`barnes-hut`](programs/barnes-hut/README.md)         |   820 | Hierarchical N-body solver                 |
+| [`black-scholes`](programs/black-scholes/README.md)   |   126 | European-style option pricing              |
 | [`boyer`](programs/boyer/README.md)                   |   912 |                                            |
 | [`count-graphs`](programs/count-graphs/README.md)     |   399 |                                            |
 | [`delta-blue`](programs/delta-blue/README.md)         |   703 | Delta-Blue incremental constraint solver   |
