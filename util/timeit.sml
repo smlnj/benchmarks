@@ -86,41 +86,13 @@ structure Timing : sig
 	  end
 
     local
-(* NOTE: these functions will eventually be exposed via the SMLofNJ.Internal.GC
- * structure.
- *)
-      structure CI = Unsafe.CInterface
-      val read' : unit -> word * word * word * word * word list =
-            (CI.c_function "SMLNJ-RunT" "gcCounterRead")
-              handle CI.CFunNotFound _ => (
-                TextIO.output(TextIO.stdErr, "Warning: gcCounterRead not found\n");
-                fn _ => raise Fail "gcCounterRead not available")
-      val reset : bool -> unit =
-            (CI.c_function "SMLNJ-RunT" "gcCounterReset")
-              handle CI.CFunNotFound _ => (
-                TextIO.output(TextIO.stdErr, "Warning: gcCounterReset not found\n");
-                fn _ => raise Fail "gcCounterReset not available")
-      fun read () = let
-            (* results are:
-             *   s     -- scaling factor for allocation counts
-             *   a     -- scaled nursery allocation count
-             *   a1    -- scaled first-generation allocation count
-             *   p     -- scaled count of promotions to first generation
-             *   ngcs  -- number of collections by generation
-             *)
-            val (s, a, a1, p, ngcs) = read'()
-            val scale = Word.toLargeInt s
-            in {
-              nbAlloc = scale * Word.toLargeInt a,
-              nbAlloc1 = scale * Word.toLargeInt a1,
-              nbPromote = scale * Word.toLargeInt p,
-              nGCs = List.map Word.toIntX ngcs
-            } end
+    val reset = SMLofNJ.Internals.GC.resetCounters
+    val read = SMLofNJ.Internals.GC.readCounters
     in
     fun gcStats doit outS = let
           val () = reset true
           val _ = doit()
-          val {nbAlloc, nbAlloc1, nbPromote, nGCs} = read()
+          val {nbAlloc, nStores, nbAlloc1, nbPromote, nGCs} = read()
           in
             TextIO.output (outS, String.concat[
                  "{ \"nursery-alloc\" : ", LargeInt.toString nbAlloc,
