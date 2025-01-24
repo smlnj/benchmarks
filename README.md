@@ -74,6 +74,7 @@ directory.
 | [`mazefun`](programs/mazefun/README.md)               |   185 | Maze generator                             |
 | [`mc-ray`](programs/mc-ray/README.md)                 |   736 | Monte-Carlo ray tracer                     |
 | [`mlyacc`](programs/mlyacc/README.md)                 | 5,566 |                                            |
+| [`nbody`](programs/nbody/README.md)                   |   135 | O(n^2) N-body solver                       |
 | [`nucleic`](programs/nucleic/README.md)               | 2,920 |                                            |
 | [`pia`](programs/pia/README.md)                       |   xxx |                                            |
 | [`plclub-ray`](programs/plclub-ray/README.md)         | 2,026 | Another ray tracer                         |
