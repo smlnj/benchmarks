@@ -1,3 +1,4 @@
+rand.sml
 imm-array.sml
 imm-array2.sml
 register-file.sig
