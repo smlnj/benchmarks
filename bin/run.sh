@@ -215,6 +215,19 @@ case $outfile in
   *) outfile="$outdir/$outfile" ;;
 esac
 
+# ouput meta data to report file
+#
+echo "{ \"timestamp\" : \"${timestamp}\"," > $outfile
+echo "  \"sml-command\" : \"${smlcmd}\"," >> $outfile
+if [ x"$single_file" = xyes ] ; then
+  SF=true
+else
+  SF=false
+fi
+echo "  \"single-file\" : ${SF}," >> $outfile
+echo "  \"mode\" : \"${mode}\"," >> $outfile
+echo "  \"data\" : [" >> $outfile
+
 # do the measurements (depending on mode)
 #
 case $mode in
@@ -243,3 +256,5 @@ case $mode in
     done
   ;;
 esac
+
+echo "]}" >> $outfile
