@@ -14,7 +14,7 @@ structure BarnesHut3D : sig
     structure DataIO : DATA_IO
 
     (* reset the random number generator *)
-    val srand : word -> unit
+    val srand : real -> unit
 
     (* generate the Plummer model data *)
     val testdata : int -> S.body list

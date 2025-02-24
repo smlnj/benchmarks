@@ -15,7 +15,7 @@ structure Rand : RAND =
 
     val seed = ref 123.0
 
-    fun srand s = (seed := Int.max(1.0, Int.min(s, 2147483647.0)))
+    fun srand s = (seed := Real.max(1.0, Real.min(s, 2147483647.0)))
 
     fun rand () = let
           val t = kA * !seed + 1.0
@@ -28,7 +28,7 @@ structure Rand : RAND =
     fun xrand (xl, xh) = let
           val r = rand ()
           in
-            return xl + (xh - xl) * r / 2147483647.0
+            xl + (xh - xl) * r / 2147483647.0
           end
 
   end
