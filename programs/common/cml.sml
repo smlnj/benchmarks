@@ -1,3 +1,11 @@
+(* cml.sml
+ *
+ * Simple implementation of CML-like message passing.
+ *
+ * COPYRIGHT (c) 2025 The Fellowship of SML/NJ (https://www.smlnj.org)
+ * All rights reserved.
+ *)
+
 structure Queue :> sig
 
     type 'a t
@@ -17,19 +25,19 @@ structure Queue :> sig
     fun new () = {front = ref [], rear = ref []}
 
     fun next ({ front, rear } : 'a t) = (case !front
-         of [] =>
-              (case rev(!rear)
+           of [] => (case rev(!rear)
                  of [] => NONE
-                  | x::xs => (front := xs; rear := []; SOME x))
-          | x::xs => (front := xs; SOME x)
-         (* end case *))
+                  | x::xs => (front := xs; rear := []; SOME x)
+                (* end case *))
+            | x::xs => (front := xs; SOME x)
+          (* end case *))
 
     fun insert (q : 'a t, x) = (#rear q) := x :: !(#rear q)
 
-    fun isEmpty (q : 'a t) =
-      (case !(#front q)
-         of [] => (case !(#rear q) of [] => true | _ => false)
-          | _ => false)
+    fun isEmpty (q : 'a t) = (case !(#front q)
+           of [] => (case !(#rear q) of [] => true | _ => false)
+            | _ => false
+          (* end case *))
 
   end
 
