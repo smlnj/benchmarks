@@ -48,8 +48,6 @@ sort_items() {
 ALL="\
   barnes-hut \
   black-scholes \
-  boyer \
-  delta-blue \
   dlx \
   fft \
   knuth-bendix \
@@ -66,6 +64,11 @@ ALL="\
   smith-nf \
   tsp \
   vliw \
+  "
+
+BROKEN="\
+  boyer \
+  delta-blue \
   "
 
 FP="barnes-hut black-scholes fft mandelbrot mc-ray nucleic plclub-ray smith-nf tsp"

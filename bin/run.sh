@@ -1,4 +1,5 @@
 #!/bin/sh
+# set -x
 #
 # COPYRIGHT (c) 2024 The Fellowship of SML/NJ (https://www.smlnj.org)
 # All rights reserved.
@@ -38,9 +39,9 @@ programs=""
 verbose=yes
 
 say() {
-  if [ x"$verbose" = xno ] ; then
+  # if [ x"$verbose" = xyes ] ; then
     echo $@
-  fi
+  # fi
 }
 
 usage() {
@@ -220,25 +221,25 @@ esac
 case $mode in
   execution)
     for p in $programs ; do
-      say "***** $p"
+      echo "***** $p"
       measure_execution $p
     done
   ;;
   compile)
     for p in $programs ; do
-      say "***** $p"
+      echo "***** $p"
       measure_compile $p
     done
   ;;
   gc)
     for p in $programs ; do
-      say "***** $p"
+      echo "***** $p"
       measure_gc_stats $p
     done
   ;;
   check)
     for p in $programs ; do
-      say "***** $p"
+      echo "***** $p"
       check_program $p
     done
   ;;
