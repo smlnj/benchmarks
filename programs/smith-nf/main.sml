@@ -61,7 +61,7 @@ fun f (x, y) = List.nth (List.nth (table, x), y)
 fun show m = print (Matrix.toString (m, IntInf.toString))
 
     fun snf () = let
-          val dim = 35
+          val dim = 33
           val big = Matrix.map (Matrix.make (dim, dim, f), IntInf.fromInt)
           in
             Matrix.fetch(SmithNormalForm.smithNormalForm big, dim - 1, dim - 1)

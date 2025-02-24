@@ -108,6 +108,8 @@ val term =
                     Prop (get "implies",[Var 20, Var 22])])])]),
               Prop (get "implies",[Var 23, Var 22])])
 
+    val name = "boyer"
+
     fun testit outstrm = if tautp (apply_subst subst term)
 	  then TextIO.output (outstrm, "Proved!\n")
 	  else TextIO.output (outstrm, "Cannot prove!\n")

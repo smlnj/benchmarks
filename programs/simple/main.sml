@@ -4,4 +4,4 @@
  * All rights reserved.
  *)
 
-structure Main = Simple (val grid_max=100 val step_count=1);
+structure Main = Simple (val grid_max=600 val step_count=1);

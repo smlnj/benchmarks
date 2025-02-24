@@ -98,6 +98,7 @@ and unify1_lst ([], [], unify_subst) = unify_subst
       unify1_lst(r1, r2, unify1(h1, h2, unify_subst))
   | unify1_lst _ = raise Unify
 
+val rewriteCount = ref 0w0
 
 fun rewrite term = (
       rewriteCount := !rewriteCount + 0w1;

@@ -12,6 +12,11 @@ structure Main : BMARK =
     fun map f [] = []
       | map f (a::x) = f a :: map f x
 
+    fun revAppend ([], l) = l
+      | revAppend (x::r, l) = revAppend(r, x::l)
+
+    fun rev l = revAppend(l, [])
+
     exception ex_undefined of string
     fun error str = raise ex_undefined str
 

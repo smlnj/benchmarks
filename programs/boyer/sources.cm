@@ -18,4 +18,4 @@ is
     rules.sml
     boyer.sml
 
-    main.sml
+    (* main.sml *)
