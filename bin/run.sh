@@ -34,7 +34,7 @@ run_time=yes
 logfile="LOG-$timestamp"
 outfile="REPORT-$timestamp.json"
 nruns=5
-allocsz="512k"
+allocsz="1024k"
 programs=""
 verbose=yes
 
@@ -115,12 +115,30 @@ EOF
     done
   fi
   echo "] }" >> $outfile
-  exit 1
+  exit 0
 }
 
 # measure allocation/GC stats for a benchmark
 measure_gc_stats() {
-  exit 1
+  prog=$1
+  progdir="$programsdir/$prog"
+  echo "{ \"program\" : \"$1\"," >> $outfile
+  if [ x"$single_file"=xyes ] ; then
+    $bindir/make-single-file.sh -quiet $prog
+    cd $progdir
+    $smlcmd @SMLquiet @SMLalloc=$allocsz -m ../../util/sources.cm <<EOF 1>> $logfile 2>&1
+      use "all.sml";
+      Timing.runOnce ("$outfile", Timing.gcStats Main.doit);
+EOF
+  else
+    cd $progdir
+    $smlcmd @SMLquiet @SMLalloc=$allocsz -m ../../util/sources.cm <<EOF 1>> $logfile 2>&1
+      CM.make "sources.cm";
+      Timing.runOnce ("$outfile", Timing.gcStats Main.doit);
+EOF
+  fi
+  echo "}" >> $outfile
+  exit 0
 }
 
 # check the program's output
@@ -144,7 +162,7 @@ while [ "$#" != "0" ]; do
     ;;
     -check) shift; mode="check" ;;
     -compile-time) shift; mode="compile" ;;
-    -gc_stats) shift; mode="gc" ;;
+    -gc-stats) shift; mode="gc" ;;
     -h|-help) usage 0 ;;
     -log)
       shift
@@ -227,6 +245,7 @@ else
 fi
 echo "  \"single-file\" : ${SF}," >> $outfile
 echo "  \"mode\" : \"${mode}\"," >> $outfile
+echo "  \"alloc\" : \"${allocsz}\"," >> $outfile
 echo "  \"data\" : [" >> $outfile
 
 # do the measurements (depending on mode)
