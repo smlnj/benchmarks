@@ -46,3 +46,6 @@ latex.out/
 
 # macOS finder
 .DS_Store
+
+# Generated files
+single-file/
