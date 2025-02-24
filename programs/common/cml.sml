@@ -16,25 +16,20 @@ structure Queue :> sig
 
     fun new () = {front = ref [], rear = ref []}
 
-    fun next (q : t) = (case !(#front q)
-           of [] => (case reverse(!(#rear q))
+    fun next ({ front, rear } : 'a t) = (case !front
+         of [] =>
+              (case rev(!rear)
                  of [] => NONE
-                  | x::xs => (
-                      front := xs;
-                      rear := [];
-                      SOME x)
-                (* end case *))
-            | x::xs => (
-                front := xs;
-                SOME x)
-          (* end case *))
+                  | x::xs => (front := xs; rear := []; SOME x))
+          | x::xs => (front := xs; SOME x)
+         (* end case *))
 
-    fun insert (q : t, x) = (#rear q) := x :: !(rear q)
+    fun insert (q : 'a t, x) = (#rear q) := x :: !(#rear q)
 
-    fun isEmpty (q : t) = (case !(#front q)
-           of [] => (case !(#read q) of [] => true | _ => false)
-            | _ => false
-          (* end case *))
+    fun isEmpty (q : 'a t) =
+      (case !(#front q)
+         of [] => (case !(#rear q) of [] => true | _ => false)
+          | _ => false)
 
   end
 
@@ -52,7 +47,7 @@ structure CML : sig
 
     val channel : unit -> 'a chan
     val send : 'a chan * 'a -> unit
-    val receive : 'a chan -> 'a
+    val recv : 'a chan -> 'a
 
   end = struct
 
@@ -66,18 +61,18 @@ structure CML : sig
     val topCont : unit cont option ref = ref NONE
 
     fun exit () = (case !topCont
-           of SOME k => (topCont := NONE; throw k ())
-            | NONE => (
+         of SOME k => (topCont := NONE; throw k ())
+          | NONE => (
                 TextIO.output(TextIO.stdErr, "\n!!! invalid exit\n");
                 raise Fail "exit")
           (* end case *))
 
     (* dispatch the next thread *)
     fun dispatch () = (case Queue.next readyQ
-           of NONE => (
-                TextIO.output(TextIO.stdErr, "\n!!! deadlock\n");
-                exit ())
-            | SOME k => throw k ()
+         of NONE => (
+              TextIO.output(TextIO.stdErr, "\n!!! deadlock\n");
+              exit ())
+          | SOME k => throw k ()
           (* end case *))
 
     fun uncaught exn = (
@@ -86,11 +81,11 @@ structure CML : sig
             ]);
           dispatch())
 
-    fun spawn f = callcc (fn retK =>
-            callcc (fn thrdK => (
+    fun spawn f = callcc (fn (retK : unit cont) =>
+            (callcc (fn (thrdK : unit cont) => (
                 Queue.insert (readyQ, thrdK); (* insert new thread in readyQ *)
                 throw retK ())); (* return to parent *)
-            (f ()) handle ex => uncaught ex)
+            (f ()) handle ex => uncaught ex))
 
     fun yield () = callcc (fn retK => (
           Queue.insert (readyQ, retK);
@@ -99,10 +94,10 @@ structure CML : sig
     val topCont : unit cont option ref = ref NONE
 
     fun exit () = (case !topCont
-           of SOME k => (topCont := NONE; throw k ())
-            | NONE => (
-                TextIO.output(TextIO.stdErr, "\n!!! invalid exit\n");
-                raise Fail "exit")
+         of SOME k => (topCont := NONE; throw k ())
+          | NONE => (
+              TextIO.output(TextIO.stdErr, "\n!!! invalid exit\n");
+              raise Fail "exit")
           (* end case *))
 
     fun run f = callcc (fn k => (
