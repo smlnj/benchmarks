@@ -95,7 +95,7 @@ structure Timing : sig
           val {nbAlloc, nStores, nbAlloc1, nbPromote, nGCs} = read()
           in
             TextIO.output (outS, String.concat[
-                 "{ \"nursery-alloc\" : ", LargeInt.toString nbAlloc,
+                 "\"gc-stats\" : { \"nursery-alloc\" : ", LargeInt.toString nbAlloc,
                  ", \"gen1-alloc\" : ", LargeInt.toString nbAlloc1,
                  ", \"gen1-promote\" : ", LargeInt.toString nbPromote,
                  ", \"num-gcs\" : [", String.concatWithMap "," Int.toString nGCs, "] }"
@@ -103,7 +103,8 @@ structure Timing : sig
           end
     end (* local *)
 
-    fun runOnce (outfile, doit) = let
+    fun runOnce ("-", doit) = doit TextIO.stdOut
+      | runOnce (outfile, doit) = let
           val outS = TextIO.openAppend outfile
           in
             doit outS;
