@@ -6,6 +6,8 @@
 # usage: run.sh [ options ] ( benchmark | class ) ...
 #
 
+set -x
+
 # get the path of the benchmark root directory
 here=$(pwd)
 bindir=$(dirname "$0")
@@ -63,7 +65,7 @@ usage() {
 measure_execution() {
   prog=$1
   progdir="$programsdir/$prog"
-  if [ x"$single_file"=xyes ] ; then
+  if [ x"$single_file" = xyes ] ; then
     $bindir/make-single-file.sh -quiet $prog
     cd $progdir
     $smlcmd @SMLquiet @SMLalloc=$allocsz -m ../../util/sources.cm <<EOF 1>> $logfile 2>&1
@@ -86,7 +88,7 @@ measure_compile() {
   progdir="$programsdir/$prog"
   echo "{ \"program\" : \"$1\"," >> $outfile
   echo "  \"compile\" : [" >> $outfile
-  if [ x"$single_file"=xyes ] ; then
+  if [ x"$single_file" = xyes ] ; then
     $bindir/make-single-file.sh -quiet $prog
     cd $progdir
     for (( i = 0 ; $i < $nruns ; ++i )) ; do
@@ -122,7 +124,7 @@ measure_gc_stats() {
   prog=$1
   progdir="$programsdir/$prog"
   echo "{ \"program\" : \"$1\"," >> $outfile
-  if [ x"$single_file"=xyes ] ; then
+  if [ x"$single_file" = xyes ] ; then
     $bindir/make-single-file.sh -quiet $prog
     cd $progdir
     $smlcmd @SMLquiet @SMLalloc=$allocsz -m ../../util/sources.cm <<EOF 1>> $logfile 2>&1
