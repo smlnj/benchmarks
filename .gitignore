@@ -49,3 +49,5 @@ latex.out/
 
 # Generated files
 single-file/
+LOG-*
+REPORT-*
