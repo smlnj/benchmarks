@@ -93,6 +93,6 @@ structure Main : BMARK =
       else
         (runOne (); loop (n - 1))
 
-    fun doit () = (loop 100; ())
+    fun doit () = (loop 10; ())
 
   end
