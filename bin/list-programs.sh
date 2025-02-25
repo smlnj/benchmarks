@@ -54,6 +54,7 @@ ALL="\
   life \
   logic \
   mandelbrot \
+  mandelbrot-rat \
   mazefun \
   mc-ray \
   mlyacc \
