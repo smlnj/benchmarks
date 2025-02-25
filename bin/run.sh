@@ -100,6 +100,7 @@ EOF
         echo "," >> $outfile
       fi
     done
+    rm -f all.sml
   else
     cd $progdir
     for (( i = 0 ; $i < $nruns ; ++i )) ; do
@@ -130,6 +131,7 @@ measure_gc_stats() {
       use "all.sml";
       Timing.runOnce ("$outfile", Timing.gcStats Main.doit);
 EOF
+    rm -f all.sml
   else
     cd $progdir
     $smlcmd @SMLquiet @SMLalloc=$allocsz -m ../../util/sources.cm <<EOF 1>> $logfile 2>&1
@@ -138,7 +140,7 @@ EOF
 EOF
   fi
   echo "}" >> $outfile
-  exit 0
+  cd $here
 }
 
 # check the program's output
@@ -250,28 +252,49 @@ echo "  \"data\" : [" >> $outfile
 
 # do the measurements (depending on mode)
 #
+first=0
 case $mode in
   execution)
     for p in $programs ; do
       echo "***** $p"
+      if [ "$first" = 0 ]; then 
+        first=1
+      else
+        echo "," >> $outfile
+      fi
       measure_execution $p
     done
   ;;
   compile)
     for p in $programs ; do
       echo "***** $p"
+      if [ "$first" = 0 ]; then 
+        first=1
+      else
+        echo "," >> $outfile
+      fi
       measure_compile $p
     done
   ;;
   gc)
     for p in $programs ; do
       echo "***** $p"
+      if [ "$first" = 0 ]; then 
+        first=1
+      else
+        echo "," >> $outfile
+      fi
       measure_gc_stats $p
     done
   ;;
   check)
     for p in $programs ; do
       echo "***** $p"
+      if [ "$first" = 0 ]; then 
+        first=1
+      else
+        echo "," >> $outfile
+      fi
       check_program $p
     done
   ;;
