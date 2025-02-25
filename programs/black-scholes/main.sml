@@ -15,7 +15,7 @@ structure Main : BMARK =
     val data = let
           val data = BlackScholes.readData "DATA/simlarge.txt"
           in
-            List.concat(List.tabulate(16, fn _ => data))
+            List.concat(List.tabulate(32, fn _ => data))
           end
 
     fun testit outS = let
