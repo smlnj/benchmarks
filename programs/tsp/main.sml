@@ -14,7 +14,7 @@ structure Main : sig
 
     val name = "tsp"
 
-    val problemSz = ref 32767
+    val problemSz = ref (32767 * 4)
     val divideSz = ref 150
 
     fun printLength (outS, Tree.NULL) = print "(* 0 points *)\n"
