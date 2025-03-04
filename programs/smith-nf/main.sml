@@ -57,11 +57,11 @@ val table = [[ 8,  ~3,   1,   3,   6,   9,  ~2,   4,  ~9,  ~9,   2,   3,   8,  ~
              [ 6,   6,  ~5,  ~2,  ~8,  ~2,  ~9,   0,   2,   4,  ~6,  ~9,   9,   0,  ~8,  ~3,  ~1,  ~2,  ~1,   6,   8,   2,  ~9,   5,  ~2,   1,   7,  ~6,   5,   1,  ~1,   4,  ~4,  ~7,  ~6,  ~3,  ~8,   2,   2,   5,   5,  ~6,   5,   3,   3,   7,   4,   7,  ~3,  ~9],
              [~9,   6,  ~4,   1,   3,  ~8,  ~8,  ~8,  ~1,   5,   1,   1,  ~1,   6,   5,   1,  ~1,   5,  ~8,   8,  ~7,  ~5,  ~1,  ~1,   6,  ~8,  ~3,  ~1,  ~2,  ~6,  ~5,  ~5,  ~6,   0,   2,   2,   7,  ~1,  ~5,  ~7,  ~1,  ~3,   7,   6,   0,   2,   4,  ~5,   0,  ~4]]
 
-fun f (x, y) = List.nth (List.nth (table, x), y)
-fun show m = print (Matrix.toString (m, IntInf.toString))
+    fun f (x, y) = List.nth (List.nth (table, x), y)
+    fun show m = print (Matrix.toString (m, IntInf.toString))
 
     fun snf () = let
-          val dim = 35
+          val dim = 33
           val big = Matrix.map (Matrix.make (dim, dim, f), IntInf.fromInt)
           in
             Matrix.fetch(SmithNormalForm.smithNormalForm big, dim - 1, dim - 1)
@@ -79,7 +79,7 @@ fun show m = print (Matrix.toString (m, IntInf.toString))
           fun loop 0 = ()
             | loop n = (snf(); loop(n-1))
           in
-            loop 1
+            loop 5
           end
 
   end

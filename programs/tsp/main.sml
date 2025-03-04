@@ -58,9 +58,12 @@ structure Main : sig
 	  Tree.printList (outS, doit' (!problemSz));
 	  TextIO.output (outS, "linetype solid\n"))
 
-    fun testit strm = printLength (strm, doit' (!problemSz))
+    fun testit strm = printLength (strm, doit' 32767)
 
-    fun doit () = ignore (doit' (!problemSz))
+    fun lp 0 = ()
+      | lp n = (ignore (doit' 262143); lp(n-1))
+
+    fun doit () = lp 25
 
   end
 

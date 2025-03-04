@@ -78,10 +78,11 @@ structure Timing : sig
 
     fun timeIt doit outS = let
 	  val t0 = start()
+          val () = doit ()
+          val t1 = stop t0
 	  in
-	    doit();
 	    TextIO.output1 (outS, #"\t");
-	    output (outS, stop t0);
+	    output (outS, t1);
 	    TextIO.flushOut outS
 	  end
 

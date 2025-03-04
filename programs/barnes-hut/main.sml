@@ -15,17 +15,17 @@ structure Main : BMARK =
     val nbody = 1024
     val tnow = 0.0
     val tstop = 2.0
-    val dtime = 0.025
+    val dtime = 0.0125
     val eps = 0.05
     val tol = 1.0
     val dtout = 0.25
-    val rmin = BH.S.V.tabulate (fn _ => ~2.0)
-    val rsize = 4.0
+    val rmin = BH.S.V.tabulate (fn _ => ~4.0)
+    val rsize = 8.0
     val headline = "Plummer model"
 
     fun doit () = (
-	  BH.srand 0w123;
-	  BH.go {
+	  BH.srand 123.0;
+          BH.go {
 	      output = fn _ => (),
 	      bodies = BH.testdata nbody,
 	      tnow = tnow, tstop = tstop,

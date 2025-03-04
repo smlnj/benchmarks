@@ -83,8 +83,13 @@ structure Main : BMARK =
             print (answer ^ "code_motions " ^ code_motions ^ " \n")
           end
 
-    fun doit () = (
+    fun runOne () = (
           Delay.idempotency := 0;
           ignore (run (ifile, ofile, c_ofile, 9)))
+
+    fun loop 0 = ()
+      | loop n = (runOne(); loop (n-1))
+
+    fun doit () = loop 250
 
   end

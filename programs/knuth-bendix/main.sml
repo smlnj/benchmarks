@@ -567,8 +567,12 @@ fun Group_precedence op1 op2 =
 
     fun greater pair = (case Group_order pair of Greater => true | _ => false)
 
-    fun doit() = kb_complete greater [] Geom_rules
+    fun loop n = if n <= 0
+          then ()
+          else (kb_complete greater [] Geom_rules; loop (n - 1))
+
+
+    fun doit () = loop 100
     fun testit _ = ()
 
   end (* Main *)
-

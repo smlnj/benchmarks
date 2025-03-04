@@ -6,8 +6,6 @@
 # usage: run.sh [ options ] ( benchmark | class ) ...
 #
 
-set -x
-
 # get the path of the benchmark root directory
 here=$(pwd)
 bindir=$(dirname "$0")
@@ -251,28 +249,49 @@ echo "  \"data\" : [" >> $outfile
 
 # do the measurements (depending on mode)
 #
+first=yes
 case $mode in
   execution)
     for p in $programs ; do
       say "***** $p"
+      if [ x"$first" = xyes ]; then
+        first=no
+      else
+        echo "," >> $outfile
+      fi
       measure_execution $p
     done
   ;;
   compile)
     for p in $programs ; do
       say "***** $p"
+      if [ x"$first" = xyes ]; then
+        first=no
+      else
+        echo "," >> $outfile
+      fi
       measure_compile $p
     done
   ;;
   gc)
     for p in $programs ; do
       say "***** $p"
+      if [ x"$first" = xyes ]; then
+        first=no
+      else
+        echo "," >> $outfile
+      fi
       measure_gc_stats $p
     done
   ;;
   check)
     for p in $programs ; do
       say "***** $p"
+      if [ x"$first" = xyes ]; then
+        first=no
+      else
+        echo "," >> $outfile
+      fi
       check_program $p
     done
   ;;
