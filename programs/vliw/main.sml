@@ -49,7 +49,9 @@ structure Main : BMARK =
 
     fun run (ifile:string, ofile:string, c_ofile:string, ws:int) = let
           val foo = Ntypes.init_names()
-          val i = (dodelay o BreakInst.breaki o ReadAbs.read o TextIO.openIn) ifile
+          val inS = TextIO.openIn ifile
+          val i = (dodelay o BreakInst.breaki o ReadAbs.read) inS
+          val _ = TextIO.closeIn inS
           (* building nodes *)
           val (j, p) = ReadI.readI i
           (* writing unopt *)
