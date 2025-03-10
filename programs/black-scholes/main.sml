@@ -10,7 +10,7 @@ structure Main : BMARK =
     val name = "black-scholes"
 
     (* preload the data for the timing tests; the "large" data set has 64K entries;
-     * we scale that up to 1M entries by concatenating the list.
+     * we scale that up to 2M entries by concatenating the list.
      *)
     val data = let
           val data = BlackScholes.readData "DATA/simlarge.txt"

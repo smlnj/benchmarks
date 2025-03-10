@@ -886,7 +886,7 @@ fun print_state ((v1,v2),(r,z),alpha,s,rho,p,q,epsilon,theta,deltat,c) = (
 	  in
 	    if (c = 6787 andalso delta = ~33093)
 	      then ()
-	      else ()
+	      else TextIO.output (TextIO.stdErr, "*** ERROR ***\n")
 	  end
 
   end; (* functor Simple *)

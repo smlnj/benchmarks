@@ -49,7 +49,9 @@ structure Main : BMARK =
 
     fun run (ifile:string, ofile:string, c_ofile:string, ws:int) = let
           val foo = Ntypes.init_names()
-          val i = (dodelay o BreakInst.breaki o ReadAbs.read o TextIO.openIn) ifile
+          val inS = TextIO.openIn ifile
+          val i = (dodelay o BreakInst.breaki o ReadAbs.read) inS
+          val _ = TextIO.closeIn inS
           (* building nodes *)
           val (j, p) = ReadI.readI i
           (* writing unopt *)
@@ -87,12 +89,9 @@ structure Main : BMARK =
           Delay.idempotency := 0;
           ignore (run (ifile, ofile, c_ofile, 9)))
 
-    fun loop n =
-      if n <= 0 then
-        ()
-      else
-        (runOne (); loop (n - 1))
+    fun loop 0 = ()
+      | loop n = (runOne(); loop (n-1))
 
-    fun doit () = (loop 10; ())
+    fun doit () = loop 250
 
   end
