@@ -1,0 +1,20 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2025 The Fellowship of SML/NJ (https://www.smlnj.org)
+ * All rights reserved.
+ *)
+
+Library
+
+  structure Main
+
+is
+
+  $/basis.cm
+
+  ../../util/sources.cm
+
+  ../common/cml.sml
+
+  main.sml
+  pingpong.sml

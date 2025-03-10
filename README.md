@@ -73,13 +73,15 @@ directory.
 | [`mandelbrot-rat`](programs/mandelbrot-rat/README.md) |   xxx | Mandelbrot-set computation using rationals |
 | [`mazefun`](programs/mazefun/README.md)               |   185 | Maze generator                             |
 | [`mc-ray`](programs/mc-ray/README.md)                 |   736 | Monte-Carlo ray tracer                     |
-| [`mlyacc`](programs/mlyacc/README.md)                 | 5,566 |                                            |
+| [`mlyacc`](programs/mlyacc/README.md)                 | 5,566 | LALR(1) parser generator                   |
 | [`nbody`](programs/nbody/README.md)                   |   135 | O(n^2) N-body solver                       |
 | [`nucleic`](programs/nucleic/README.md)               | 2,920 |                                            |
 | [`pia`](programs/pia/README.md)                       |   xxx |                                            |
+| [`pingpong`](programs/pingpong/README.md)             |   126 | Message-passing microbenchmark             |
 | [`plclub-ray`](programs/plclub-ray/README.md)         | 2,026 | Another ray tracer                         |
 | [`ratio-regions`](programs/ratio-regions/README.md)   |   xxx |                                            |
 | [`ray`](programs/ray/README.md)                       |   352 |                                            |
+| [`sieve`](programs/sieve/README.md)                   |   159 | Message-passing implementation of Sieve of Eratosthenes |
 | [`simple`](programs/simple/README.md)                 |   760 | A spherical fluid-dynamics program         |
 | [`smith-nf`](programs/smith-nf/README.md)             |   371 | Computes the Smith Normal Form             |
 | [`tsp`](programs/tsp/README.md)                       |   304 | A Traveling-Sales-Person solver            |

@@ -61,8 +61,10 @@ ALL="\
   mc-ray \
   mlyacc \
   nucleic \
+  pingpong \
   plclub-ray \
   simple \
+  sieve \
   smith-nf \
   tsp \
   vliw \
@@ -79,6 +81,9 @@ ARRAY_DESC="programs that make significant use of arrays or vectors"
 
 BIGNUM="smith-nf"
 BIGNUM_DESC="programs that make significant use of the IntInf.int type"
+
+CML="pingpong sieve"
+CML_DESC="multi-threaded message-passing programs"
 
 FUNCTOR="barnes-hut dlx mlyacc simple"
 FUNCTOR_DESC="programs that are assembled from functor applications"
@@ -114,6 +119,7 @@ while [ "$#" != "0" ]; do
         LIST|list) classes="$classes LIST" ;;
         ARRAY|array) classes="$classes ARRAY" ;;
         BIGNUM|bignum) classes="$classes BIGNUM" ;;
+        CML|cml) classes="$classes CML" ;;
         FUNCTOR|functor) classes="$classes FUNCTOR" ;;
         CLASSIC|classic) classes="$classes CLASSIC" ;;
         SMLNJ|smlnj) classes="$classes SMLNJ" ;;
