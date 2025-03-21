@@ -7,8 +7,6 @@
 # usage: run.sh [ options ] ( benchmark | class ) ...
 #
 
-set -x
-
 # get the path of the benchmark root directory
 here=$(pwd)
 bindir=$(dirname "$0")
@@ -254,13 +252,13 @@ echo "  \"data\" : [" >> $outfile
 
 # do the measurements (depending on mode)
 #
-first=0
+first=yes
 case $mode in
   execution)
     for p in $programs ; do
-      echo "***** $p"
-      if [ "$first" = 0 ]; then 
-        first=1
+      say "***** $p"
+      if [ x"$first" = xyes ]; then
+        first=no
       else
         echo "," >> $outfile
       fi
@@ -269,9 +267,9 @@ case $mode in
   ;;
   compile)
     for p in $programs ; do
-      echo "***** $p"
-      if [ "$first" = 0 ]; then 
-        first=1
+      say "***** $p"
+      if [ x"$first" = xyes ]; then
+        first=no
       else
         echo "," >> $outfile
       fi
@@ -280,9 +278,9 @@ case $mode in
   ;;
   gc)
     for p in $programs ; do
-      echo "***** $p"
-      if [ "$first" = 0 ]; then 
-        first=1
+      say "***** $p"
+      if [ x"$first" = xyes ]; then
+        first=no
       else
         echo "," >> $outfile
       fi
@@ -291,9 +289,9 @@ case $mode in
   ;;
   check)
     for p in $programs ; do
-      echo "***** $p"
-      if [ "$first" = 0 ]; then 
-        first=1
+      say "***** $p"
+      if [ x"$first" = xyes ]; then
+        first=no
       else
         echo "," >> $outfile
       fi

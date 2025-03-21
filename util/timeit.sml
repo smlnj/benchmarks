@@ -13,12 +13,12 @@ structure Timing : sig
     val timeMake : string -> TextIO.outstream -> unit
 
     (* time the running of a function *)
-    val timeIt : (unit -> 'a) -> TextIO.outstream -> unit
+    val timeIt : (unit -> unit) -> TextIO.outstream -> unit
 
     (* report the GC statistics for running a function; note that this measurement
      * requires version 110.99.7+ or 2024.3+
      *)
-    val gcStats : (unit -> 'a) -> TextIO.outstream -> unit
+    val gcStats : (unit -> unit) -> TextIO.outstream -> unit
 
     val runOnce : string * (TextIO.outstream -> unit) -> unit
 
@@ -78,7 +78,7 @@ structure Timing : sig
 
     fun timeIt doit outS = let
 	  val t0 = start()
-          val _  = doit ()
+          val () = doit ()
           val t1 = stop t0
 	  in
 	    TextIO.output1 (outS, #"\t");
@@ -92,7 +92,7 @@ structure Timing : sig
     in
     fun gcStats doit outS = let
           val () = reset true
-          val _ = doit()
+          val () = doit()
           val {nbAlloc, nStores, nbAlloc1, nbPromote, nGCs} = read()
           in
             TextIO.output (outS, String.concat[
