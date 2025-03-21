@@ -199,7 +199,7 @@ structure Main : BMARK =
             printr (out, zm); say(out, "\n")
           end (* test *)
 
-    fun loop_np out i np = if i > 13
+    fun loop_np out i np = if i > 19
           then ()
           else (test out np; loop_np out (i+1) (np*2))
 
