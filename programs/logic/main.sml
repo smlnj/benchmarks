@@ -13,7 +13,15 @@ structure Main : BMARK =
     fun testit strm = Data.exists(fn Z => Data.solution2 Z (fn () => raise Done))
 	  handle Done => TextIO.output(strm, "yes\n")
 
-    fun doit () = Data.exists(fn Z => Data.solution2 Z (fn () => raise Done))
-	  handle Done => ()
+    fun loop n =
+      if n <= 0 then
+        ()
+      else
+        (Data.exists(fn Z => Data.solution2 Z (fn () => raise Done))
+           handle Done => ();
+         loop (n - 1))
+
+
+    fun doit () = loop 10
 
   end; (* Main *)
