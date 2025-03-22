@@ -8,7 +8,10 @@ structure Main : BMARK =
   struct
     val name = "nucleic"
 
-    fun doit () = (Nucleic.anticodon_length (); ())
+    fun loop n =
+      if n <= 0 then () else (Nucleic.anticodon_length (); loop (n - 1))
+
+    fun doit () = loop 1000
 
     fun testit strm = TextIO.output(strm, concat[
 	    Int.toString (Nucleic.anticodon_length ()), "\n"
