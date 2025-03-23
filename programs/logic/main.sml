@@ -22,6 +22,6 @@ structure Main : BMARK =
          loop (n - 1))
 
 
-    fun doit () = loop 10
+    fun doit () = loop 60
 
   end; (* Main *)

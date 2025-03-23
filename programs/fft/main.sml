@@ -199,7 +199,9 @@ structure Main : BMARK =
             printr (out, zm); say(out, "\n")
           end (* test *)
 
-    fun loop_np out i np = if i > 19
+    val N = 21
+
+    fun loop_np out i np = if i > N
           then ()
           else (test out np; loop_np out (i+1) (np*2))
 

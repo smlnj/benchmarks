@@ -23,7 +23,7 @@ structure Main : BMARK =
     val rsize = 8.0
     val headline = "Plummer model"
 
-    fun doit () = (
+    fun doOne () = (
 	  BH.srand 123.0;
           BH.go {
 	      output = fn _ => (),
@@ -33,6 +33,10 @@ structure Main : BMARK =
 	      rmin = rmin,
 	      rsize = rsize
 	    })
+
+    fun loop n = if n <= 0 then () else (doOne (); loop (n - 1))
+
+    fun doit () = loop 10
 
     fun testit outS = let
           val nbody = 256 (* smaller problem for testing *)

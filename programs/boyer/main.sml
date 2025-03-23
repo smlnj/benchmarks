@@ -66,7 +66,10 @@ structure Main : BMARK =
 	  then TextIO.output (outstrm, "ok\n")
 	  else TextIO.output (outstrm, "fail\n")
 
-    fun doit () = ignore (tautp (apply_subst subst term))
+    fun loop n =
+      if n <= 0 then () else (tautp (apply_subst subst term); loop (n - 1))
+
+    fun doit () = loop 1300
 
   end; (* Main *)
 

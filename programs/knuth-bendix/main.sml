@@ -572,7 +572,7 @@ fun Group_precedence op1 op2 =
           else (kb_complete greater [] Geom_rules; loop (n - 1))
 
 
-    fun doit () = loop 100
+    fun doit () = loop 300
     fun testit _ = ()
 
   end (* Main *)

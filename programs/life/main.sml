@@ -153,7 +153,7 @@ structure Main : BMARK =
           fun lp 0 = ()
             | lp n = (runOnce(); lp(n-1))
           in
-            lp 100
+            lp 1000
           end
 
     fun testit strm = show (fn c => TextIO.output (strm, c)) (runOnce())

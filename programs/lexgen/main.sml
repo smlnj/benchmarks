@@ -12,7 +12,7 @@ structure Main : BMARK =
     fun loop n =
       if n <= 0 then () else (LexGen.lexGen "DATA/ml.lex"; loop (n - 1))
 
-    fun doit () = loop 100
+    fun doit () = loop 500
 
 (* FIXME: need to generate output *)
     fun testit outS = LexGen.lexGen "DATA/ml.lex"

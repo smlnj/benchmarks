@@ -25,10 +25,14 @@ structure Main : BMARK =
             List.app f (BlackScholes.readData "DATA/simsmall.txt")
           end
 
-    fun doit () = let
+    fun doOne () = let
           val prices = List.map BlackScholes.price data
 	  in
 	    TextIO.print (Real.toString(hd prices) ^ "\n")
 	  end
+    fun loop n =
+      if n <= 0 then () else (doOne (); loop (n - 1)) 
+
+    fun doit () = loop 10
 
   end
