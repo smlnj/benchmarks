@@ -9,10 +9,14 @@ structure Main : BMARK =
 
     val name = "mlyacc"
 
-    fun loop n =
-      if n <= 0 then () else (ParseGen.parseGen "DATA/ml.grm"; loop (n - 1))
+    fun runOnce () = ParseGen.parseGen "DATA/ml.grm"
 
-    fun doit() = loop 200
+    fun doit () = let
+	  fun lp 0 = ()
+	    | lp i = (runOnce(); lp(i-1))
+	  in
+	    lp 250
+	  end
 
     fun testit _ = ParseGen.parseGen "DATA/ml.grm"
 
