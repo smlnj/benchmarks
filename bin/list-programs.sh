@@ -63,8 +63,9 @@ ALL="\
   nucleic \
   pingpong \
   plclub-ray \
-  simple \
+  sat \
   sieve \
+  simple \
   smith-nf \
   tsp \
   vliw \
@@ -98,7 +99,10 @@ MLTON="dlx smith-nf"
 MLTON_DESC="programs from the MLton bencmark suite"
 
 LARCENY="mazefun"
-LARCENY_DESC="programs from the MLton bencmark suite"
+LARCENY_DESC="programs from the Larceny bencmark suite"
+
+SCHEME="$LARCENY sat"
+SCHEME_DESC="programs ported from Scheme (includes the Larceny bencmarks)"
 
 classes=""
 
@@ -125,6 +129,7 @@ while [ "$#" != "0" ]; do
         SMLNJ|smlnj) classes="$classes SMLNJ" ;;
         MLTON|mlton) classes="$classes MLTON" ;;
         LARCENY|larceny) classes="$classes LARCENY" ;;
+        SCHEME|scheme) classes="$classes SCHEME" ;;
         *) echo "$cmd: unknown benchmark class '$arg'"
           exit 1
           ;;

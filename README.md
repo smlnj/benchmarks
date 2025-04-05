@@ -81,6 +81,7 @@ directory.
 | [`plclub-ray`](programs/plclub-ray/README.md)         | 2,026 | Another ray tracer                         |
 | [`ratio-regions`](programs/ratio-regions/README.md)   |   xxx |                                            |
 | [`ray`](programs/ray/README.md)                       |   352 |                                            |
+| [`sat`](programs/sat/README.md)                       |    53 | Brute-force SAT solver                     |
 | [`sieve`](programs/sieve/README.md)                   |   159 | Message-passing implementation of Sieve of Eratosthenes |
 | [`simple`](programs/simple/README.md)                 |   760 | A spherical fluid-dynamics program         |
 | [`smith-nf`](programs/smith-nf/README.md)             |   371 | Computes the Smith Normal Form             |
