@@ -43,12 +43,6 @@ structure Main : BMARK =
 
     fun testit outS = runAll (SOME outS)
 
-    fun doit () = let
-          fun loop n = if n = 0
-                then ()
-                else (runAll NONE; loop (n-1))
-          in
-            loop 5
-          end
+    fun doit () = runAll NONE
 
   end
