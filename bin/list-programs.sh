@@ -46,10 +46,8 @@ sort_items() {
 }
 
 ALL="\
-  barnes-hut \
   black-scholes \
-  boyer \
-  delta-blue \
+  count-graphs \
   dlx \
   fft \
   knuth-bendix \
@@ -60,6 +58,7 @@ ALL="\
   mazefun \
   mc-ray \
   mlyacc \
+  nbody \
   nucleic \
   pingpong \
   plclub-ray \
@@ -70,8 +69,13 @@ ALL="\
   tsp \
   vliw \
   "
+BROKEN="\
+  barnes-hut \
+  boyer \
+  delta-blue \
+  "
 
-FP="barnes-hut black-scholes fft mandelbrot mc-ray nucleic plclub-ray smith-nf tsp"
+FP="barnes-hut black-scholes fft mandelbrot mc-ray nbody nucleic plclub-ray smith-nf tsp"
 FP_DESC="programs that make significant use of floating-point arithmetic"
 
 LIST="count-graphs life"
