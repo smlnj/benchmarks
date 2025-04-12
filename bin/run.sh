@@ -21,24 +21,26 @@ if [ ! -d $root/programs ] ; then
   exit 1
 fi
 
-# time stamp for output files
-timestamp=$(date +"%F-%H-%M-%S")
-host=$(hostname -s)
+# time stamp and file suffix for output files
+timestamp=$(date +"%FT%H:%M:%S")
+fileid=$(echo $timestamp | tr "T:" "--")
 
+host=$(hostname -s)
 cmd=$0
 smlcmd=sml
 single_file=no
 mode="execution"  # can also be "compile", "gc", and "test"
 run_time=yes
-logfile="LOG-$timestamp"
-outfile="REPORT-$timestamp.json"
+logfile="LOG-$fileid"
+outfile="REPORT-$fileid.json"
 nruns=5
 allocsz="1024k"
 programs=""
-verbose=yes
+progress=no
+mlton=no # for future MLton benchmarking support
 
 say() {
-  if [ x"$verbose" = xno ] ; then
+  if [ x"$progress" = xyes ] ; then
     echo $@
   fi
 }
@@ -56,6 +58,7 @@ usage() {
   echo "    -nruns <n>       specify the number of runs per program"
   echo "    -outfile <file>  specify the output file"
   echo "    -log <file>      specify the log file (specify none to disable log)"
+  echo "    -progress        print progress messages to stdout"
   exit $1
 }
 
@@ -150,21 +153,20 @@ check_program() {
 #
 while [ "$#" != "0" ]; do
   arg=$1
+  shift
   case "$arg" in
     -alloc)
-      shift
       if [ "$#" != 0 ] ; then
         allocsz="$1"; shift
       else
         usage 1
       fi
     ;;
-    -check) shift; mode="check" ;;
-    -compile-time) shift; mode="compile" ;;
-    -gc-stats) shift; mode="gc" ;;
+    -check) mode="check" ;;
+    -compile-time) mode="compile" ;;
+    -gc-stats) mode="gc" ;;
     -h|-help) usage 0 ;;
     -log)
-      shift
       if [ "$#" != 0 ] ; then
         if [ x"$1" = xnone ] ; then
           logfile="/dev/null"
@@ -177,7 +179,6 @@ while [ "$#" != "0" ]; do
       fi
     ;;
     -nruns)
-      shift;
       if [ "$#" != 0 ] ; then
         nruns="$1"; shift
       else
@@ -185,16 +186,15 @@ while [ "$#" != "0" ]; do
       fi
     ;;
     -o)
-      shift
       if [ "$#" != 0 ] ; then
         outfile="$1"; shift
       else
         usage 1
       fi
     ;;
-    -single-file) shift; single_file="yes" ;;
+    -progress) progress="yes" ;;
+    -single-file) single_file="yes" ;;
     -sml)
-      shift
       if [ "$#" != 0 ] ; then
         smlcmd="$1"; shift
       else
@@ -203,7 +203,6 @@ while [ "$#" != "0" ]; do
     ;;
     -*) echo "$cmd: unknown option '$arg'"; usage 1 ;;
     *)
-      shift
       if [ -d "$programsdir/$arg" ] ; then
         programs="$programs $arg"
       else
@@ -233,10 +232,29 @@ case $outfile in
   *) outfile="$outdir/$outfile" ;;
 esac
 
+# get the version information for the SML command
+#
+if [ x"$mlton" = xno ] ; then
+  smlvers=$($smlcmd @SMLversion)
+  case $smlvers in
+    sml*) # old-style version string
+      smlvers=$(echo $smlvers | sed -e 's/sml //')
+      ;;
+    *) ;;
+  esac
+  smlsys="SML/NJ"
+else
+  smlsys="MLton"
+  echo "mlton not supported yet"
+  exit 1
+fi
+
 # ouput meta data to report file
 #
 echo "{ \"timestamp\" : \"${timestamp}\"," > $outfile
 echo "  \"sml-command\" : \"${smlcmd}\"," >> $outfile
+echo "  \"sml-system\" : \"${smlsys}\"," >> $outfile
+echo "  \"sml-version\" : \"${smlvers}\"," >> $outfile
 if [ x"$single_file" = xyes ] ; then
   SF=true
 else
@@ -253,7 +271,7 @@ first=yes
 case $mode in
   execution)
     for p in $programs ; do
-      say "***** $p"
+      say "# $p"
       if [ x"$first" = xyes ]; then
         first=no
       else
@@ -264,7 +282,7 @@ case $mode in
   ;;
   compile)
     for p in $programs ; do
-      say "***** $p"
+      say "# $p"
       if [ x"$first" = xyes ]; then
         first=no
       else
@@ -275,7 +293,7 @@ case $mode in
   ;;
   gc)
     for p in $programs ; do
-      say "***** $p"
+      say "# $p"
       if [ x"$first" = xyes ]; then
         first=no
       else
@@ -286,7 +304,7 @@ case $mode in
   ;;
   check)
     for p in $programs ; do
-      say "***** $p"
+      say "# $p"
       if [ x"$first" = xyes ]; then
         first=no
       else
