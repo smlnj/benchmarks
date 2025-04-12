@@ -54,7 +54,7 @@ structure Main : sig
     fun dumpPS outS = (
 	  TextIO.output (outS, "newgraph\n");
 	  TextIO.output (outS, "newcurve pts\n");
-	  Tree.printList (outS, doit' (!problemSz));
+	  Tree.printList (outS, doit' 262143);
 	  TextIO.output (outS, "linetype solid\n"))
 
     fun testit strm = printLength (strm, doit' 32767)
