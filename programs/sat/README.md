@@ -5,4 +5,3 @@ This is a brute-force SAT solver ported from Scheme (see
 We have extended the size of the problem to involve ten variables (up
 from the four) and added some additional clauses to increase the amount
 of work.
-
