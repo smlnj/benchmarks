@@ -134,7 +134,6 @@ EOF
     done
   fi
   echo "] }" >> $outfile
-  exit 0
 }
 
 # measure allocation/GC stats for a benchmark
@@ -157,7 +156,6 @@ EOF
 EOF
   fi
   echo "}" >> $outfile
-  exit 0
 }
 
 # check the program's output
@@ -303,11 +301,11 @@ case $mode in
     for p in $programs ; do
       say "# $p"
       if [ x"$first" = xyes ]; then
-        clean_cm "$programsdir/$p"
         first=no
       else
         echo "," >> $outfile
       fi
+      clean_cm "$programsdir/$p"
       measure_execution $p
     done
   ;;
@@ -319,6 +317,7 @@ case $mode in
       else
         echo "," >> $outfile
       fi
+      clean_cm "$programsdir/$p"
       measure_compile $p
     done
   ;;
@@ -326,11 +325,11 @@ case $mode in
     for p in $programs ; do
       say "# $p"
       if [ x"$first" = xyes ]; then
-        clean_cm "$programsdir/$p"
         first=no
       else
         echo "," >> $outfile
       fi
+      clean_cm "$programsdir/$p"
       measure_gc_stats $p
     done
   ;;
@@ -338,11 +337,11 @@ case $mode in
     for p in $programs ; do
       say "# $p"
       if [ x"$first" = xyes ]; then
-        clean_cm "$programsdir/$p"
         first=no
       else
         echo "," >> $outfile
       fi
+      clean_cm "$programsdir/$p"
       check_program $p
     done
   ;;
