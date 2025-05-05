@@ -58,7 +58,7 @@ usage() {
   echo "    -gc-stats        measure and report allocation and GC counts"
   echo "    -check           check benchmark outputs"
   echo "    -nruns <n>       specify the number of runs per program (default 5)"
-  echo "    -outfile <file>  specify the output file"
+  echo "    -o <file>        specify the output file"
   echo "    -log <file>      specify the log file (specify none to disable log)"
   echo "    -progress        print progress messages to stdout"
   echo "    -C<ctl>=<value>  specify SML/NJ compiler flags"
