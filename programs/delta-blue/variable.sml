@@ -8,6 +8,7 @@ structure Variable : sig
 
     type t
 
+    (* create a new variable with the given name, initial value, and strength *)
     val new : string * int * Strength.t -> t
 
     val toString : t -> string

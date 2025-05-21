@@ -10,8 +10,8 @@ structure RepTypes =
   struct
 
     datatype variable = Variable of {
-        name : string,
-        value : int ref,
+        name : string,                          (* variable name *)
+        value : int ref,                        (* current value *)
         constraints : constraint list ref,      (* constraints that depend on this variable *)
         determinedBy : constraint ref,          (* the constraint that determines
                                                  * the value of this variable.
