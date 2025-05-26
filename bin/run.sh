@@ -9,21 +9,21 @@
 # get the path of the benchmark root directory
 here=$(pwd)
 bindir=$(dirname "$0")
-cd "$bindir/.."
+cd "$bindir/.." || exit 1
 root=$(pwd)
 programsdir="$root/programs"
 outdir="$root/reports"
-cd $here
+cd "$here" || exit 1
 
 # sanity check
-if [ ! -d $root/programs ] ; then
+if [ ! -d "$root/programs" ] ; then
   echo "$cmd: missing programs at $root"
   exit 1
 fi
 
 # time stamp and file suffix for output files
 timestamp=$(date +"%FT%H:%M:%S")
-fileid=$(echo $timestamp | tr "T:" "--")
+fileid=$(echo "$timestamp" | tr "T:" "--")
 
 host=$(hostname -s)
 cmd=$0
@@ -42,9 +42,9 @@ mlton=no # for future MLton benchmarking support
 
 say() {
   if [ x"$progress" = xyes ] ; then
-    echo $@
+    echo "$*"
   fi
-  echo $@ >> $logfile
+  echo "$*" >> $logfile
 }
 
 usage() {
@@ -62,100 +62,100 @@ usage() {
   echo "    -log <file>      specify the log file (specify none to disable log)"
   echo "    -progress        print progress messages to stdout"
   echo "    -C<ctl>=<value>  specify SML/NJ compiler flags"
-  exit $1
+  exit "$1"
 }
 
 # remove CM files to get a fresh build (except when in single-file mode)
 clean_cm() {
   if [ x"$single_file" = xno ] ; then
     echo "# removing CM files from $1" >> $logfile
-    find $1 \( -name .cm -exec rm -rf {} \; -prune \)
+    find "$1" \( -name .cm -exec rm -rf {} \; -prune \)
   fi
 }
 
 # run the SML command with the benchmark utilities included
 run_sml() {
-  echo "$smlcmd @SMLquiet @SMLalloc=$allocsz $controls -m ../../util/sources.cm $@" >> $logfile
-  $smlcmd @SMLquiet @SMLalloc=$allocsz $controls -m ../../util/sources.cm $@
+  echo "$smlcmd @SMLquiet @SMLalloc=$allocsz $controls -m ../../util/sources.cm $*" >> $logfile
+  $smlcmd @SMLquiet "@SMLalloc=$allocsz" $controls -m ../../util/sources.cm "$@"
 }
 
 # measure execution time for a benchmark
 measure_execution() {
-  prog=$1
+  prog="$1"
   progdir="$programsdir/$prog"
   if [ x"$single_file" = xyes ] ; then
-    $bindir/make-single-file.sh -quiet $prog
-    cd $progdir
-    run_sml <<EOF 1>> $logfile 2>&1
+    "$bindir/make-single-file.sh" -quiet "$prog"
+    cd "$progdir" || exit 1
+    run_sml <<EOF 1>> "$logfile" 2>&1
       use "all.sml";
       Timing.run (Main.name, "runs", $nruns, "$outfile", Timing.timeIt Main.doit);
 EOF
     rm -f all.sml
   else
-    cd $progdir
-    run_sml sources.cm <<EOF 1>> $logfile 2>&1
+    cd "$progdir" || exit 1
+    run_sml sources.cm <<EOF 1>> "$logfile" 2>&1
       Timing.run (Main.name, "runs", $nruns, "$outfile", Timing.timeIt Main.doit);
 EOF
   fi
-  cd $here
+  cd "$here" || exit 1
 }
 
 # measure compile time for a benchmark
 measure_compile() {
-  prog=$1
+  prog="$1"
   progdir="$programsdir/$prog"
-  echo "{ \"program\" : \"$1\"," >> $outfile
-  echo "  \"compile\" : [" >> $outfile
+  echo "{ \"program\" : \"$1\"," >> "$outfile"
+  echo "  \"compile\" : [" >> "$outfile"
   if [ x"$single_file" = xyes ] ; then
-    $bindir/make-single-file.sh -quiet $prog
-    cd $progdir
-    for (( i = 0 ; $i < $nruns ; ++i )) ; do
-      run_sml <<EOF 1>> $logfile 2>&1
+    "$bindir/make-single-file.sh" -quiet "$prog"
+    cd "$progdir" || exit 1
+    for i in $(seq "$nruns"); do
+      run_sml <<EOF 1>> "$logfile" 2>&1
         Timing.runOnce ("$outfile", Timing.timeUse "all.sml");
 EOF
-      if (( $i == $nruns-1 )) ; then
-        echo "" >> $outfile
+      if [ "$i" -eq "$nruns" ] ; then
+        echo "" >> "$outfile"
       else
-        echo "," >> $outfile
+        echo "," >> "$outfile"
       fi
     done
   else
-    cd $progdir
-    for (( i = 0 ; $i < $nruns ; ++i )) ; do
-      rm -rf $root/util/.cm .cm
-      run_sml <<EOF 1>> $logfile 2>&1
+    cd "$progdir" || exit 1
+    for i in $(seq "$nruns") ; do
+      rm -rf "$root/util/.cm" .cm
+      run_sml <<EOF 1>> "$logfile" 2>&1
         Timing.runOnce ("$outfile", Timing.timeMake "sources.cm");
 EOF
-      if (( $i == $nruns-1 )) ; then
-        echo "" >> $outfile
+      if [ "$i" -eq "$nruns" ]; then
+        echo "" >> "$outfile"
       else
-        echo "," >> $outfile
+        echo "," >> "$outfile"
       fi
     done
   fi
-  echo "] }" >> $outfile
+  echo "] }" >> "$outfile"
 }
 
 # measure allocation/GC stats for a benchmark
 measure_gc_stats() {
-  prog=$1
+  prog="$1"
   progdir="$programsdir/$prog"
-  echo "{ \"program\" : \"$1\"," >> $outfile
+  echo "{ \"program\" : \"$1\"," >> "$outfile"
   if [ x"$single_file" = xyes ] ; then
-    $bindir/make-single-file.sh -quiet $prog
-    cd $progdir
-    run_sml <<EOF 1>> $logfile 2>&1
+    "$bindir/make-single-file.sh" -quiet "$prog"
+    cd "$progdir" || exit 1
+    run_sml <<EOF 1>> "$logfile" 2>&1
       use "all.sml";
       Timing.runOnce ("$outfile", Timing.gcStats Main.doit);
 EOF
   else
-    cd $progdir
-    run_sml <<EOF 1>> $logfile 2>&1
+    cd "$progdir" || exit 1
+    run_sml <<EOF 1>> "$logfile" 2>&1
       CM.make "sources.cm";
       Timing.runOnce ("$outfile", Timing.gcStats Main.doit);
 EOF
   fi
-  echo "}" >> $outfile
+  echo "}" >> "$outfile"
 }
 
 # check the program's output
@@ -228,7 +228,7 @@ while [ "$#" != "0" ]; do
       if [ -d "$programsdir/$arg" ] ; then
         programs="$programs $arg"
       else
-        c_progs=$($bindir/list-programs.sh -compact $arg)
+        c_progs=$("$bindir/list-programs.sh" -compact "$arg")
         if [ "$?" != 0 ] ; then
           usage 1
         fi
@@ -260,7 +260,7 @@ if [ x"$mlton" = xno ] ; then
   smlvers=$($smlcmd @SMLversion)
   case $smlvers in
     sml*) # old-style version string
-      smlvers=$(echo $smlvers | sed -e 's/sml //')
+      smlvers=$(echo "$smlvers" | sed -e 's/sml //')
       ;;
     *) ;;
   esac
@@ -272,25 +272,26 @@ else
 fi
 
 # ouput meta data to report file
-#
-echo "{ \"timestamp\" : \"${timestamp}\"," > $outfile
-echo "  \"sml-command\" : \"${smlcmd}\"," >> $outfile
-echo "  \"sml-system\" : \"${smlsys}\"," >> $outfile
-echo "  \"sml-version\" : \"${smlvers}\"," >> $outfile
-if [ x"$controls" = x ] ; then
-  echo "  \"sml-options\" : none," >> $outfile
-else
-  echo "  \"sml-options\" : \"$controls\"," >> $outfile
-fi
-if [ x"$single_file" = xyes ] ; then
-  SF=true
-else
-  SF=false
-fi
-echo "  \"single-file\" : ${SF}," >> $outfile
-echo "  \"mode\" : \"${mode}\"," >> $outfile
-echo "  \"alloc\" : \"${allocsz}\"," >> $outfile
-echo "  \"data\" : [" >> $outfile
+{
+    echo "{ \"timestamp\" : \"${timestamp}\","
+    echo "  \"sml-command\" : \"${smlcmd}\","
+    echo "  \"sml-system\" : \"${smlsys}\","
+    echo "  \"sml-version\" : \"${smlvers}\","
+    if [ x"$controls" = x ] ; then
+      echo "  \"sml-options\" : none,"
+    else
+      echo "  \"sml-options\" : \"$controls\","
+    fi
+    if [ x"$single_file" = xyes ] ; then
+      SF=true
+    else
+      SF=false
+    fi
+    echo "  \"single-file\" : ${SF},"
+    echo "  \"mode\" : \"${mode}\","
+    echo "  \"alloc\" : \"${allocsz}\","
+    echo "  \"data\" : ["
+} > "$outfile"
 
 # do the measurements (depending on mode)
 #
@@ -306,7 +307,7 @@ case $mode in
         echo "," >> $outfile
       fi
       clean_cm "$programsdir/$p"
-      measure_execution $p
+      measure_execution "$p"
     done
   ;;
   compile)
@@ -315,10 +316,10 @@ case $mode in
       if [ x"$first" = xyes ]; then
         first=no
       else
-        echo "," >> $outfile
+        echo "," >> "$outfile"
       fi
       clean_cm "$programsdir/$p"
-      measure_compile $p
+      measure_compile "$p"
     done
   ;;
   gc)
@@ -327,10 +328,10 @@ case $mode in
       if [ x"$first" = xyes ]; then
         first=no
       else
-        echo "," >> $outfile
+        echo "," >> "$outfile"
       fi
       clean_cm "$programsdir/$p"
-      measure_gc_stats $p
+      measure_gc_stats "$p"
     done
   ;;
   check)
@@ -339,12 +340,12 @@ case $mode in
       if [ x"$first" = xyes ]; then
         first=no
       else
-        echo "," >> $outfile
+        echo "," >> "$outfile"
       fi
       clean_cm "$programsdir/$p"
-      check_program $p
+      check_program "$p"
     done
   ;;
 esac
 
-echo "]}" >> $outfile
+echo "]}" >> "$outfile"
