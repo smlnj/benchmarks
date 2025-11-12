@@ -18,7 +18,7 @@ cmd="list-programs.sh"
 compact=no
 all_programs=no
 
-CLASSES="FP LIST ARRAY BIGNUM FUNCTOR CLASSIC SMLNJ MLTON LARCENY"
+CLASSES="FP LIST ARRAY BIGNUM FUNCTOR CLASSIC SMLNJ MANTICORE MLTON LARCENY"
 
 usage() {
   echo "usage: $cmd [ options ] <class> ..."
@@ -56,6 +56,7 @@ ALL="\
   mandelbrot \
   mazefun \
   mc-ray \
+  minimax \
   mlyacc \
   nbody \
   nucleic \
@@ -78,10 +79,10 @@ BROKEN="\
 FP="barnes-hut black-scholes fft mandelbrot mc-ray nbody nucleic plclub-ray smith-nf tsp"
 FP_DESC="programs that make significant use of floating-point arithmetic"
 
-LIST="count-graphs life"
+LIST="count-graphs life minimax"
 LIST_DESC="programs that make significant use of lists"
 
-ARRAY="fft simple smith-nf"
+ARRAY="fft minimax simple smith-nf"
 ARRAY_DESC="programs that make significant use of arrays or vectors"
 
 BIGNUM="smith-nf"
@@ -98,6 +99,9 @@ CLASSIC_DESC="programs from the original SML/NJ benchmarking"
 
 SMLNJ="$CLASSIC boyer fft knuth-bendix logic mandelbrot ray tsp"
 SMLNJ_DESC="programs from the previous SML/NJ bencmark suite"
+
+MANTICORE="minimax"
+MANTICORE_DESC="programs from the Manticore benchmark suite"
 
 MLTON="dlx smith-nf"
 MLTON_DESC="programs from the MLton bencmark suite"
@@ -131,6 +135,7 @@ while [ "$#" != "0" ]; do
         FUNCTOR|functor) classes="$classes FUNCTOR" ;;
         CLASSIC|classic) classes="$classes CLASSIC" ;;
         SMLNJ|smlnj) classes="$classes SMLNJ" ;;
+        MANTICORE|manticore) classes="$classes MANTICORE" ;;
         MLTON|mlton) classes="$classes MLTON" ;;
         LARCENY|larceny) classes="$classes LARCENY" ;;
         SCHEME|scheme) classes="$classes SCHEME" ;;
