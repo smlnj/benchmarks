@@ -20,18 +20,10 @@
 structure List : LIST =
   struct
 
-    val op +  = InlineT.Int.+
-    val op -  = InlineT.Int.-
-    val op <  = InlineT.Int.<
-    val op <= = InlineT.Int.<=
-    val op >  = InlineT.Int.>
-    val op >= = InlineT.Int.>=
-(*    val op =  = InlineT.= *)
-
-  (* fast add/subtract avoiding the overflow test *)
+    (* fast add/subtract avoiding the overflow test *)
     infix 6 -- ++
-    fun x -- y = InlineT.Int.fast_sub(x, y)
-    fun x ++ y = InlineT.Int.fast_add(x, y)
+    fun x -- y = Word.toIntX(Word.fromInt x - Word.fromInt y)
+    fun x ++ y = Word.toIntX(Word.fromInt x + Word.fromInt y)
 
     datatype list = datatype list
 
