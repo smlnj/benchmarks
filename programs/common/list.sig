@@ -100,3 +100,15 @@ signature LIST_2015 =
   end
 
 signature LIST = LIST_2015
+
+(* top-level bindings *)
+datatype list = datatype List.list
+val hd = List.hd
+val tl = List.tl
+val null = List.null
+val length = List.length
+val map = List.map
+val foldr = List.foldr
+val foldl = List.foldl
+val rev = List.rev
+
