@@ -20,7 +20,7 @@ the results of compiling and running each benchmark.
 
 Executing
 
-> bin/runit.sh -help
+> bin/run.sh -help
 
 will show command line options.
 

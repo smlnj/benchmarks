@@ -11,6 +11,7 @@
 cmd="make-single-file.sh"
 mlton=no
 quiet=no
+include_basis=no
 
 # get the path of the benchmark root directory
 here=$(pwd)
@@ -34,9 +35,10 @@ say() {
 usage() {
   echo "usage: $cmd [ options ] <benchmark> ..."
   echo "  options:"
-  echo "    -h,-help  print this message and exit"
-  echo "    -mlton    create a file that can be compiled by MLton"
-  echo "    -quiet    run in quiet mode"
+  echo "    -h,-help        print this message and exit"
+  echo "    -mlton          create a file that can be compiled by MLton"
+  echo "    -quiet          run in quiet mode"
+  echo "    -include-basis  include the Basis source code in a single-file"
   exit $1
 }
 
@@ -75,7 +77,15 @@ mkall () {
   if [ -f $bmarkDir/FILES ] ; then
     # copy the listed source files in FILES
     for srcFile in $(cat $bmarkDir/FILES) ; do
-      copy "$bmarkDir" "$srcFile" "$out"
+      if [ x"$include_basis" = xyes ] ; then
+        copy "$bmarkDir" "$srcFile" "$out"
+      else
+        # filter out basis modules
+        case $srcFile in
+          ../common/*) ;;
+          *) copy "$bmarkDir" "$srcFile" "$out" ;;
+        esac
+      fi
     done
   fi
 
@@ -103,6 +113,7 @@ while [ "$#" != "0" ]; do
   case "$arg" in
     -mlton) shift; mlton=yes ;;
     -quiet) shift; quiet=yes ;;
+    -include-basis) shift; include_basis=yes ;;
     -h|-help) usage 0 ;;
     -*) echo "$cmd: unknown option '$arg'"; usage 1 ;;
     *) break ;;

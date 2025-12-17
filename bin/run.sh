@@ -29,6 +29,7 @@ host=$(hostname -s)
 cmd=$0
 smlcmd=sml
 single_file=no
+include_basis_opt=""
 mode="execution"  # can also be "compile", "gc", and "test"
 run_time=yes
 logfile="LOG-$fileid"
@@ -54,6 +55,7 @@ usage() {
   echo "    -alloc <sz>      specify size of the allocation nursery"
   echo "    -sml <path>      specify the path to the SML/NJ executable"
   echo "    -single-file     measure single-file version of programs"
+  echo "    -include-basis   include the Basis source code in a single-file"
   echo "    -compile-time    measure and report compile time"
   echo "    -gc-stats        measure and report allocation and GC counts"
   echo "    -check           check benchmark outputs"
@@ -84,7 +86,7 @@ measure_execution() {
   prog="$1"
   progdir="$programsdir/$prog"
   if [ x"$single_file" = xyes ] ; then
-    "$bindir/make-single-file.sh" -quiet "$prog"
+    "$bindir/make-single-file.sh" -quiet $include_basis_opt "$prog"
     cd "$progdir" || exit 1
     run_sml <<EOF 1>> "$logfile" 2>&1
       use "all.sml";
@@ -107,7 +109,7 @@ measure_compile() {
   echo "{ \"program\" : \"$1\"," >> "$outfile"
   echo "  \"compile\" : [" >> "$outfile"
   if [ x"$single_file" = xyes ] ; then
-    "$bindir/make-single-file.sh" -quiet "$prog"
+    "$bindir/make-single-file.sh" -quiet $include_basis_opt "$prog"
     cd "$progdir" || exit 1
     for i in $(seq "$nruns"); do
       run_sml <<EOF 1>> "$logfile" 2>&1
@@ -142,7 +144,7 @@ measure_gc_stats() {
   progdir="$programsdir/$prog"
   echo "{ \"program\" : \"$1\"," >> "$outfile"
   if [ x"$single_file" = xyes ] ; then
-    "$bindir/make-single-file.sh" -quiet "$prog"
+    "$bindir/make-single-file.sh" -quiet $include_basis_opt "$prog"
     cd "$progdir" || exit 1
     run_sml <<EOF 1>> "$logfile" 2>&1
       use "all.sml";
@@ -209,6 +211,7 @@ while [ "$#" != "0" ]; do
     ;;
     -progress) progress="yes" ;;
     -single-file) single_file="yes" ;;
+    -include-basis) include_basis_opt="$arg" ;;
     -sml)
       if [ "$#" != 0 ] ; then
         smlcmd="$1"; shift
@@ -283,11 +286,15 @@ fi
       echo "  \"sml-options\" : \"$controls\","
     fi
     if [ x"$single_file" = xyes ] ; then
-      SF=true
+      echo "  \"single-file\" : true,"
+      if [ x"$include_basis_opt" = x ] ; then
+        echo "  \"include-basis\" : false,"
+      else
+        echo "  \"include-basis\" : true,"
+      fi
     else
-      SF=false
+      echo "  \"single-file\" : false,"
     fi
-    echo "  \"single-file\" : ${SF},"
     echo "  \"mode\" : \"${mode}\","
     echo "  \"alloc\" : \"${allocsz}\","
     echo "  \"data\" : ["
