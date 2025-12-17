@@ -51,3 +51,5 @@ latex.out/
 single-file/
 LOG-*
 REPORT-*
+programs/*/all.sml
+
