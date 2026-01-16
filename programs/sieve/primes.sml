@@ -1,10 +1,12 @@
-(* sieve.sml
+(* primes.sml
  *
  * COPYRIGHT (c) 2025 The Fellowship of SML/NJ (https://www.smlnj.org)
  * All rights reserved.
+ *
+ * Compute primes using the sieve of Eratosthenes.
  *)
 
-structure Sieve : sig
+structure Primes : sig
 
     val nthPrime : int -> int
 
@@ -46,7 +48,7 @@ structure Sieve : sig
 	    primes
 	  end
 
-    fun nthPrime n = let
+    fun nthPrime' n = let
 	  val ch = sieve ()
 	  fun loop 0 = CML.recv ch
 	    | loop i = (CML.recv ch; loop(i-1))
@@ -54,6 +56,8 @@ structure Sieve : sig
 	    loop (n-1)
 	  end
 
+    fun nthPrime n = if (n <= 0)
+          then raise Fail "invalid argument"
+          else CML.run(nthPrime', n)
+
   end
-
-

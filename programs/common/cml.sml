@@ -18,6 +18,8 @@ structure Queue :> sig
 
     val isEmpty : 'a t -> bool
 
+    val clear : 'a t -> unit
+
   end = struct
 
     type 'a t = {front : 'a list ref, rear : 'a list ref}
@@ -39,6 +41,8 @@ structure Queue :> sig
             | _ => false
           (* end case *))
 
+    fun clear ({ front, rear } : 'a t) = (front := nil; rear := nil)
+
   end
 
 structure CML : sig
@@ -49,7 +53,7 @@ structure CML : sig
 
     val exit : unit -> 'a
 
-    val run : (unit -> unit) -> unit
+    val run : ('a -> 'b) * 'a -> 'b
 
     type 'a chan
 
@@ -108,9 +112,18 @@ structure CML : sig
               raise Fail "exit")
           (* end case *))
 
-    fun run f = callcc (fn k => (
-          topCont := SOME k;
-          (f ()) handle exn => (topCont := NONE; raise exn)))
+    (***** run a CML program *****)
+
+    fun run (f, arg) = let
+          val res = ref NONE
+          in
+            Queue.clear readyQ;
+            callcc (fn k => (
+              topCont := SOME k;
+              (res := SOME(f arg))
+                handle exn => (topCont := NONE; raise exn)));
+            valOf (!res)
+          end
 
     (***** Channels *****)
 

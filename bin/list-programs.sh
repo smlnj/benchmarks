@@ -88,7 +88,7 @@ ARRAY_DESC="programs that make significant use of arrays or vectors"
 BIGNUM="smith-nf"
 BIGNUM_DESC="programs that make significant use of the IntInf.int type"
 
-CML="pingpong sieve"
+CML="cml-sieve"
 CML_DESC="multi-threaded message-passing programs"
 
 FUNCTOR="barnes-hut dlx mlyacc simple"
@@ -100,7 +100,7 @@ CLASSIC_DESC="programs from the original SML/NJ benchmarking"
 SMLNJ="$CLASSIC boyer fft knuth-bendix logic mandelbrot ray tsp"
 SMLNJ_DESC="programs from the previous SML/NJ bencmark suite"
 
-MANTICORE="minimax"
+MANTICORE="cml-sieve minimax"
 MANTICORE_DESC="programs from the Manticore benchmark suite"
 
 MLTON="dlx smith-nf"

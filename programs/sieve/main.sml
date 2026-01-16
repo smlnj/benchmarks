@@ -10,23 +10,13 @@ structure Main : BMARK =
     val name = "sieve"
 
     fun testit outS = let
-	  fun thd () = let
-                val n = 100
-		val p = Sieve.nthPrime n (* should be 541 *)
-		in
-		  TextIO.output(outS, concat[
-		      "Prime(", Int.toString n, ") = ",
-		      Int.toString p, "\n"
-		    ])
-		end
-	  in
-	    CML.run thd
-	  end
-
-    fun doit () = let
-          fun thd () = ignore (Sieve.nthPrime 12000)
+          val res = List.tabulate(10, fn i => Primes.nthPrime(i+1))
           in
-            CML.run thd
+            if ListPair.allEq (op =) (res, [2,3,5,7,11,13,17,19,23,29])
+              then TextIO.output(outS, "OK\n")
+              else TextIO.output(outS, "FAIL\n")
           end
+
+    fun doit () = ignore (Primes.nthPrime 12000)
 
   end
