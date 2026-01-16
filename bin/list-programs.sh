@@ -67,6 +67,7 @@ ALL="\
   simple \
   smith-nf \
   tsp \
+  twenty-four \
   vliw \
   "
 BROKEN="\

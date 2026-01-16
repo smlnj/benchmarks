@@ -86,6 +86,7 @@ directory.
 | [`simple`](programs/simple/README.md)                 |   760 | A spherical fluid-dynamics program         |
 | [`smith-nf`](programs/smith-nf/README.md)             |   371 | Computes the Smith Normal Form             |
 | [`tsp`](programs/tsp/README.md)                       |   304 | A Traveling-Sales-Person solver            |
+| [`twenty-four`](programs/twenty-four/README.md)       |   421 | CPS-style solver for 24 puzzle             |
 | [`vliw`](programs/vliw/README.md)                     | 2,934 | A Very-Long-Instruction-Word instruction scheduler |
 
 ## Scripts
