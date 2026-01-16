@@ -77,12 +77,12 @@ directory.
 | [`nbody`](programs/nbody/README.md)                   |   135 | O(n^2) N-body solver                       |
 | [`nucleic`](programs/nucleic/README.md)               | 2,920 |                                            |
 | [`pia`](programs/pia/README.md)                       |   xxx |                                            |
-| [`pingpong`](programs/pingpong/README.md)             |   126 | Message-passing microbenchmark             |
+| [`pingpong`](programs/pingpong/README.md)             |   135 | Message-passing microbenchmark             |
 | [`plclub-ray`](programs/plclub-ray/README.md)         | 2,026 | Another ray tracer                         |
 | [`ratio-regions`](programs/ratio-regions/README.md)   |   xxx |                                            |
 | [`ray`](programs/ray/README.md)                       |   352 |                                            |
 | [`sat`](programs/sat/README.md)                       |    53 | Brute-force SAT solver                     |
-| [`sieve`](programs/sieve/README.md)                   |   159 | Message-passing implementation of Sieve of Eratosthenes |
+| [`sieve`](programs/sieve/README.md)                   |   161 | Message-passing implementation of Sieve of Eratosthenes |
 | [`simple`](programs/simple/README.md)                 |   760 | A spherical fluid-dynamics program         |
 | [`smith-nf`](programs/smith-nf/README.md)             |   371 | Computes the Smith Normal Form             |
 | [`tsp`](programs/tsp/README.md)                       |   304 | A Traveling-Sales-Person solver            |

@@ -10,9 +10,9 @@ structure Main : BMARK =
     val name = "pingpong"
 
     fun testit outS = (
-          CML.run (fn () => PingPong.run 10);
+          CML.run (PingPong.run, 10);
           print "ok\n")
 
-    fun doit () = CML.run (fn () => PingPong.run 100000000)
+    fun doit () = CML.run (PingPong.run, 100000000)
 
   end
