@@ -14,10 +14,10 @@ signature BMARK =
     (* run the benchmark program for timing purposes (no output) *)
     val doit : unit -> unit
 
-    (* run the benchmark program and direct its output to the specified
-     * outstream.  This function can be used to verify that the benchmark
-     * is producing the expected results.
+    (* run the benchmark program and direct its output to the Log output
+     * (see `log.sml`).  This function can be used to verify that the
+     * benchmark is producing the expected results.
      *)
-    val testit : TextIO.outstream -> unit
+    val testit : unit -> unit
 
   end

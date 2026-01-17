@@ -18,19 +18,12 @@ structure Main : BMARK =
           val trap = {inputFn = inputFn, outputFn = outputFn, state = state}
           val {state = (_, outputs), statistics} =
                 DLXSimulatorC1.run_prog {instructions = instructions, trap = trap}
+          val pr = Log.say
           in
-            case optOut
-             of SOME outS => let
-                  fun pr s = TextIO.output(outS, s)
-                  in
-                    List.app
-                      (fn output => pr (concat["Output: ", Int.toString output, "\n"]))
-                        outputs;
-                    pr (statistics ());
-                    pr "\n"
-                  end
-              | NONE => ()
-            (* end case *)
+            List.app
+              (fn output => pr ["Output: ", Int.toString output, "\n"])
+                outputs;
+            pr [statistics (), "\n"];
           end
 
     fun runAll optOut = List.app (run optOut) [

@@ -152,8 +152,8 @@ structure Main : BMARK =
 
     fun doit () = ignore (run (50000000, offsetMomentum bodies))
 
-    fun testit outS = let
-          fun pr e = TextIO.output(outS, Real.fmt (StringCvt.FIX(SOME 9)) e ^ "\n")
+    fun testit () = let
+          fun pr e = Log.say [Real.fmt (StringCvt.FIX(SOME 9)) e, "\n"]
           val bodies = offsetMomentum bodies
           in
             pr (energy bodies);

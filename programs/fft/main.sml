@@ -15,18 +15,15 @@ structure Main : BMARK =
     structure R = Real64
     structure M = R.Math
 
-    fun say (NONE, _) = ()
-      | say (SOME outstrm, s) = TextIO.output(outstrm, s)
-
-    fun say' toS (NONE, _) = ()
-      | say' toS (SOME outstrm, v) = TextIO.output(outstrm, toS v)
+    val say = Log.print
+    fun say' toS v = Log.print(toS v)
 
     val printr = say' R.toString
     val printi = say' Int.toString
 
     val tpi = 2.0 * M.pi
 
-    fun fft out px py np = let
+    fun fft px py np = let
           fun find_num_points i m = if i < np then find_num_points (i+i) (m+1) else (i,m)
           val (n,m) = find_num_points 2 1
           in
@@ -40,7 +37,7 @@ structure Main : BMARK =
                         loop (i+1))
                 in
                   loop (np+1);
-                  say (out, "Use "); printi(out, n); say(out, " point fft\n")
+                  say "Use "; printi n; say " point fft\n"
                 end
               else ();
             let
@@ -143,8 +140,8 @@ structure Main : BMARK =
             n
           end (* fft *)
 
-    fun test out np = let
-          val _ = (printi (out, np); say (out, "... "))
+    fun test np = let
+          val _ = (printi np; say "... ")
           val enp = R.fromInt np
           val npm = (np div 2) - 1
           val pxr = A.array (np+2, 0.0)
@@ -175,7 +172,7 @@ structure Main : BMARK =
              print (sub(pxi, i+1)); print "\n"; loop_i (i+1))
           val _ = loop_i 0
     ***)
-          val _ = fft out pxr pxi np
+          val _ = fft pxr pxi np
     (***
           fun loop_i i = if i > 15 then () else
             (print i; print "\t";
@@ -196,17 +193,17 @@ structure Main : BMARK =
           val (zr, zi) = loop_i 0 0.0 0.0 0 0
           val zm = if R.abs zr < R.abs zi then zi else zr
           in
-            printr (out, zm); say(out, "\n")
+            printr zm; say "\n"
           end (* test *)
 
     val N = 21
 
-    fun loop_np out i np = if i > N
+    fun loop_np i np = if i > N
           then ()
-          else (test out np; loop_np out (i+1) (np*2))
+          else (test np; loop_np (i+1) (np*2))
 
-    fun doit () = loop_np NONE 1 16
+    fun doit () = loop_np 1 16
 
-    fun testit outstream = loop_np (SOME outstream) 1 16
+    fun testit () = loop_np 1 16
 
   end;

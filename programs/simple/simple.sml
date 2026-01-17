@@ -50,10 +50,10 @@ fun update2((A,((lb1,_),(lb2,_))),(k,l), v) = Array2.update(A,(k-lb1,l-lb2),v)
 fun bounds2(_,b) = b
 fun printarray2 (A as (M:real Array2.array2,((l1,u1),(l2,u2)))) =
     for {from=l1,step=1,to=u1} (fn i =>
-        (print "[";
+        (Log.print "[";
 	 for {from=l2,step=1,to=u2-1} (fn j =>
-	      print (Real.toString (sub2(A,(i,j))) ^ ", "));
-	 print (Real.toString (sub2(A,(i,u2))) ^ "]\n")))
+	      Log.print (Real.toString (sub2(A,(i,j))) ^ ", "));
+	 Log.print (Real.toString (sub2(A,(i,u2))) ^ "]\n")))
 fun array1((l,u),v) = (Array.array(u-l+1,v),(l,u))
 fun sub1((A,(l:int,u:int)),i:int) = Array.sub(A,i-l)
 fun update1((A,(l,_)),i,v) = Array.update(A,i-l,v)
@@ -499,8 +499,8 @@ fun make_cc(alpha_prime, theta_hat) =
     let fun interior_cc zone =
 	    (0.0001 * pow(sub2(theta_hat,zone),2) *
 	    (Math.sqrt (abs(sub2(theta_hat,zone)))) / sub2(alpha_prime,zone))
-	    handle Sqrt => (print (Real.toString (sub2(theta_hat, zone)));
-			    print ("\nzone =(" ^ Int.toString (#1 zone) ^ "," ^
+	    handle Sqrt => (Log.print (Real.toString (sub2(theta_hat, zone)));
+			    Log.print ("\nzone =(" ^ Int.toString (#1 zone) ^ "," ^
 				   Int.toString (#2 zone) ^ ")\n");
 			    printarray2 theta_hat;
 			    raise Sqrt)
@@ -519,14 +519,14 @@ fun make_sigma(deltat, rho_prime, alpha_prime) =
 	    sub2(rho_prime,zone)*sub2(alpha_prime,zone)*specific_heat/ deltat
 	val M = array2(dimension_interior_zones, 0.0)
 	fun ohandle zone =
-	    (print (Real.toString (sub2(rho_prime, zone)) ^ " ");
-	     print (Real.toString (sub2(alpha_prime, zone)) ^ " ");
-	     print (Real.toString specific_heat ^ " ");
-	     print (Real.toString deltat ^ "\n");
+	    (Log.print (Real.toString (sub2(rho_prime, zone)) ^ " ");
+	     Log.print (Real.toString (sub2(alpha_prime, zone)) ^ " ");
+	     Log.print (Real.toString specific_heat ^ " ");
+	     Log.print (Real.toString deltat ^ "\n");
 	     raise Overflow)
 
     in  if !Control.trace
-        then print ("\t\tmake_sigma:deltat = " ^ Real.toString deltat ^ "\n")
+        then Log.print ("\t\tmake_sigma:deltat = " ^ Real.toString deltat ^ "\n")
 	else ();
 (***	for_interior_zones(fn zone => update2(M,zone, interior_sigma zone)) **)
 	for_interior_zones(fn zone => (update2(M,zone, interior_sigma zone)
@@ -587,28 +587,28 @@ fun make_theta (a, b, succeeding, int_zones) =
 
 fun compute_heat_conduction(theta_hat, deltat, x', alpha', rho') =
     let val sigma 	= make_sigma(deltat,  rho',  alpha')
-	val _ = if !Control.trace then print "\tdone make_sigma\n" else ()
+	val _ = if !Control.trace then Log.print "\tdone make_sigma\n" else ()
 
 	val cc 		= make_cc(alpha',  theta_hat)
-	val _ = if !Control.trace then print "\tdone make_cc\n" else ()
+	val _ = if !Control.trace then Log.print "\tdone make_cc\n" else ()
 
 	val Gamma_k  	= make_gamma(  x', cc, north, east)
-	val _ = if !Control.trace then print "\tdone make_gamma\n" else ()
+	val _ = if !Control.trace then Log.print "\tdone make_gamma\n" else ()
 
 	val (a_k,b_k)  	= make_ab(theta_hat, sigma, Gamma_k, north)
-	val _ = if !Control.trace then print "\tdone make_ab\n" else ()
+	val _ = if !Control.trace then Log.print "\tdone make_ab\n" else ()
 
 	val theta_k  	= make_theta(a_k,b_k,south,for_north_ward_interior_zones)
-	val _ = if !Control.trace then print "\tdone make_theta\n" else ()
+	val _ = if !Control.trace then Log.print "\tdone make_theta\n" else ()
 
 	val Gamma_l  	= make_gamma(x', cc, west, south)
-	val _ = if !Control.trace then print "\tdone make_gamma\n" else ()
+	val _ = if !Control.trace then Log.print "\tdone make_gamma\n" else ()
 
 	val (a_l,b_l) 	= make_ab(theta_k, sigma, Gamma_l, west)
-	val _ = if !Control.trace then print "\tdone make_ab\n" else ()
+	val _ = if !Control.trace then Log.print "\tdone make_ab\n" else ()
 
 	val theta_l  	= make_theta(a_l,b_l,east,for_west_ward_interior_zones)
-	val _ = if !Control.trace then print "\tdone make_theta\n" else ()
+	val _ = if !Control.trace then Log.print "\tdone make_theta\n" else ()
     in  (theta_l, Gamma_k, Gamma_l)
     end
 
@@ -797,87 +797,87 @@ fun compute_next_state state =
     let
 	val (v,x,alpha,s,rho,p,q,epsilon,theta,deltat,c) = state
 	val v'  = make_velocity (v, x, p, q, alpha, rho, deltat)
-	val _ = if !Control.trace then print "done make_velocity\n" else ()
+	val _ = if !Control.trace then Log.print "done make_velocity\n" else ()
 
 	val x'  = make_position(x,deltat,v')
 	          handle Overflow =>(printarray2 (#1 v');
 				     printarray2 (#2 v');
 				     raise Overflow)
-	val _ = if !Control.trace then print "done make_position\n" else ()
+	val _ = if !Control.trace then Log.print "done make_position\n" else ()
 
 	val (alpha',rho',s')  = make_area_density_volume (rho,  s , x')
-	val _ = if !Control.trace then print "done make_area_density_volume\n"
+	val _ = if !Control.trace then Log.print "done make_area_density_volume\n"
 		else ()
 
 	val (q',d)  = make_viscosity (p,  v',  x',  alpha',  rho')
-	val _ = if !Control.trace then print "done make_viscosity\n" else ()
+	val _ = if !Control.trace then Log.print "done make_viscosity\n" else ()
 
 	val theta_hat  = make_temperature (p, epsilon, rho, theta, rho', q')
-	val _ = if !Control.trace then print "done make_temperature\n" else ()
+	val _ = if !Control.trace then Log.print "done make_temperature\n" else ()
 
 	val (theta',Gamma_k,Gamma_l) =
 	    compute_heat_conduction (theta_hat, deltat, x', alpha', rho')
-	val _ = if !Control.trace then print "done compute_heat_conduction\n"
+	val _ = if !Control.trace then Log.print "done compute_heat_conduction\n"
 		else ()
 
 	val p'  = make_pressure(rho', theta')
-	val _ = if !Control.trace then print "done make_pressure\n" else ()
+	val _ = if !Control.trace then Log.print "done make_pressure\n" else ()
 
 	val epsilon'  = make_energy (rho', theta')
-	val _ = if !Control.trace then print "done make_energy\n" else ()
+	val _ = if !Control.trace then Log.print "done make_energy\n" else ()
 
 	val c'  = compute_energy_error (v', x', p', q', epsilon', theta', rho',
 					alpha', Gamma_k, Gamma_l,  deltat)
-	val _ = if !Control.trace then print "done compute_energy_error\n"
+	val _ = if !Control.trace then Log.print "done compute_energy_error\n"
 		else ()
 
 	val deltat'  = compute_time_step (d, theta_hat, theta')
-	val _ = if !Control.trace then print "done compute_time_step\n\n" else ()
+	val _ = if !Control.trace then Log.print "done compute_time_step\n\n" else ()
     in
 	(v',x',alpha',s',rho',p',q',  epsilon',theta',deltat',c')
     end
 
 fun runit () =
     let fun iter (i,state) = if i = 0 then state
-			     else (print ".";
+			     else (Log.print ".";
 				   iter(i-1, compute_next_state state))
     in iter(step_count, compute_initial_state())
     end
 
 fun print_state ((v1,v2),(r,z),alpha,s,rho,p,q,epsilon,theta,deltat,c) = (
-      print "Velocity matrices = \n";
-      printarray2 v1; print "\n\n";
+      Log.print "Velocity matrices = \n";
+      printarray2 v1; Log.print "\n\n";
       printarray2 v2;
 
-      print "\n\nPosition matrices = \n";
-      printarray2 r; print "\n\n";
+      Log.print "\n\nPosition matrices = \n";
+      printarray2 r; Log.print "\n\n";
       printarray2 z;
 
-      print "\n\nalpha = \n";
+      Log.print "\n\nalpha = \n";
       printarray2 alpha;
 
-      print "\n\ns = \n";
+      Log.print "\n\ns = \n";
       printarray2 s;
 
-      print "\n\nrho = \n";
+      Log.print "\n\nrho = \n";
       printarray2 rho;
 
-      print "\n\nPressure = \n";
+      Log.print "\n\nPressure = \n";
       printarray2 p;
 
-      print "\n\nq = \n";
+      Log.print "\n\nq = \n";
       printarray2 q;
 
-      print "\n\nepsilon = \n";
+      Log.print "\n\nepsilon = \n";
       printarray2 epsilon;
 
-      print "\n\ntheta = \n";
+      Log.print "\n\ntheta = \n";
       printarray2 theta;
 
-      print ("delatat = " ^ Real.toString (deltat : real)^ "\n");
-      print ("c = " ^ Real.toString (c : real) ^ "\n"))
+      Log.print ("delatat = " ^ Real.toString (deltat : real)^ "\n");
+      Log.print ("c = " ^ Real.toString (c : real) ^ "\n"))
 
-    fun testit outstrm = print_state (runit())
+    fun testit () = print_state (runit())
 
     fun doit () = let
 	  val (_, _, _, _, _, _, _, _, _, delta', c') = runit()
@@ -886,7 +886,7 @@ fun print_state ((v1,v2),(r,z),alpha,s,rho,p,q,epsilon,theta,deltat,c) = (
 	  in
 	    if (c = 6787 andalso delta = ~33093)
 	      then ()
-	      else TextIO.output (TextIO.stdErr, "*** ERROR ***\n")
+	      else Log.error ["*** ERROR ***\n"]
 	  end
 
   end; (* functor Simple *)

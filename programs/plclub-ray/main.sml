@@ -18,10 +18,9 @@ structure Main : BMARK =
             in loop n
             end
 
-      fun testit outS =
-            TextIO.output(
-              outS,
-              (runOnce (); "okay\n")
+      fun testit () =
+            Log.print (
+              (runOnce (); "OK\n")
                 handle ex => exnMessage ex ^ "\n")
 
       fun doit () = run 10

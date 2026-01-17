@@ -17,7 +17,7 @@ structure Main : BMARK =
           val img = render ()
           in
             Image.writePPM ("mc-ray-output.ppm", img);
-            TextIO.output (outS, "ok\n")
+            Log.print "OK\n"
           end
 
   end

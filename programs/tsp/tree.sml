@@ -23,22 +23,19 @@ structure Tree =
 	    prev = ref NULL, next = ref NULL
 	  }
 
-    fun printTree (outS, NULL) = ()
-      | printTree (outS, ND{x, y, left, right, ...}) = (
-	  TextIO.output(outS, String.concat [
-	    Real.toString x, " ", Real.toString y, "\n"]);
-	  printTree (outS, left);
-	  printTree (outS, right))
+    fun printTree NULL = ()
+      | printTree (ND{x, y, left, right, ...}) = (
+	  Log.say [Real.toString x, " ", Real.toString y, "\n"];
+	  printTree left;
+	  printTree right)
 
-    fun printList (outS, NULL) = ()
-      | printList (outS, start as ND{next, ...}) = let
+    fun printList (NULL) = ()
+      | printList (start as ND{next, ...}) = let
 	  fun cycle (ND{next=next', ...}) = (next = next')
 	    | cycle _ = false
-	  fun prt (NULL) = ()
+	  fun prt NULL = ()
 	    | prt (t as ND{x, y, next, ...}) = (
-		TextIO.output(outS, String.concat [
-		    Real.toString x, " ", Real.toString y, "\n"
-		  ]);
+		Log.say [Real.toString x, " ", Real.toString y, "\n"];
 		if (cycle (!next))
 		  then ()
 		  else prt (!next))

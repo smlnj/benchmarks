@@ -10,6 +10,7 @@ Library
 
   signature BMARK
 
+  structure Log
   structure Timing
 
 is
@@ -19,4 +20,5 @@ is
 
   bmark.sig
 
+  log.sml
   timeit.sml

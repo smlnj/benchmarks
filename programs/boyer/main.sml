@@ -63,11 +63,12 @@ structure Main : BMARK =
                   Prop (get "implies",[Var 23, Var 22])])
 
     fun testit outstrm = if tautp (apply_subst subst term)
-	  then TextIO.output (outstrm, "ok\n")
-	  else TextIO.output (outstrm, "fail\n")
+	  then Log.print "OK\n"
+	  else Log.print "FAIL\n"
 
-    fun loop n =
-      if n <= 0 then () else (tautp (apply_subst subst term); loop (n - 1))
+    fun loop n = if n <= 0
+          then ()
+          else (tautp (apply_subst subst term); loop (n - 1))
 
     fun doit () = loop 1300
 

@@ -44,11 +44,7 @@ structure Main : BMARK =
        | Empty => " *"
       (* end case *))
 
-    fun printStringMat outStrm = let
-          fun pr s = TextIO.output(outStrm, s)
-          in
-            fn mat => app (fn lst => (app pr lst; pr "\n")) mat
-          end
+    fun printStringMat mat = app (fn lst => (app Log.print lst; Log.print "\n")) mat
 
   (***********)
 
@@ -250,7 +246,6 @@ structure Main : BMARK =
             lp iterations
           end
 
-    fun testit outStrm =
-          printStringMat outStrm (makeMaze n m)
+    fun testit () = printStringMat (makeMaze n m)
 
 end

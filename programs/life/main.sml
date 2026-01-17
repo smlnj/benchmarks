@@ -34,7 +34,6 @@ structure Main : BMARK =
 	    rev o accumulate consifp []
 	  end
 
-
     fun exists p = let fun existsp [] = false
                      | existsp (a::x) = if p a then true else existsp x
                 in existsp end
@@ -156,6 +155,6 @@ structure Main : BMARK =
             lp 1000
           end
 
-    fun testit strm = show (fn c => TextIO.output (strm, c)) (runOnce())
+    fun testit () = show Log.print (runOnce())
 
   end (* Main *)

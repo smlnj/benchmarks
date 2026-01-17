@@ -21,11 +21,11 @@ structure Main : BMARK =
     fun countSolutions hand =
           TwentyFour.solve hand (fn (_, resume) => 1 + resume ()) (fn () => 0)
 
-    fun testit outS = if (countSolutions [4, 7, 8, 8] = 44)
-          then TextIO.output(outS, "OK\n")
-          else TextIO.output(outS, "FAIL")
+    fun testit () = if (countSolutions [4, 7, 8, 8] = 44)
+          then Log.print "OK\n"
+          else Log.print "FAIL"
 
-    fun doit outS = let
+    fun doit () = let
           val nSoln = ref 0
           val hands = allHands 10 4
           fun runHand hand = (nSoln := !nSoln + countSolutions hand)

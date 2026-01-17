@@ -60,9 +60,9 @@ structure Main : BMARK =
 
     fun doit () = (sum_iterations := 0; loop1 0)
 
-    fun testit outstrm = (
+    fun testit () = (
 	  sum_iterations := 0;
 	  loop1 0;
-	  TextIO.output (outstrm, Int.toString(!sum_iterations) ^ " iterations\n"))
+	  Log.say [Int.toString(!sum_iterations), " iterations\n"])
 
   end (* Mandelbrot *)

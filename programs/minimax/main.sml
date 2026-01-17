@@ -25,7 +25,7 @@ structure Main : BMARK =
             end
 
     (* print the size of the tree *)
-    fun printTree outS tr = let
+    fun printTree tr = let
           fun sz (T.Rose(_, kids)) = let
                 fun doKid (t, (n, d)) = let
                       val (n', d') = sz t
@@ -38,15 +38,15 @@ structure Main : BMARK =
                 end
           val (n, d) = sz tr
           in
-            TextIO.output(outS, String.concat[
+            Log.say [
                 "# nodes = ", Int.toString n, ", max depth = ", Int.toString d, "\n"
-              ])
+              ]
           end
 
-    fun testit outS = (
-          TextIO.output(outS, "Minimax: ");
-          printTree outS (T.gameTree());
-          TextIO.output(outS, "Minimax+TT: ");
-          printTree outS (T.gameTreeWithTT()))
+    fun testit () = (
+          Log.print "Minimax: ";
+          printTree (T.gameTree());
+          Log.print "Minimax+TT: ";
+          printTree (T.gameTreeWithTT()))
 
   end

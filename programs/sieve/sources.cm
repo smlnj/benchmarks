@@ -17,4 +17,4 @@ is
   ../common/cml.sml
 
   main.sml
-  sieve.sml
+  primes.sml

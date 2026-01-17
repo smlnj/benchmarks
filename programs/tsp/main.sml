@@ -16,8 +16,8 @@ structure Main : sig
 
     val divideSz = ref 150
 
-    fun printLength (outS, Tree.NULL) = print "(* 0 points *)\n"
-      | printLength (outS, start as Tree.ND{next, x, y, ...}) = let
+    fun printLength (Tree.NULL) = Log.print "(* 0 points *)\n"
+      | printLength (start as Tree.ND{next, x, y, ...}) = let
 	  fun cycle (Tree.ND{next=next', ...}) = (next = next')
 	    | cycle _ = false
 	  fun distance (ax, ay, bx, by) = let
@@ -32,14 +32,14 @@ structure Main : sig
 		  else length(!next, x, y, n+1, len+distance(px, py, x, y))
 	  in
 	    if (cycle(!next))
-	      then TextIO.output (outS, "(* 1 point *)\n")
+	      then Log.print "(* 1 point *)\n"
 	      else let
 		val (n, len) = length(!next, x, y, 1, 0.0)
 		in
-		  TextIO.output (outS, concat[
+		  Log.say [
 		      "(* ", Int.toString n, "points, cycle length = ",
 		      Real.toString len, " *)\n"
-		    ])
+		    ]
 		end
 	  end
 
@@ -52,12 +52,12 @@ structure Main : sig
     fun doit' n = TSP.tsp (mkTree n, !divideSz)
 
     fun dumpPS outS = (
-	  TextIO.output (outS, "newgraph\n");
-	  TextIO.output (outS, "newcurve pts\n");
-	  Tree.printList (outS, doit' 262143);
-	  TextIO.output (outS, "linetype solid\n"))
+	  Log.print "newgraph\n";
+	  Log.print "newcurve pts\n";
+	  Tree.printList (doit' 262143);
+	  Log.print "linetype solid\n")
 
-    fun testit strm = printLength (strm, doit' 32767)
+    fun testit () = printLength (doit' 32767)
 
     fun lp 0 = ()
       | lp n = (ignore (doit' 262143); lp(n-1))

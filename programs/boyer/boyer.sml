@@ -111,9 +111,9 @@ structure Main : BMARK =
 
     val name = "boyer"
 
-    fun testit outstrm = if tautp (apply_subst subst term)
-	  then TextIO.output (outstrm, "Proved!\n")
-	  else TextIO.output (outstrm, "Cannot prove!\n")
+    fun testit () = if tautp (apply_subst subst term)
+	  then Log.print "Proved!\n"
+	  else Log.print "Cannot prove!\n"
 
     fun doit () = (tautp (apply_subst subst term); ())
 

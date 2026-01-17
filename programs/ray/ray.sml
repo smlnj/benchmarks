@@ -136,4 +136,3 @@ structure Ray =
 
     end (* local *)
   end (* Ray *)
-

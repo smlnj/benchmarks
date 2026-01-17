@@ -18,9 +18,8 @@ structure Main : BMARK =
             List.concat(List.tabulate(32, fn _ => data))
           end
 
-    fun testit outS = let
-          val options = BlackScholes.readData "DATA/simsmall.txt"
-          fun f opt = TextIO.output(outS, Real.toString(BlackScholes.price opt))
+    fun testit () = let
+          fun f opt = Log.say [Real.toString(BlackScholes.price opt), "\n"]
           in
             List.app f (BlackScholes.readData "DATA/simsmall.txt")
           end
@@ -28,10 +27,10 @@ structure Main : BMARK =
     fun doOne () = let
           val prices = List.map BlackScholes.price data
 	  in
-	    TextIO.print (Real.toString(hd prices) ^ "\n")
+	    Log.say [Real.toString(hd prices), "\n"]
 	  end
-    fun loop n =
-      if n <= 0 then () else (doOne (); loop (n - 1)) 
+
+    fun loop n = if n <= 0 then () else (doOne (); loop (n - 1))
 
     fun doit () = loop 10
 

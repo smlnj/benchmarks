@@ -479,21 +479,19 @@ in fun f maxSize =
            0)
 end
 
-fun pr outS s = TextIO.output (outS, s)
-
 fun showGraph outS (size, connected) =
         naturalFold (
             size,
             fn (from, _) => (
-                pr outS ((Int.toString from) ^ ":");
+                Log.say [Int.toString from, ":"];
                 naturalFold (
                     size,
                     fn (to, _) =>
                         if from <> to andalso connected (from, to)
-                            then pr outS (" " ^ (Int.toString to))
+                            then Log.say [" ", Int.toString to]
                             else (),
                     ());
-                pr outS "\n"),
+                Log.print "\n"),
             ());
 
 fun showList (start, sep, stop, trans) lst = (
@@ -510,25 +508,25 @@ fun showList (start, sep, stop, trans) lst = (
         stop ())
 
 fun showIntList outS = showList (
-                      fn () => pr outS "[",
-                      fn () => pr outS ", ",
-                      fn () => pr outS "]",
-                      fn i => pr outS (Int.toString i))
+                      fn () => Log.print "[",
+                      fn () => Log.print ", ",
+                      fn () => Log.print "]",
+                      fn i => Log.print (Int.toString i))
 
 fun showIntListList outS = showList (
-                      fn () => pr outS "[",
-                      fn () => pr outS ", ",
-                      fn () => pr outS "]",
+                      fn () => Log.print "[",
+                      fn () => Log.print ", ",
+                      fn () => Log.print "]",
                       showIntList outS)
 
     val name = "count-graphs"
 
     fun testit outS = let
           fun doOne arg = (
-                pr outS (arg ^ " -> ");
+                Log.say [arg, " -> "];
                 case Int.fromString arg
-                 of SOME n => pr outS ((Int.toString (f n)) ^ "\n")
-                  | NONE => pr outS "NOT A NUMBER\n"
+                 of SOME n => Log.say [Int.toString (f n), "\n"]
+                  | NONE => Log.print "NOT A NUMBER\n"
                 (* end case *))
           in
             List.app doOne [

@@ -75,22 +75,22 @@ structure CML : sig
     fun exit () = (case !topCont
          of SOME k => (topCont := NONE; throw k ())
           | NONE => (
-                TextIO.output(TextIO.stdErr, "\n!!! invalid exit\n");
+                Log.error ["\n!!! invalid exit\n"];
                 raise Fail "exit")
           (* end case *))
 
     (* dispatch the next thread *)
     fun dispatch () = (case Queue.next readyQ
          of NONE => (
-              TextIO.output(TextIO.stdErr, "\n!!! deadlock\n");
+              Log.error ["\n!!! deadlock\n"];
               exit ())
           | SOME k => throw k ()
           (* end case *))
 
     fun uncaught exn = (
-          TextIO.output(TextIO.stdErr, concat[
+          Log.error [
               "\n!!! uncaught exception: ", General.exnMessage exn, "\n"
-            ]);
+            ];
           dispatch())
 
     fun spawn f = callcc (fn (retK : unit cont) =>
@@ -108,7 +108,7 @@ structure CML : sig
     fun exit () = (case !topCont
          of SOME k => (topCont := NONE; throw k ())
           | NONE => (
-              TextIO.output(TextIO.stdErr, "\n!!! invalid exit\n");
+              Log.error ["\n!!! invalid exit\n"];
               raise Fail "exit")
           (* end case *))
 

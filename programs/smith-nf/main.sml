@@ -71,8 +71,8 @@ val table = [[ 8,  ~3,   1,   3,   6,   9,  ~2,   4,  ~9,  ~9,   2,   3,   8,  ~
           val entry = snf()
           in
             if entry = ~1027954043102083189860753402541358641712697245
-              then TextIO.output(outS, "ok\n")
-              else TextIO.output(outS, concat(["fail: ", IntInf.toString entry, "\n"]))
+              then Log.print "OK\n"
+              else Log.say ["FAIL: ", IntInf.toString entry, "\n"]
           end
 
     fun doit () = let
