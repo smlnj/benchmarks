@@ -162,6 +162,8 @@ EOF
 
 # check the program's output
 check_program() {
+# TODO: use the Timing.testIt function to generate output and then
+# compare it with the reference
   exit 1
 }
 
