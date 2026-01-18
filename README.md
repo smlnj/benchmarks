@@ -79,7 +79,7 @@ directory.
 | [`pia`](programs/pia/README.md)                       |   xxx |                                            |
 | [`pingpong`](programs/pingpong/README.md)             |   135 | Message-passing microbenchmark             |
 | [`plclub-ray`](programs/plclub-ray/README.md)         | 2,026 | Another ray tracer                         |
-| [`ratio-regions`](programs/ratio-regions/README.md)   |   xxx |                                            |
+| [`ratio-regions`](programs/ratio-regions/README.md)   |   983 |                                            |
 | [`ray`](programs/ray/README.md)                       |   352 |                                            |
 | [`sat`](programs/sat/README.md)                       |    53 | Brute-force SAT solver                     |
 | [`sieve`](programs/sieve/README.md)                   |   161 | Message-passing implementation of Sieve of Eratosthenes |
