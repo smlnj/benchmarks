@@ -62,6 +62,7 @@ ALL="\
   nucleic \
   pingpong \
   plclub-ray \
+  ratio-regions \
   sat \
   sieve \
   simple \
@@ -104,7 +105,7 @@ SMLNJ_DESC="programs from the previous SML/NJ bencmark suite"
 MANTICORE="cml-sieve minimax"
 MANTICORE_DESC="programs from the Manticore benchmark suite"
 
-MLTON="dlx smith-nf"
+MLTON="dlx ratio-regions smith-nf"
 MLTON_DESC="programs from the MLton bencmark suite"
 
 LARCENY="mazefun"
