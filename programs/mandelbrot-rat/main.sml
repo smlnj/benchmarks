@@ -2,6 +2,8 @@
  *
  * COPYRIGHT (c) 2024 The Fellowship of SML/NJ (https://www.smlnj.org)
  * All rights reserved.
+ *
+ * Mandelbrot sets using rational numbers instead of floating-point.
  *)
 
 structure Main : BMARK =

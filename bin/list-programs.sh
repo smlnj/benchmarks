@@ -48,12 +48,14 @@ sort_items() {
 ALL="\
   black-scholes \
   count-graphs \
+  cml-sieve \
   fft \
   knuth-bendix \
   lexgen \
   life \
   logic \
   mandelbrot \
+  mandelbrot-rat \
   mazefun \
   mc-ray \
   minimax \
@@ -64,7 +66,7 @@ ALL="\
   plclub-ray \
   ratio-regions \
   sat \
-  sieve \
+  stream-sieve \
   simple \
   smith-nf \
   tsp \
@@ -111,8 +113,8 @@ MLTON_DESC="programs from the MLton bencmark suite"
 LARCENY="mazefun"
 LARCENY_DESC="programs from the Larceny bencmark suite"
 
-SCHEME="$LARCENY sat"
-SCHEME_DESC="programs ported from Scheme (includes the Larceny bencmarks)"
+SCHEME="$LARCENY sat stream-sieve"
+SCHEME_DESC="programs ported from Scheme and Racket (includes the Larceny bencmarks)"
 
 classes=""
 
