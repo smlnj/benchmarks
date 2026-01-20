@@ -9,6 +9,7 @@
 cmd="cloc.sh"
 outfile=""
 outformat=""
+include_basis_opt=""
 
 # get the path of the benchmark root directory
 here=$(pwd)
@@ -20,10 +21,11 @@ cd $here
 usage() {
   echo "usage: $cmd [ options ] <benchmark> ..."
   echo "  options:"
-  echo "    -h,-help      print this message and exit"
-  echo "    -json         generate output in JSON format"
-  echo "    -md           generate output in Markdown table format"
-  echo "    -o <file>     direct output to a file instead out stdout"
+  echo "    -h,-help        print this message and exit"
+  echo "    -json           generate output in JSON format"
+  echo "    -md             generate output in Markdown table format"
+  echo "    -o <file>       direct output to a file instead out stdout"
+  echo "    -include-basis  include the Basis source code in a single-file"
   exit $1
 }
 
@@ -44,6 +46,7 @@ while [ "$#" != "0" ]; do
         usage 1
       fi
     ;;
+    -include-basis) shift; include_basis_opt="$arg" ;;
     -*) echo "$cmd: unknown option '$arg'"; usage 1 ;;
     *) break ;;
   esac
@@ -68,7 +71,7 @@ for b in $bmarks ; do
     echo 1
   fi
   # create a single file from the benchmark sources
-  $bindir/make-single-file.sh -cloc "$b"
+  $bindir/make-single-file.sh -cloc "$include_basis_opt" "$b"
   mv "$bmarkdir/all.sml" "$tmpdir/$b"
   echo "$b" >> "$tmpdir/FILES"
 done

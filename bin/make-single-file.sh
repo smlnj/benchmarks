@@ -55,7 +55,7 @@ copy() {
 }
 
 # mkall bmark
-mkall () {
+mkall() {
   bmark="$1"
   bmarkDir="$root/programs/$bmark"
   if [ ! -d "$bmarkDir" ] ; then
@@ -99,7 +99,7 @@ mkall () {
       else
         # filter out basis modules
         case $srcFile in
-          ../common/*) ;;
+          ../BASIS/*) ;;
           *) copy "$bmarkDir" "$srcFile" "$out" ;;
         esac
       fi

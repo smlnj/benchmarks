@@ -22,7 +22,7 @@ Executing
 
 > bin/run.sh -help
 
-will show command line options.
+will show the command line options.
 
 ## Benchmark Directory Structure
 
@@ -39,7 +39,7 @@ may be present):
   `main.sml`) in compilation order.  The `bin/make-single-file.sh` script
   uses this list to construct a single-file version of the program.
   This file is omitted for benchmarks that have `main.sml` as their
-  only source file
+  only source file.
 
 * `ANSWER` -- an optional text file containing the correct output from
   running the `Main.testit` function.  Some benchmarks currently do not
@@ -73,38 +73,35 @@ directory.
 | [`mandelbrot-rat`](programs/mandelbrot-rat/README.md) |    92 | Mandelbrot-set computation using rationals |
 | [`mazefun`](programs/mazefun/README.md)               |   180 | Maze generator                             |
 | [`mc-ray`](programs/mc-ray/README.md)                 |   736 | Monte-Carlo ray tracer                     |
-| [`minimax`](programs/minimax/README.md)               |   717 | Minimax game-tree search                   |
+| [`minimax`](programs/minimax/README.md)               |   167 | Minimax game-tree search                   |
 | [`mlyacc`](programs/mlyacc/README.md)                 | 5,572 | LALR(1) parser generator                   |
 | [`nbody`](programs/nbody/README.md)                   |   135 | O(n^2) N-body solver                       |
 | [`nucleic`](programs/nucleic/README.md)               | 2,919 |                                            |
 | [`pia`](programs/pia/README.md)                       |   xxx |                                            |
 | [`pingpong`](programs/pingpong/README.md)             |   135 | Message-passing microbenchmark             |
 | [`plclub-ray`](programs/plclub-ray/README.md)         | 2,025 | Another ray tracer                         |
-| [`ratio-regions`](programs/ratio-regions/README.md)   |   983 | Image segmentation/contour finding         |
+| [`ratio-regions`](programs/ratio-regions/README.md)   |   485 | Image segmentation/contour finding         |
 | [`sat`](programs/sat/README.md)                       |    53 | Brute-force SAT solver                     |
 | [`simple`](programs/simple/README.md)                 |   760 | A spherical fluid-dynamics program         |
 | [`smith-nf`](programs/smith-nf/README.md)             |   371 | Computes the Smith Normal Form             |
 | [`stream-sieve`](programs/sieve/README.md)            |    57 | Functional stream implementation of Sieve of Eratosthenes |
 | [`tsp`](programs/tsp/README.md)                       |   302 | A Traveling-Sales-Person solver            |
-| [`twenty-four`](programs/twenty-four/README.md)       |   421 | CPS-style solver for 24 puzzle             |
+| [`twenty-four`](programs/twenty-four/README.md)       |   145 | CPS-style solver for 24 puzzle             |
 | [`vliw`](programs/vliw/README.md)                     | 2,939 | A Very-Long-Instruction-Word instruction scheduler |
 
 ## Scripts
+
+In addition to the `run.sh` script, there are a couple of other utility scripts in
+the `bin` directory.
 
 ### `cloc.sh`
 
 The `cloc.sh` script can be used to count the number of source lines in
 the benchmark programs.  It uses the [`cloc`](https://github.com/AlDanial/cloc)
-program and reports the number of blank, comment, and code lines.  It
-applies `cloc` to the result of `make-single-file.sh`, so the result includes the
-`BMARK` signature and three extra lines of code for the `local` declaration.
+program and reports the number of blank, comment, and code lines.
 
 ### `make-single-file.sh`
 
 The `make-single-file.sh` script is used to create a single compilation unit for the
-benchmark sources.
-
-### `runit.sh`
-
-The `runit.sh` script is used to run one or more benchmark programs.
+benchmark sources.  It is used by the `cloc.sh` and `run.sh`
 
