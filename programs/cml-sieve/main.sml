@@ -7,7 +7,7 @@
 structure Main : BMARK =
   struct
 
-    val name = "sieve"
+    val name = "cml-sieve"
 
     fun testit () = let
           val res = List.tabulate(10, fn i => Primes.nthPrime(i+1))
