@@ -134,7 +134,7 @@ structure Timing : sig
             if (nruns = 1)
               then (
                 pr(concat["  \"", label, "\" : "]);
-                doit outS; pr "\n")
+                doit outS; pr "}\n")
               else (
                 pr(concat["  \"", label, "\" : [\n"]);
                 loop nruns;
