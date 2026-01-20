@@ -38,7 +38,7 @@ structure Main : BMARK =
 
 (******* Quelques definitions du prelude CAML **************)
 
-    exception Failure of string;
+    exception Failure of string
 
     fun failwith s = raise(Failure s)
 
@@ -118,11 +118,11 @@ fun assoc a =
 
 (* 4- Les sorties *)
 
-fun print s = TextIO.output(TextIO.stdOut, s)
+val print = Log.print
 val print_string = print
 val print_num = print o Int.toString
-fun print_newline () = print "\n";
-fun message s = (print s; print "\n");
+fun print_newline () = print "\n"
+fun message s = Log.say [s, "\n"]
 
 (* 5- Les ensembles *)
 
@@ -207,7 +207,7 @@ fun unify ((term1 as (Var n1)), term2) =
 (* We need to print terms with variables independently from input terms
   obtained by parsing. We give arbitrary names v1,v2,... to their variables. *)
 
-val INFIXES = ["+","*"];
+val INFIXES = ["+","*"]
 
 fun pretty_term (Var n) =
       (print_string "v"; print_num n)
@@ -237,7 +237,7 @@ and pretty_close (M as Term(oper, _)) =
 (* standardizes an equation so its variables are 1,2,... *)
 
 fun mk_rule M N =
-  let val all_vars = union (vars M) (vars N);
+  let val all_vars = union (vars M) (vars N)
       val (k,subst) =
         it_list (fn (i,sigma) => fn v => (i+1,(v,Var(i))::sigma))
                (1,[]) all_vars
@@ -310,7 +310,7 @@ pretty_term (mrewrite_all Group_rules M where M,_=<<A*(I(B)*B)>>);;
 
 (************************ Recursive Path Ordering ****************************)
 
-datatype ordering = Greater | Equal | NotGE;
+datatype ordering = Greater | Equal | NotGE
 
 fun ge_ord order pair = case order pair of NotGE => false | _ => true
 and gt_ord order pair = case order pair of Greater => true | _ => false
@@ -387,7 +387,7 @@ fun rpo op_order ext =
 fun super M =
   let fun suprec (N as Term(_,sons)) =
       let fun collate (pairs,n) son =
-                (pairs @ map (fn (u,sigma) => (n::u,sigma)) (suprec son), n+1);
+                (pairs @ map (fn (u,sigma) => (n::u,sigma)) (suprec son), n+1)
           val insides =
                 fst (it_list collate ([],1) sons)
       in ([], unify(M,N)) :: insides  handle Failure _ => insides
@@ -452,8 +452,8 @@ fun non_orientable (M,N) =
 (* kb_completion : (term_pair -> bool) -> num -> rules -> term_pair list -> (num & num) -> term_pair list -> rules *)
 fun kb_completion greater =
   let fun kbrec n rules =
-    let val normal_form = mrewrite_all rules;
-        fun get_rule k = assoc k rules;
+    let val normal_form = mrewrite_all rules
+        fun get_rule k = assoc k rules
         fun process failures =
           let fun processf (k,l) =
             let fun processkl [] =
@@ -465,17 +465,17 @@ fun kb_completion greater =
                          app non_orientable failures;
                          failwith "kb_completion"))
             | processkl ((M,N)::eqs) =
-              let val M' = normal_form M;
-                  val N' = normal_form N;
+              let val M' = normal_form M
+                  val N' = normal_form N
                   fun enter_rule(left,right) =
                     let val new_rule = (n+1, mk_rule left right) in
                      (pretty_rule new_rule;
-                      let fun left_reducible (_,(_,(L,_))) = reducible left L;
+                      let fun left_reducible (_,(_,(L,_))) = reducible left L
                           val (redl,irredl) = partition left_reducible rules
                       in (app deletion_message redl;
                           let fun right_reduce (m,(_,(L,R))) =
                               (m,mk_rule L (mrewrite_all (new_rule::rules) R));
-                              val irreds = map right_reduce irredl;
+                              val irreds = map right_reduce irredl
                               val eqs' = map (fn (_,(_,pair)) => pair) redl
                           in kbrec (n+1) (new_rule::irreds) [] (k,l)
                                    (eqs @ eqs' @ failures)
@@ -510,8 +510,8 @@ fun kb_completion greater =
   end
 
 fun kb_complete greater complete_rules rules =
-    let val n = check_rules complete_rules;
-        val eqs = map (fn (_,(_,pair)) => pair) rules;
+    let val n = check_rules complete_rules
+        val eqs = map (fn (_,(_,pair)) => pair) rules
         val completed_rules =
                kb_completion greater n complete_rules [] (n,n) eqs
     in (message "Canonical set found :";
@@ -523,7 +523,7 @@ val Group_rules = [
   (1, (1, (Term("*", [Term("U",[]), Var 1]), Var 1))),
   (2, (1, (Term("*", [Term("I",[Var 1]), Var 1]), Term("U",[])))),
   (3, (3, (Term("*", [Term("*", [Var 1, Var 2]), Var 3]),
-           Term("*", [Var 1, Term("*", [Var 2, Var 3])]))))];
+           Term("*", [Var 1, Term("*", [Var 2, Var 3])]))))]
 
 val Geom_rules = [
  (1,(1,(Term ("*",[(Term ("U",[])), (Var 1)]),(Var 1)))),
@@ -545,7 +545,7 @@ val Geom_rules = [
     [(Term ("C",[])),
      (Term ("*",[(Term ("B",[])), (Term ("I",[(Term ("C",[]))]))]))]),
   (Term ("B",[])))))
-];
+]
 
 fun Group_rank "U" = 0
   | Group_rank "*" = 1
@@ -556,7 +556,7 @@ fun Group_rank "U" = 0
   | Group_rank _ = raise Fail "unknown operator"
 
 fun Group_precedence op1 op2 =
-  let val r1 = Group_rank op1;
+  let val r1 = Group_rank op1
       val r2 = Group_rank op2
   in
     if r1 = r2 then Equal else
