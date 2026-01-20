@@ -283,7 +283,7 @@ fi
     echo "  \"sml-system\" : \"${smlsys}\","
     echo "  \"sml-version\" : \"${smlvers}\","
     if [ x"$controls" = x ] ; then
-      echo "  \"sml-options\" : none,"
+      echo "  \"sml-options\" : null,"
     else
       echo "  \"sml-options\" : \"$controls\","
     fi
