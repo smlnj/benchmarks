@@ -9,7 +9,7 @@
 #
 
 cmd="make-single-file.sh"
-mlton=no
+mode=smlnj      # possible values: smlnj, mlton, cloc
 quiet=no
 include_basis=no
 
@@ -37,6 +37,7 @@ usage() {
   echo "  options:"
   echo "    -h,-help        print this message and exit"
   echo "    -mlton          create a file that can be compiled by MLton"
+  echo "    -cloc           create a file for counting lines of code"
   echo "    -quiet          run in quiet mode"
   echo "    -include-basis  include the Basis source code in a single-file"
   exit $1
@@ -47,7 +48,9 @@ copy() {
   srcDir="$1"
   src="$2"
   dst="$3"
-  echo "(******************** $src ********************)" >> "$dst"
+  if [ x"$mode" != xcloc ] ; then
+    echo "(******************** $src ********************)" >> "$dst"
+  fi
   cat "$srcDir/$src" >> "$dst"
 }
 
@@ -60,19 +63,33 @@ mkall () {
     exit 1
   fi
   say "***** $bmark"
-  if [ x"$mlton" = xyes ] ; then
-    out="$bmarkDir/all-mlton.sml"
-  else
-    out="$bmarkDir/all.sml"
-  fi
-  echo "(* $out -- all sources for $bmark *)" > $out
-  if [ x"$mlton" != xyes ] ; then
-    # SML/NJ allows signatures in local, which is an extension, but
-    # MLton follows the Definition and does not
-    echo "local" >> $out
-  fi
 
-  copy "$root/util" bmark.sig "$out"
+  case x"$mode" in
+    xsmlnj) out="$bmarkDir/all.sml" ;;
+    xmlton) out="$bmarkDir/all-mlton.sml" ;;
+    xcloc) out="$bmarkDir/all.sml" ;;
+    *) echo "!!! invalid mode" ; exit 1 ;;
+  esac
+
+  echo "(* $out -- all sources for $bmark *)" > $out
+  case x"$mode" in
+    xsmlnj)
+      # SML/NJ allows signatures in local, which is an extension, but
+      # MLton follows the Definition and does not
+      echo "local" >> $out
+      ;;
+    *) ;;
+  esac
+
+  case x"$mode" in
+    xsmlnj|xmlton)
+      # copy the utility files
+      for srcFile in $(cat $root/util/FILES) ; do
+        copy "$root/util" $srcFile "$out"
+      done
+      ;;
+    *) ;;
+  esac
 
   if [ -f $bmarkDir/FILES ] ; then
     # copy the listed source files in FILES
@@ -89,20 +106,23 @@ mkall () {
     done
   fi
 
-  if [ x"$mlton" = xyes ] ; then
-    cat "$bmarkDir/main.sml" >> $out
-  else
-    echo "in" >> $out
-    cat "$bmarkDir/main.sml" >> $out
-    echo "end; (* local *)" >> $out
-  fi
-
-  if [ x"$mlton" = xyes ] ; then
-    echo "val _ = (case CommandLine.arguments()" >> $out
-    echo "         of \"-test\"::_ => Main.testit TextIO.stdOut" >> $out
-    echo "          | _ => Main.doit()" >> $out
-    echo "        (* end case *));" >> $out
-  fi
+  case x"$mode" in
+    xsmlnj)
+      echo "in" >> $out
+      cat "$bmarkDir/main.sml" >> $out
+      echo "end; (* local *)" >> $out
+      ;;
+    xmlton)
+      cat "$bmarkDir/main.sml" >> $out
+      echo "val _ = (case CommandLine.arguments()" >> $out
+      echo "         of \"-test\"::_ => Timing.testIt(\"-\", Main.testit)" >> $out
+      echo "          | _ => Timing.timeIt Main.doit TextIO.stdOut" >> $out
+      echo "        (* end case *));" >> $out
+      ;;
+    xcloc)
+      cat "$bmarkDir/main.sml" >> $out
+      ;;
+  esac
 }
 
 #
@@ -111,7 +131,8 @@ mkall () {
 while [ "$#" != "0" ]; do
   arg=$1
   case "$arg" in
-    -mlton) shift; mlton=yes ;;
+    -mlton) shift; mode=mlton ;;
+    -cloc) shift; mode=cloc ;;
     -quiet) shift; quiet=yes ;;
     -include-basis) shift; include_basis=yes ;;
     -h|-help) usage 0 ;;

@@ -61,7 +61,6 @@ mkdir $tmpdir
 
 for b in $bmarks ; do
   bmarkdir=programs/$b
-  dst="$tmpdir/$b"
   # check the validity of the benchmark
   if [ ! -d "$bmarkdir" ] ; then
     rm -rf $tmpdir
@@ -69,14 +68,9 @@ for b in $bmarks ; do
     echo 1
   fi
   # create a single file from the benchmark sources
-  if [ -r "$bmarkdir/FILES" ] ; then
-    for f in $(cat "$bmarkdir/FILES") main.sml ; do
-      cat $bmarkdir/$f >> $dst
-    done
-  else
-    cp $bmarkdir/main.sml $dst
-  fi
-  echo "$b" >> $tmpdir/FILES
+  $bindir/make-single-file.sh -cloc "$b"
+  mv "$bmarkdir/all.sml" "$tmpdir/$b"
+  echo "$b" >> "$tmpdir/FILES"
 done
 
 # command-line arguments to the cloc command
