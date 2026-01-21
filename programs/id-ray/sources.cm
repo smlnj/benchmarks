@@ -1,0 +1,22 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2026 The Fellowship of SML/NJ (https://smlnj.org)
+ * All rights reserved.
+ *
+ * This benchmark is a port of a ray tracer written in Id.  The original
+ * port was part of the Manticore project.
+ *)
+
+Library
+
+  structure Main
+
+is
+
+  $/basis.cm
+
+  ../../util/sources.cm
+
+  image.sml
+  ray.sml
+  main.sml
