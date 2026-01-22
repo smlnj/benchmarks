@@ -9,6 +9,8 @@ structure Main : BMARK =
 
     val name = "lexgen"
 
+    val results = ["ml.lex.sml"]
+
     fun loop n =
       if n <= 0 then () else (LexGen.lexGen "DATA/ml.lex"; loop (n - 1))
 

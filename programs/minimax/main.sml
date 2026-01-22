@@ -11,6 +11,8 @@ structure Main : BMARK =
 
     val name = "minimax"
 
+    val results : string list = []
+
     val iters = 10
 
     fun doit () = let

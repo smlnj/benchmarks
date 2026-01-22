@@ -11,6 +11,8 @@ structure Main : BMARK =
 
     val name = "mandelbrot-rat"
 
+    val results : string list = []
+
     (* rational number *)
     type fixed = int * int
 

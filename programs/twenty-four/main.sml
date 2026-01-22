@@ -9,6 +9,8 @@ structure Main : BMARK =
 
     val name = "twenty-four"
 
+    val results : string list = []
+
     fun allHands curr left =
         if left < 0 orelse left > curr
           then []

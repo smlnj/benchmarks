@@ -9,6 +9,8 @@ structure Main : BMARK =
 
     val name = "vliw"
 
+    val results : string list = []
+
     val _ = (
           Node.move_test_debug := false;
           Node.move_op_debug := false;
@@ -70,19 +72,19 @@ structure Main : BMARK =
           val ws = 9
           val () = (
                 Delay.idempotency := idemp;
-                print (concat[
+                Log.say [
                     "compressing ", ifile, " into (uncompressed) ", ofile,
                     " and (compressed) ", c_ofile,
                     " with idempotency ", Int.toString idemp,
                     " and window size ", Int.toString ws, "\n"
-                  ]))
+                  ])
           val code_motions = run (ifile, ofile, c_ofile, ws)
 (* the following produces a Subscript exception in `set-env.sml` (line 370)
           val answer = SimStuff.cmprog(ofile, c_ofile)
 *)
           val answer = ""
           in
-            print (answer ^ "code_motions " ^ code_motions ^ " \n")
+            Log.say [answer, "code_motions ", code_motions, " \n"]
           end
 
     fun runOne () = (

@@ -11,6 +11,8 @@ functor Simple (val grid_max: int val step_count: int) : BMARK =
 
     val name = "simple"
 
+    val results : string list = []
+
 fun fold f [] = (fn b => b)
   | fold f (a::r) = (fn b => let fun f2(e,[]) = f(e,b)
                                    | f2(e,a::r) = f(e,f2(a,r))

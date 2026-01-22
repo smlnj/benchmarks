@@ -9,6 +9,8 @@ structure Main : BMARK =
 
     val name = "life"
 
+    val results : string list = []
+
 (* TODO: move the list functions to common/list.sml *)
     fun map f [] = []
       | map f (a::x) = f a :: map f x

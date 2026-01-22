@@ -4,4 +4,4 @@
  * All rights reserved.
  *)
 
-structure Main = Simple (val grid_max=560 val step_count=1);
+structure Main : BMARK = Simple (val grid_max=560 val step_count=1);

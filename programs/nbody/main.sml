@@ -150,6 +150,8 @@ structure Main : BMARK =
 
     val name = "nbody"
 
+    val results : string list = []
+
     fun doit () = ignore (run (50000000, offsetMomentum bodies))
 
     fun testit () = let

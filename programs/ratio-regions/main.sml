@@ -11,6 +11,8 @@ structure Main : BMARK =
 
     val name = "ratio-regions"
 
+    val results : string list = []
+
     fun doo (max: int, f: int -> unit): unit = let
         fun loop i = if i >= max then () else (f i; loop(i + 1))
         in

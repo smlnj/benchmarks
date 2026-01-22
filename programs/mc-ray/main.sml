@@ -9,6 +9,8 @@ structure Main : BMARK =
 
     val name = "mc-ray"
 
+    val results = ["out.ppm"]
+
     fun render () = Trace.rayTracer (RandomScene.build (150, 100, 50))
 
     fun doit () = ignore (render ())
@@ -16,7 +18,7 @@ structure Main : BMARK =
     fun testit outS = let
           val img = render ()
           in
-            Image.writePPM ("mc-ray-output.ppm", img);
+            Image.writePPM ("out.ppm", img);
             Log.print "OK\n"
           end
 

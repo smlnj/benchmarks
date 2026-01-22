@@ -7,22 +7,24 @@
 structure Main : BMARK =
    struct
 
-      val name = "plclub-ray"
+    val name = "plclub-ray"
 
-      fun runOnce () =
-         Eval.f (Program.read (TextIO.openIn "chess.gml"))
-         handle _ => ()
+    val results : string list = ["chess.ppm"]
 
-      fun run n = let
-            fun loop n = if n = 0 then () else (runOnce(); loop(n-1))
-            in loop n
-            end
+    fun runOnce () =
+       Eval.f (Program.read (TextIO.openIn "chess.gml"))
+       handle _ => ()
 
-      fun testit () =
-            Log.print (
-              (runOnce (); "OK\n")
-                handle ex => exnMessage ex ^ "\n")
+    fun run n = let
+          fun loop n = if n = 0 then () else (runOnce(); loop(n-1))
+          in loop n
+          end
 
-      fun doit () = run 10
+    fun testit () =
+          Log.print (
+            (runOnce (); "OK\n")
+              handle ex => exnMessage ex ^ "\n")
+
+    fun doit () = run 10
 
    end

@@ -6,6 +6,7 @@ structure Main : BMARK =
 
     val name = "dlx"
 
+    val results : string list = []
 
     fun run optOut (instructions, inputs) = let
           fun inputFn {state = (inputs, outputs)} = (case inputs

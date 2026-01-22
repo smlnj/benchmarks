@@ -11,6 +11,8 @@ structure Main : BMARK =
 
     val name = "barnes-hut-3d"
 
+    val results : string list = []
+
     (* parameters *)
     val nbody = 1024
     val tnow = 0.0

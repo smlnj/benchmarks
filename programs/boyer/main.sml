@@ -9,6 +9,8 @@ structure Main : BMARK =
 
     val name = "boyer"
 
+    val results : string list = []
+
     open Terms;
     open Boyer;
 

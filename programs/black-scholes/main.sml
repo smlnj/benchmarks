@@ -9,6 +9,8 @@ structure Main : BMARK =
 
     val name = "black-scholes"
 
+    val results : string list = []
+
     (* preload the data for the timing tests; the "large" data set has 64K entries;
      * we scale that up to 2M entries by concatenating the list.
      *)

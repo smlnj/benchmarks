@@ -9,6 +9,8 @@ structure Main : BMARK =
 
     val name = "sat"
 
+    val results : string list = []
+
     fun AND [] = true
       | AND (false::_) = false
       | AND (true::bs) = AND bs

@@ -507,19 +507,21 @@ fun showList (start, sep, stop, trans) lst = (
                   ()));
         stop ())
 
-fun showIntList outS = showList (
+    fun showIntList outS = showList (
                       fn () => Log.print "[",
                       fn () => Log.print ", ",
                       fn () => Log.print "]",
                       fn i => Log.print (Int.toString i))
 
-fun showIntListList outS = showList (
+    fun showIntListList outS = showList (
                       fn () => Log.print "[",
                       fn () => Log.print ", ",
                       fn () => Log.print "]",
                       showIntList outS)
 
     val name = "count-graphs"
+
+    val results : string list = []
 
     fun testit outS = let
           fun doOne arg = (

@@ -9,6 +9,8 @@ structure Main : BMARK =
 
     val name = "id-ray"
 
+    val results = ["out.ppm"]
+
     fun testit () = (Ray.ray ("out.ppm", 256); Log.print "OK\n")
           handle _ => Log.print "FAIL\n"
 

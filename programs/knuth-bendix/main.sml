@@ -571,8 +571,9 @@ fun Group_precedence op1 op2 =
           then ()
           else (kb_complete greater [] Geom_rules; loop (n - 1))
 
+    val results = []
 
     fun doit () = loop 300
-    fun testit _ = ()
+    fun testit _ = () (* FIXME *)
 
   end (* Main *)

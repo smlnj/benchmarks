@@ -9,6 +9,8 @@ structure Main : BMARK =
 
     val name = "mlyacc"
 
+    val results : string list = ["ml.grm.sig","ml.grm.sml"]
+
     fun runOnce () = ParseGen.parseGen "DATA/ml.grm"
 
     fun doit () = let

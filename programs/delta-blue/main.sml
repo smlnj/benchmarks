@@ -9,6 +9,8 @@ structure Main : BMARK =
 
     val name = "delta-blue"
 
+    val results : string list = []
+
     fun repeat n f = let
           fun lp 0 = ()
             | lp i = (f(); lp (i-1))

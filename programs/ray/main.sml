@@ -11,6 +11,8 @@ structure Main : BMARK =
 
     val name = "ray"
 
+    val results = ["out.ppm"]
+
     fun doit () = let
           fun loop n = if n = 0
                 then ()
@@ -26,6 +28,7 @@ structure Main : BMARK =
             loop 100
           end
 
+(* FIXME *)
     fun testit _ = ()
 
   end

@@ -9,6 +9,8 @@ structure Main : BMARK =
 
     val name = "cml-sieve"
 
+    val results : string list = []
+
     fun testit () = let
           val res = List.tabulate(10, fn i => Primes.nthPrime(i+1))
           in

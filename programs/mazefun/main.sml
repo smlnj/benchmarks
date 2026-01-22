@@ -238,6 +238,8 @@ structure Main : BMARK =
 
     val name = "mazefn"
 
+    val results : string list = []
+
     fun doit () = let
           fun oneRun () = makeMaze n m
           fun lp 0 = ()

@@ -10,6 +10,8 @@
 structure Main : BMARK =
   struct
 
+    val results : string list = []
+
     exception Empty
 
     fun hd l = (case l of [] => raise Empty | x::_ => x)

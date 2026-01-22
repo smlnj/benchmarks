@@ -9,6 +9,8 @@ structure Main : BMARK =
 
     val name = "pingpong"
 
+    val results : string list = []
+
     fun testit outS = (
           CML.run (PingPong.run, 10);
           print "ok\n")

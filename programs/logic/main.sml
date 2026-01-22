@@ -6,7 +6,10 @@
 
 structure Main : BMARK =
   struct
+
     val name = "logic"
+
+    val results : string list = []
 
     exception Done
 

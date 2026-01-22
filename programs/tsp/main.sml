@@ -14,6 +14,8 @@ structure Main : sig
 
     val name = "tsp"
 
+    val results : string list = []
+
     val divideSz = ref 150
 
     fun printLength (Tree.NULL) = Log.print "(* 0 points *)\n"

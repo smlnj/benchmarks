@@ -20,4 +20,9 @@ signature BMARK =
      *)
     val testit : unit -> unit
 
+    (* a (possibly empty) list of generated result files.  This list is used
+     * when testing a benchmark for correctness.
+     *)
+    val results : string list
+
   end

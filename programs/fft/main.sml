@@ -11,6 +11,8 @@ structure Main : BMARK =
 
     val name = "fft64"
 
+    val results : string list = []
+
     structure A = Real64Array
     structure R = Real64
     structure M = R.Math

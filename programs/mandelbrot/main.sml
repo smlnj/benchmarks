@@ -9,6 +9,8 @@ structure Main : BMARK =
 
     val name = "mandelbrot"
 
+    val results : string list = []
+
     val x_base = ~2.0
     val y_base = 1.25
     val side = 2.5
