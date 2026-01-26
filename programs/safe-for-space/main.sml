@@ -47,6 +47,7 @@ structure Main : BMARK =
     (*
     val result = loop (N, [])
     *)
+    fun doit () = ignore (loop (10000, []))
     val result = loop (5, [])
 
-  end;
+  end
