@@ -1,0 +1,37 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2026 The Fellowship of SML/NJ (https://smlnj.org)
+ * All rights reserved.
+ *)
+
+Library
+
+  structure Main
+
+is
+
+  $/basis.cm
+
+  ../../util/sources.cm
+
+  ../common/ord-key.sig
+  ../common/ord-map.sig
+  ../common/ord-set.sig
+  ../common/lib-base.sml
+  ../common/redblack-map-fn.sml
+  ../common/redblack-set-fn.sml
+
+  addr.sml
+  analysis.sml
+  bind.sml
+  cps.sml
+  examples.sml
+  interp-fn.sml
+  label.sml
+  state-space.sml
+  store.sml
+  time.sml
+  value.sml
+  var.sml
+
+  main.sml
