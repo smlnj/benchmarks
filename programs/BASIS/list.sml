@@ -270,3 +270,15 @@ structure List : LIST =
     val sub = nth
 
   end (* structure List *)
+
+(* top-level bindings for List operations *)
+val null = List.null
+val hd = List.hd
+val tl = List.tl
+val length = List.length
+val op @ = List.@
+val rev = List.rev
+val app = List.app
+val map = List.map
+val foldl = List.foldl
+val foldr = List.foldr
