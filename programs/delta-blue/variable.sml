@@ -46,8 +46,8 @@ structure Variable : sig
             stay = ref true
           }
 
-    fun toString (Variable{name, value, walkStrength, ...}) = concat [
-            name, "(", Strength.toString(!walkStrength), ",",
+    fun toString (Variable{name, value, walkStrength, mark, ...}) = concat [
+            name, "(", Strength.toString(!walkStrength), "#", Int.toString(!mark), ",",
             Int.toString(!value), ")"
           ]
 

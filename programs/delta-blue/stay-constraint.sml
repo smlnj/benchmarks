@@ -41,7 +41,8 @@ structure StayConstraint : sig
                     (* optimized by removing call to execute *)
                     V.setWalkStrength (out, !strength);
                     V.setStay (out, true)),
-                inputsToString = fn _ => ""
+                inputsToString = fn _ => "",
+                toString = fn _ => V.toString out ^ " == STAY"
               }
           end
 

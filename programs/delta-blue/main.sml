@@ -22,6 +22,6 @@ structure Main : BMARK =
 
     fun doit () = repeat 100 runOnce
 
-    fun testit outS = ()
+    fun testit outS = (DeltaBlue.chainTest 10; DeltaBlue.projectionTest 10)
 
   end

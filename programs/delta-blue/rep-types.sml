@@ -34,7 +34,8 @@ structure RepTypes =
         inputsKnown : constraint * int -> bool,
         output : constraint -> variable,
         recalculate : constraint -> unit,
-        inputsToString : constraint -> string
+        inputsToString : constraint -> string,
+        toString : constraint -> string
       }
 
     (* directions for binary constraints *)

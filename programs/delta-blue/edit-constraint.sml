@@ -41,7 +41,8 @@ structure EditConstraint : sig
                     (* optimized by removing call to execute *)
                     V.setWalkStrength (out, !strength);
                     V.setStay (out, false)),
-                inputsToString = fn _ => ""
+                inputsToString = fn _ => "",
+                toString = fn _ => V.toString out ^ " == EDIT"
               }
           end
 

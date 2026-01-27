@@ -95,7 +95,17 @@ structure ScaleConstraint : sig
                       V.setStay (outp, V.getStay inp);
                       if V.getStay outp then execute c else ()
                     end,
-                inputsToString = fn c => V.toString(input c)
+                inputsToString = fn c => V.toString(input c),
+                toString = fn _ => (case !direction
+                   of Forward => concat [
+                          V.toString dest, " == ", V.toString scale, " * ",
+                          V.toString src, " + ", V.toString offset
+                        ]
+                    | _ => concat [
+                          V.toString src, " == (", V.toString dest, " - ",
+                          V.toString offset, ") / ", V.toString scale
+                        ]
+                  (* end case *))
               }
           end
 

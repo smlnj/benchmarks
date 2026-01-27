@@ -77,7 +77,8 @@ structure EqualityConstraint : sig
                       V.setStay (outp, V.getStay inp);
                       if V.getStay outp then execute c else ()
                     end,
-                inputsToString = fn c => V.toString(input c)
+                inputsToString = fn c => V.toString(input c),
+                toString = fn c => concat[V.toString(output c), " == ", V.toString(input c)]
               }
           end
 
@@ -85,7 +86,8 @@ structure EqualityConstraint : sig
           val c = make (var1, var2, s)
           in
             C.addToGraph c;
-            Planner.incrementalAdd (planner, c);
+            Planner.incrementalAdd (planner, c)
+handle ex => (print(concat["# EqualityConstraint.new: ", Constraint.toString c, "\n"]); raise ex);
             c
           end
 

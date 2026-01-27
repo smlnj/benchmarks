@@ -113,8 +113,10 @@ structure Planner : sig
                 then ()
                 else propagate (satisfy (planner, overridden, mark))
           in
+print(concat["## incrementalAdd: ", C.toString c, "; mark = ", Int.toString mark, "\n"]);
             propagate (satisfy (planner, c, mark))
           end
+handle ex => raise ex
 
     and removePropagateFrom (planner, out) = let
           val () = V.setDeterminedBy (out, C.null)
@@ -159,6 +161,7 @@ structure Planner : sig
           in
             lp Strength.required
           end
+handle ex => raise ex
 
     (* Recompute the walkabout strengths and stay flags of all variables
      * downstream of the given constraint and recompute the actual

@@ -37,10 +37,11 @@ structure DeltaBlue : sig
     fun newVar (name, value) = V.new(name, value, S.weakest)
 
     fun chainTest n = let
+val _ = print "# Chain Test\n"
           val planner = Planner.new()
           (* build a chain of `n` equality constraints *)
           val first = newVar("v0", 0)
-          fun build (i, prev) = if (i <= n)
+          fun build (i, prev) = if (i < n)
                 then let
                   val x = newVar("v"^Int.toString i, 0)
                   in
@@ -48,10 +49,15 @@ structure DeltaBlue : sig
                     build (i+1, x)
                   end
                 else prev
+val _ = print "## build\n"
           val last = build(1, first)
+handle ex => raise ex
           val _ = StayConstraint.new(planner, last, S.strongDefault)
+handle ex => raise ex
           val editC = EditConstraint.new(planner, first, S.preferred)
+handle ex => raise ex
           val plan = Planner.extractPlanFromConstraints(planner, [editC])
+handle ex => raise ex
           (* execute the plan 100 times *)
           fun execLp i = if (i < 100)
                 then (
@@ -62,6 +68,7 @@ structure DeltaBlue : sig
                     else execLp(i+1))
                 else ()
           in
+print "## execute\n";
             execLp 0;
             C.destroy (editC, planner)
           end
@@ -110,16 +117,19 @@ structure DeltaBlue : sig
           val (src, dst, dests) = lp (1, src, dst, [dst])
           in
             (* test 1 *)
+print "# Projection Test 1\n";
             change (planner, src, 17);
             if (Variable.getValue dst <> 1170)
               then raise Fail "Projection test 1 failed!"
               else ();
             (* test 2 *)
+print "# Projection Test 2\n";
             change (planner, dst, 1050);
             if (Variable.getValue dst <> 5)
               then raise Fail "Projection test 2 failed!"
               else ();
             (* test 3 *)
+print "# Projection Test 3\n";
             change(planner, scale, 5);
             let fun lp (i, x::xs) = if (i < n - 1)
                       then if (Variable.getValue x <> i * 5 + 1000)
@@ -131,6 +141,7 @@ structure DeltaBlue : sig
                   lp (0, dests)
                 end;
             (* test 4 *)
+print "# Projection Test 4\n";
             change(planner, offset, 2000);
             let fun lp (i, x::xs) = if (i < n - 1)
                       then if (Variable.getValue x <> i * 5 + 2000)

@@ -29,6 +29,7 @@ signature CONSTRAINT_BASE =
     val output : t -> RepTypes.variable
     val recalculate : t -> unit
     val inputsToString : t -> string
+    val toString : t -> string
 
   end
 
@@ -53,7 +54,8 @@ structure ConstraintBase : CONSTRAINT_BASE =
                 inputsKnown = fail "inputsKnown",
                 output = fail "output",
                 recalculate = fail "recalculate",
-                inputsToString = fail "inputsToString"
+                inputsToString = fail "inputsToString",
+                toString = fail "toString"
               }
           end
 
@@ -75,5 +77,6 @@ structure ConstraintBase : CONSTRAINT_BASE =
     fun output (c as Constraint{output, ...}) = output c
     fun recalculate (c as Constraint{recalculate, ...}) = recalculate c
     fun inputsToString (c as Constraint{inputsToString, ...}) = inputsToString c
+    fun toString (c as Constraint{toString, ...}) = toString c
 
   end
