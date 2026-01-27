@@ -37,6 +37,8 @@ structure Constraint : sig
                 "Satisfied(", inputsToString c, " -> ",
                 Variable.toString(output c), ")"
               ]
-            else "Unsatisfied"
+            else concat [
+                "Unsatisfied(", inputsToString c, ")"
+              ]
 
   end
