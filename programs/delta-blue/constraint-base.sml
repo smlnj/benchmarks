@@ -77,6 +77,10 @@ structure ConstraintBase : CONSTRAINT_BASE =
     fun output (c as Constraint{output, ...}) = output c
     fun recalculate (c as Constraint{recalculate, ...}) = recalculate c
     fun inputsToString (c as Constraint{inputsToString, ...}) = inputsToString c
-    fun toString (c as Constraint{toString, ...}) = toString c
+    fun toString (c as Constraint{strength, toString, isSatisfied, ...}) = let
+          val sts = if isSatisfied c then "Satisfied" else "Unsatisfied"
+          in
+            concat[sts, "(", Strength.toString(!strength), "; ", toString c, ")"]
+          end
 
   end

@@ -34,10 +34,12 @@ structure EqualityConstraint : sig
                 in
                   if (V.getMark var1 = mark)
                     then setDir (var1, var2, Forward)
-                  else if (V.getMark var2 = mark)
+                    else ();
+                  if (V.getMark var2 = mark)
                     then setDir (var2, var1, Backward)
+                    else ();
                   (* If we get here, neither variable is marked, so we have a choice. *)
-                  else if S.weaker(V.getWalkStrength var1, V.getWalkStrength var2)
+                  if S.weaker(V.getWalkStrength var1, V.getWalkStrength var2)
                     then if S.stronger(!strength, V.getWalkStrength var1)
                       then direction := Backward
                       else direction := NoDirection

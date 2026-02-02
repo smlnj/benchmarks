@@ -16,10 +16,6 @@ structure Constraint : sig
      *)
     val destroy : t * Planner.t -> unit
 
-(*
-    val toString : t -> string
-*)
-
   end = struct
 
     open ConstraintBase
@@ -32,20 +28,5 @@ structure Constraint : sig
     fun destroy (c, planner) = (
           if (isSatisfied c) then Planner.incrementalRemove(planner, c) else ();
           removeFromGraph c)
-
-(*
-    fun toString c =
-          if isSatisfied c
-            then concat [
-                "Satisfied(", inputsToString c, " -> ",
-                Variable.toString(output c), ")"
-              ]
-            else concat [
-                "Unsatisfied(", inputsToString c, ")"
-              ]
-*)
-val toString = fn c => if isSatisfied c
-      then concat ["Satisfied(", ConstraintBase.toString c, ")"]
-      else concat ["Unsatisfied(", ConstraintBase.toString c, ")"]
 
   end

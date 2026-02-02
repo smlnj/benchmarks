@@ -86,6 +86,7 @@ structure Planner : sig
      *)
     fun satisfy (planner, c, mark) = (
           C.chooseMethod (c, mark);
+print(concat["## satisfy: ", C.toString c, "; mark = ", Int.toString mark, "\n"]);
           if (not (C.isSatisfied c))
             then if Strength.same(C.getStrength c, Strength.required)
               then raise Fail "Could not satisfy a required constraint"

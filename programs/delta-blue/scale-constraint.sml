@@ -46,16 +46,18 @@ structure ScaleConstraint : sig
                         then direction := dir
                         else direction := NoDirection
                 in
-                  if (V.getMark src = mark)
-                    then setDir (src, dest, Forward)
-                  else if (V.getMark dest = mark)
-                    then setDir (dest, src, Backward)
+                  if (V.getMark var1 = mark)
+                    then setDir (var1, var2, Forward)
+                    else ();
+                  if (V.getMark var2 = mark)
+                    then setDir (var2, var1, Backward)
+                    else ();
                   (* If we get here, neither variable is marked, so we have a choice. *)
-                  else if S.weaker(V.getWalkStrength src, V.getWalkStrength dest)
-                    then if S.stronger(!strength, V.getWalkStrength src)
+                  if S.weaker(V.getWalkStrength var1, V.getWalkStrength var2)
+                    then if S.stronger(!strength, V.getWalkStrength var1)
                       then direction := Backward
                       else direction := NoDirection
-                    else if S.stronger(!strength, V.getWalkStrength dest)
+                    else if S.stronger(!strength, V.getWalkStrength var2)
                       then direction := Forward
                       else direction := NoDirection
                 end
