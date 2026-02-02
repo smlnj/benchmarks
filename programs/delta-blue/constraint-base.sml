@@ -39,7 +39,7 @@ structure ConstraintBase : CONSTRAINT_BASE =
     datatype t = datatype RepTypes.constraint
 
     val null = let
-          fun fail name _ = raise Fail name
+          fun fail name _ = raise Fail("null." ^ name)
           in
             Constraint{
                 strength = ref Strength.required,
@@ -54,8 +54,8 @@ structure ConstraintBase : CONSTRAINT_BASE =
                 inputsKnown = fail "inputsKnown",
                 output = fail "output",
                 recalculate = fail "recalculate",
-                inputsToString = fail "inputsToString",
-                toString = fail "toString"
+                inputsToString = fn _ => "",
+                toString = fn _ => "NULL"
               }
           end
 
@@ -77,10 +77,13 @@ structure ConstraintBase : CONSTRAINT_BASE =
     fun output (c as Constraint{output, ...}) = output c
     fun recalculate (c as Constraint{recalculate, ...}) = recalculate c
     fun inputsToString (c as Constraint{inputsToString, ...}) = inputsToString c
-    fun toString (c as Constraint{strength, toString, isSatisfied, ...}) = let
-          val sts = if isSatisfied c then "Satisfied" else "Unsatisfied"
-          in
-            concat[sts, "(", Strength.toString(!strength), "; ", toString c, ")"]
-          end
+    fun toString (c as Constraint{strength, toString, isSatisfied, ...}) =
+          if same(c, null)
+            then "NULL"
+            else let
+              val sts = if isSatisfied c then "Satisfied" else "Unsatisfied"
+              in
+                concat[sts, "(", Strength.toString(!strength), "; ", toString c, ")"]
+              end
 
   end
