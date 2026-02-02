@@ -8,13 +8,6 @@
  *   val nil, ::, hd, tl, null, length, @, app, map, foldr, foldl, rev
  *   exception Empty
  *
- * Consequently the following are not visible at top level:
- *   val last, nth, take, drop, concat, revAppend, mapPartial, find, filter,
- *       partition, exists, all, tabulate
- *
- * The following infix declarations will hold at top level:
- *   infixr 5 :: @
- *
  *)
 
 structure List : LIST =
@@ -29,23 +22,45 @@ structure List : LIST =
 
     exception Empty = Empty
 
-  (* these functions are implemented in base/system/smlnj/init/pervasive.sml *)
-    val null = null
-    val hd = hd
-    val tl = tl
-    val length = length
-    val rev = rev
-    val revAppend = revAppend
-    val op @ = op @
-    val foldr = foldr
-    val foldl = foldl
-    val app = app
-    val map = map
-
-  (* copy some definitions to improve inlining *)
-    fun revAppend' ([], l) = l
-      | revAppend' (x::r, l) = revAppend'(r, x::l)
-    fun rev' l = revAppend' (l, [])
+    fun null [] = true
+      | null _ = false
+    fun hd (h :: _) = h
+      | hd [] = raise Empty
+    fun tl (_ :: t) = t
+      | tl [] = raise Empty
+    fun length l = let
+          fun loop (n, []) = n
+            | loop (n, [_]) = n ++ 1
+            | loop (n, _ :: _ :: l) = loop (n ++ 2, l)
+          in
+            loop (0, l)
+          end
+    fun revAppend ([], l) = l
+      | revAppend (x::r, l) = revAppend(r, x::l)
+    fun rev l = revAppend(l, [])
+    fun l1 @ l2 = revAppend(rev l1, l2)
+    fun foldr f b l = foldl f b (rev l)
+    fun foldl f b l = let
+          fun f2 ([], b) = b
+            | f2 (a :: r, b) = f2 (r, f (a, b))
+          in
+            f2 (l, b)
+          end
+    fun app f = let
+          fun a2 [] = ()
+            | a2 (h :: t) = (f h : unit; a2 t)
+          in
+            a2
+          end
+    fun map f = let
+          fun m [] = []
+            | m [a] = [f a]
+            | m [a, b] = [f a, f b]
+            | m [a, b, c] = [f a, f b, f c]
+            | m (a :: b :: c :: d :: r) = f a :: f b :: f c :: f d :: m r
+          in
+            m
+          end
 
     fun last [] = raise Empty
       | last [x] = x
@@ -82,7 +97,7 @@ structure List : LIST =
       | concat (l::r) = l @ concat r
 
     fun mapPartial pred l = let
-          fun mapp ([], l) = rev' l
+          fun mapp ([], l) = rev l
             | mapp (x::r, l) = (case (pred x)
                  of SOME y => mapp(r, y::l)
                   | NONE => mapp(r, l)
@@ -100,7 +115,7 @@ structure List : LIST =
 	  else (filter pred rest)
 
     fun partition pred l = let
-          fun loop ([],trueList,falseList) = (rev' trueList, rev' falseList)
+          fun loop ([],trueList,falseList) = (rev trueList, rev falseList)
             | loop (h::t,trueList,falseList) =
                 if pred h then loop(t, h::trueList, falseList)
                 else loop(t, trueList, h::falseList)
@@ -146,7 +161,7 @@ structure List : LIST =
 	    lp (strm, [])
 	  end
 
-    fun unfoldl getNext strm = rev'(unfoldr getNext strm)
+    fun unfoldl getNext strm = rev(unfoldr getNext strm)
 
     fun reduce f id [] = id
       | reduce f _ (x::xs) = foldl f x xs
@@ -166,7 +181,7 @@ structure List : LIST =
 	  end
 
     fun mapPartiali pred l = let
-          fun mapp (_, [], l) = rev' l
+          fun mapp (_, [], l) = rev l
             | mapp (i, x::r, l) = (case pred(i, x)
                  of SOME y => mapp(i ++ 1, r, y::l)
                   | NONE => mapp(i ++ 1, r, l)
@@ -229,14 +244,14 @@ structure List : LIST =
           end
 
     fun concatMap f l = let
-	  fun mapf ([], l) = rev' l
-	    | mapf (x::r, l) = mapf (r, revAppend'(f x, l))
+	  fun mapf ([], l) = rev l
+	    | mapf (x::r, l) = mapf (r, revAppend(f x, l))
 	  in
 	    mapf (l, [])
 	  end
     fun concatMapi f l = let
-	  fun mapf (_, [], l) = rev' l
-	    | mapf (i, x::r, l) = mapf (i ++ 1, r, revAppend'(f(i, x), l))
+	  fun mapf (_, [], l) = rev l
+	    | mapf (i, x::r, l) = mapf (i ++ 1, r, revAppend(f(i, x), l))
 	  in
 	    mapf (0, l, [])
 	  end
@@ -252,7 +267,7 @@ structure List : LIST =
 	  foldr (fn (x, acc) => reduceFn(mapFn x, acc)) init l
 
     fun splitAt (l, n) = let
-          fun loop (0, xs, prefix) = (rev' prefix, xs)
+          fun loop (0, xs, prefix) = (rev prefix, xs)
             | loop (_, [], _) = raise Subscript
             | loop (i, x::xs, prefix) = loop (i -- 1, xs, x::prefix)
           in
@@ -260,7 +275,7 @@ structure List : LIST =
           end
 
     fun update (l, n, y) = let
-	  fun upd (0, x::xs, prefix) = revAppend'(prefix, y::xs)
+	  fun upd (0, x::xs, prefix) = revAppend(prefix, y::xs)
 	    | upd (_, [], _) = raise Subscript
 	    | upd (i, x::xs, prefix) = upd (i -- 1, xs, x::prefix)
 	  in
