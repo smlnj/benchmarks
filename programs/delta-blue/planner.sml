@@ -66,12 +66,13 @@ structure Planner : sig
 
     fun addConstraintsConsumingTo (x, constraints) = let
           val determiningC = V.getDeterminedBy x
-          fun lp ([], constraints) = constraints
-            | lp (c::cc, constraints) = if C.same(c, determiningC) andalso C.isSatisfied c
-                then lp (cc, c::constraints)
-                else lp (cc, constraints)
+          fun lp ([], cs) = constraints @ cs
+            | lp (c::cc, cs) =
+                if not(C.same(c, determiningC)) andalso C.isSatisfied c
+                  then lp (cc, c::cs)
+                  else lp (cc, cs)
           in
-            lp (V.getConstraints x, constraints)
+            lp (V.getConstraints x, [])
           end
 
     (* Attempt to find a way to enforce this constraint. If successful,
@@ -97,6 +98,7 @@ print(concat["## satisfy: ", C.toString c, "; mark = ", Int.toString mark, "\n"]
               val out = C.output c
               val overridden = V.getDeterminedBy out
               in
+(*DEBUG*)print(concat["### overridden = ", C.toString overridden, "\n"]);
                 if not(C.same(overridden, C.null))
                   then C.markUnsatisfied c
                   else ();
@@ -106,13 +108,17 @@ print(concat["## satisfy: ", C.toString c, "; mark = ", Int.toString mark, "\n"]
                   else ();
                 V.setMark (out, mark);
                 overridden
+(*DEBUG*)before print "## satisfy done\n"
               end)
 
     and incrementalAdd (planner, c) = let
           val mark = newMark planner
-          fun propagate overridden = if C.same(overridden, C.null)
+          fun propagate overridden = (
+(*DEBUG*)print(concat["### propagate ", C.toString overridden, "\n"]);
+if C.same(overridden, C.null)
                 then ()
                 else propagate (satisfy (planner, overridden, mark))
+(*DEBUG*))
           in
 print(concat["## incrementalAdd: ", C.toString c, "; mark = ", Int.toString mark, "\n"]);
             propagate (satisfy (planner, c, mark))
@@ -160,6 +166,7 @@ handle ex => raise ex
                     lp (S.nextWeaker strength)
                   end
           in
+print(concat["## incrementalRemove: ", C.toString c, "\n"]);
             lp Strength.required
           end
 handle ex => raise ex
@@ -184,8 +191,10 @@ handle ex => raise ex
                   false)
                 else (
                   C.recalculate d;
+(*DEBUG*)print(concat["#### after recalculate: ", C.toString d, "\n"]);
                   lp (addConstraintsConsumingTo (C.output d, todo)))
           in
+(*DEBUG*)print(concat["### addPropagate: c = ", C.toString c, "; mark = ", Int.toString mark, "\n"]);
             lp [c]
           end
 

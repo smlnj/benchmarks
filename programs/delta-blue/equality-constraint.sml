@@ -89,7 +89,9 @@ structure EqualityConstraint : sig
           in
             C.addToGraph c;
             Planner.incrementalAdd (planner, c)
-handle ex => (print(concat["# EqualityConstraint.new: ", Constraint.toString c, "\n"]); raise ex);
+handle ex => (
+print(concat["# exception in EqualityConstraint.new: ", Constraint.toString c, "\n"]);
+raise ex);
             c
           end
 

@@ -74,7 +74,10 @@ structure Variable : sig
     fun setDeterminedBy (Variable{determinedBy, ...}, c) = determinedBy := c
 
     fun getMark (Variable{mark, ...}) = !mark
-    fun setMark (Variable{mark, ...}, m) = mark := m
+    fun setMark (Variable{name, mark, ...}, m) =
+(*DEBUG*)(print(concat["#### Variable.setMark (", name, ", ", Int.toString m, ")\n"]);
+mark := m
+(*DEBUG*))
 
     fun getWalkStrength (Variable{walkStrength, ...}) = !walkStrength
     fun setWalkStrength (Variable{walkStrength, ...}, s) = walkStrength := s
