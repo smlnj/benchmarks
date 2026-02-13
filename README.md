@@ -93,6 +93,7 @@ directory.
 | [`stream-sieve`](programs/sieve/README.md)            |    58 | Functional stream implementation of Sieve of Eratosthenes |
 | [`tsp`](programs/tsp/README.md)                       |   303 | A Traveling-Sales-Person solver            |
 | [`twenty-four`](programs/twenty-four/README.md)       |   120 | CPS-style solver for the 24 puzzle         |
+| [`tyan`](programs/tyan/README.md)                     |   500 | Grobner Basis calculation                  |
 | [`vliw`](programs/vliw/README.md)                     | 2,940 | A Very-Long-Instruction-Word instruction scheduler |
 
 ## Scripts

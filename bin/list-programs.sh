@@ -72,6 +72,7 @@ ALL="\
   smith-nf \
   tsp \
   twenty-four \
+  tyan \
   vliw \
   "
 BROKEN="\
@@ -108,7 +109,7 @@ SMLNJ_DESC="programs from the previous SML/NJ bencmark suite"
 MANTICORE="cml-sieve minimax"
 MANTICORE_DESC="programs from the Manticore benchmark suite"
 
-MLTON="dlx ratio-regions smith-nf"
+MLTON="dlx ratio-regions smith-nf tyan"
 MLTON_DESC="programs from the MLton bencmark suite"
 
 LARCENY="mazefun"

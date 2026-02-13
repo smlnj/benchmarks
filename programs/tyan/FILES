@@ -1,0 +1,13 @@
+../BASIS/list.sig
+../BASIS/list.sml
+../BASIS/array.sig
+../BASIS/array.sml
+../BASIS/string.sig
+../BASIS/string.sml
+util.sml
+f.sml
+m.sml
+mi.sml
+p.sml
+hp.sml
+g.sml

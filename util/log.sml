@@ -15,6 +15,7 @@ structure Log : sig
     (* output to the current output *)
     val print : string -> unit
     val say : string list -> unit
+    val flush : unit -> unit
 
     (* support for binary output *)
     structure BinIO : sig
@@ -52,6 +53,11 @@ structure Log : sig
            of SOME outS => outputList (outS, msg)
             | NONE => ()
           (* end case *))
+
+    fun flush () = (case !logS
+	   of SOME outS => TextIO.flushOut outS
+	    | _ => ()
+	  (* end case *))
 
     structure BinIO =
       struct
