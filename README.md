@@ -57,6 +57,7 @@ directory.
 
 | Directory                                             | LOC   | Short Description                          |
 | ----------------------------------------------------- | ----- | ------------------------------------------ |
+| [`aobench`](programs/aobench/README.md)               |   259 | A small ambient occlusion renderer         |
 | [`barnes-hut`](programs/barnes-hut/README.md)         |   820 | Hierarchical N-body solver (BROKEN)        |
 | [`black-scholes`](programs/black-scholes/README.md)   |   127 | European-style option pricing              |
 | [`boyer`](programs/boyer/README.md)                   |   912 | (BROKEN)                                   |

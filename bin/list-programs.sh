@@ -46,6 +46,7 @@ sort_items() {
 }
 
 ALL="\
+  aobench \
   black-scholes \
   count-graphs \
   cml-sieve \
@@ -80,7 +81,7 @@ BROKEN="\
   dlx \
   "
 
-FP="barnes-hut black-scholes fft mandelbrot mc-ray nbody nucleic plclub-ray smith-nf tsp"
+FP="aobench barnes-hut black-scholes fft mandelbrot mc-ray nbody nucleic plclub-ray smith-nf tsp"
 FP_DESC="programs that make significant use of floating-point arithmetic"
 
 LIST="count-graphs life minimax"
