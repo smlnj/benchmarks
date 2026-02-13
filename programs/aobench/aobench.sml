@@ -1,14 +1,14 @@
-(* main.sml
+(* aobench.sml
  *
  * COPYRIGHT (c) 2026 The Fellowship of SML/NJ (https://smlnj.org)
  * All rights reserved.
  *)
 
-structure AOBench : sig
+structure AOBench (*: sig
 
     val render : {ht : int, wid : int, nSubsamples : int} -> Word8Array.array
 
-  end = struct
+  end*) = struct
 
     structure W8A = Word8Array
     structure R64A = Real64Array
@@ -71,6 +71,11 @@ structure AOBench : sig
           }
 
   (** intersection tests **)
+
+    val miss : isect = {t = 1.0e17, p = vzero, n = vzero, hit = false}
+
+    fun hit (t, p, n) : isect = {t = t, p = p, n = n, hit = true}
+
     fun raySphereIntersect (isect : isect, ray : ray, sphere : sphere) = let
           val rs = vsub(#org ray, #center sphere)
           val b = vdot(rs, #dir ray)
@@ -84,10 +89,9 @@ structure AOBench : sig
                   if (t > 0.0) andalso (t < #t isect)
                     then let
                       val pt = pointAt (ray, t)
-                      in {
-                        t = t, hit = true, p = pt,
-                        n = vnormalize(vsub(pt, #center sphere))
-                      } end
+                      in
+                        hit (t, pt, vnormalize(vsub(pt, #center sphere)))
+                      end
                     else isect
                 end
               else isect
@@ -100,10 +104,10 @@ structure AOBench : sig
             if Real.abs v < 1.0e~17
               then isect
               else let
-                val t = ~(vdot(#org ray, #n plane) - d) / v
+                val t = ~(vdot(#org ray, #n plane) + d) / v
                 in
                   if (t > 0.0) andalso (t < #t isect)
-                    then {t = t, hit = true, p = pointAt(ray, t), n = #n plane}
+                    then hit (t, pointAt(ray, t), #n plane)
                     else isect
                 end
           end
@@ -123,8 +127,6 @@ structure AOBench : sig
           in
             (vX, vY, vZ)
           end
-
-    val miss : isect = {t = 1.0e17, p = vzero, n = vzero, hit = false}
 
   (** The scene **)
     val sphere1 : sphere = { center = {x = ~2.0, y = 0.0, z = ~3.5 }, radius = 0.5 }

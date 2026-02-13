@@ -22,7 +22,7 @@ typedef struct _Isect
     double t;
     vec    p;
     vec    n;
-    int    hit; 
+    int    hit;
 } Isect;
 
 typedef struct _Sphere
@@ -55,7 +55,7 @@ static double vdot(vec v0, vec v1)
 
 static void vcross(vec *c, vec v0, vec v1)
 {
-    
+
     c->x = v0.y * v1.z - v0.z * v1.y;
     c->y = v0.z * v1.x - v0.x * v1.z;
     c->z = v0.x * v1.y - v0.y * v1.x;
@@ -87,11 +87,11 @@ ray_sphere_intersect(Isect *isect, const Ray *ray, const Sphere *sphere)
 
     if (D > 0.0) {
         double t = -B - sqrt(D);
-        
+
         if ((t > 0.0) && (t < isect->t)) {
             isect->t = t;
             isect->hit = 1;
-            
+
             isect->p.x = ray->org.x + ray->dir.x * t;
             isect->p.y = ray->org.y + ray->dir.y * t;
             isect->p.z = ray->org.z + ray->dir.z * t;
@@ -118,7 +118,7 @@ ray_plane_intersect(Isect *isect, const Ray *ray, const Plane *plane)
     if ((t > 0.0) && (t < isect->t)) {
         isect->t = t;
         isect->hit = 1;
-        
+
         isect->p.x = ray->org.x + ray->dir.x * t;
         isect->p.y = ray->org.y + ray->dir.y * t;
         isect->p.z = ray->org.z + ray->dir.z * t;
@@ -194,13 +194,13 @@ void ambient_occlusion(vec *col, const Isect *isect)
             occIsect.t   = 1.0e+17;
             occIsect.hit = 0;
 
-            ray_sphere_intersect(&occIsect, &ray, &spheres[0]); 
-            ray_sphere_intersect(&occIsect, &ray, &spheres[1]); 
-            ray_sphere_intersect(&occIsect, &ray, &spheres[2]); 
-            ray_plane_intersect (&occIsect, &ray, &plane); 
+            ray_sphere_intersect(&occIsect, &ray, &spheres[0]);
+            ray_sphere_intersect(&occIsect, &ray, &spheres[1]);
+            ray_sphere_intersect(&occIsect, &ray, &spheres[2]);
+            ray_plane_intersect (&occIsect, &ray, &plane);
 
             if (occIsect.hit) occlusion += 1.0;
-            
+
         }
     }
 
@@ -234,7 +234,7 @@ render(unsigned char *img, int w, int h, int nsubsamples)
 
     for (y = 0; y < h; y++) {
         for (x = 0; x < w; x++) {
-            
+
             for (v = 0; v < nsubsamples; v++) {
                 for (u = 0; u < nsubsamples; u++) {
                     double px = (x + (u / (double)nsubsamples) - (w / 2.0)) / (w / 2.0);
@@ -275,7 +275,7 @@ render(unsigned char *img, int w, int h, int nsubsamples)
             fimg[3 * (y * w + x) + 0] /= (double)(nsubsamples * nsubsamples);
             fimg[3 * (y * w + x) + 1] /= (double)(nsubsamples * nsubsamples);
             fimg[3 * (y * w + x) + 2] /= (double)(nsubsamples * nsubsamples);
-        
+
             img[3 * (y * w + x) + 0] = clamp(fimg[3 *(y * w + x) + 0]);
             img[3 * (y * w + x) + 1] = clamp(fimg[3 *(y * w + x) + 1]);
             img[3 * (y * w + x) + 2] = clamp(fimg[3 *(y * w + x) + 2]);
@@ -291,12 +291,12 @@ init_scene()
     spheres[0].center.y =  0.0;
     spheres[0].center.z = -3.5;
     spheres[0].radius = 0.5;
-    
+
     spheres[1].center.x = -0.5;
     spheres[1].center.y =  0.0;
     spheres[1].center.z = -3.0;
     spheres[1].radius = 0.5;
-    
+
     spheres[2].center.x =  1.0;
     spheres[2].center.y =  0.0;
     spheres[2].center.z = -2.2;
@@ -336,7 +336,7 @@ main(int argc, char **argv)
 
     render(img, WIDTH, HEIGHT, NSUBSAMPLES);
 
-    saveppm("ao.ppm", WIDTH, HEIGHT, img); 
+    saveppm("ao.ppm", WIDTH, HEIGHT, img);
 
     return 0;
 }
