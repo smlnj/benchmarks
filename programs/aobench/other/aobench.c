@@ -4,9 +4,16 @@
 #include <assert.h>
 #include <math.h>
 
+/* define BENCHMARK to match the Main.doit() test parameters */
+#ifdef BENCHMARK
+#define WIDTH        512
+#define HEIGHT       512
+#define NSUBSAMPLES  3
+#else
 #define WIDTH        256
 #define HEIGHT       256
 #define NSUBSAMPLES  2
+#endif
 #define NAO_SAMPLES  8
 
 typedef struct _vec
