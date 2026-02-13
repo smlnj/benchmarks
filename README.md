@@ -59,41 +59,41 @@ directory.
 | ----------------------------------------------------- | ----- | ------------------------------------------ |
 | [`aobench`](programs/aobench/README.md)               |   259 | A small ambient occlusion renderer         |
 | [`barnes-hut`](programs/barnes-hut/README.md)         |   820 | Hierarchical N-body solver (BROKEN)        |
-| [`black-scholes`](programs/black-scholes/README.md)   |   127 | European-style option pricing              |
+| [`black-scholes`](programs/black-scholes/README.md)   |   128 | European-style option pricing              |
 | [`boyer`](programs/boyer/README.md)                   |   912 | (BROKEN)                                   |
-| [`cml-sieve`](programs/cml-sieve/README.md)           |   161 | Message-passing implementation of Sieve of Eratosthenes |
-| [`count-graphs`](programs/count-graphs/README.md)     |   400 |                                            |
+| [`cml-sieve`](programs/cml-sieve/README.md)           |   162 | Message-passing implementation of Sieve of Eratosthenes |
+| [`count-graphs`](programs/count-graphs/README.md)     |   401 |                                            |
 | [`delta-blue`](programs/delta-blue/README.md)         |   703 | Delta-Blue incremental constraint solver (BROKEN) |
 | [`dlx`](programs/dlx/README.md)                       | 1,887 | (BROKEN)                                   |
 | [`fannkuchredux`](programs/fannkuchredux/README.md)   |   xxx | (BROKEN)                                   |
-| [`fft`](programs/fft/README.md)                       |   165 |                                            |
+| [`fft`](programs/fft/README.md)                       |   166 |                                            |
 | [`id-ray`](programs/id-ray/README.md)                 |   xxx | A ray tracer ported from Id                |
 | [`kcfa`](programs/kcfa/README.md)                     |   xxx | A reference implementation of kCFA (BROKEN) |
-| [`knuth-bendix`](programs/knuth-bendix/README.md)     |   433 | Knuth-Bendix completion algorithm          |
-| [`lexgen`](programs/lexgen/README.md)                 | 1,040 | Lexical-analyzer generator                 |
-| [`life`](programs/life/README.md)                     |   121 | Conway's game of life                      |
-| [`logic`](programs/logic/README.md)                   |   322 |                                            |
-| [`mandelbrot`](programs/mandelbrot/README.md)         |    49 | Mandelbrot-set computation                 |
-| [`mandelbrot-rat`](programs/mandelbrot-rat/README.md) |    92 | Mandelbrot-set computation using rationals |
-| [`mazefun`](programs/mazefun/README.md)               |   180 | Maze generator                             |
-| [`mc-ray`](programs/mc-ray/README.md)                 |   736 | Monte-Carlo ray tracer                     |
-| [`minimax`](programs/minimax/README.md)               |   167 | Minimax game-tree search for Tic-Tac-Toe   |
-| [`mlyacc`](programs/mlyacc/README.md)                 | 5,572 | LALR(1) parser generator                   |
-| [`nbody`](programs/nbody/README.md)                   |   135 | O(n^2) N-body solver                       |
-| [`nucleic`](programs/nucleic/README.md)               | 2,919 |                                            |
+| [`knuth-bendix`](programs/knuth-bendix/README.md)     |   434 | Knuth-Bendix completion algorithm          |
+| [`lexgen`](programs/lexgen/README.md)                 | 1,033 | Lexical-analyzer generator                 |
+| [`life`](programs/life/README.md)                     |   123 | Conway's game of life                      |
+| [`logic`](programs/logic/README.md)                   |   323 |                                            |
+| [`mandelbrot`](programs/mandelbrot/README.md)         |    50 | Mandelbrot-set computation                 |
+| [`mandelbrot-rat`](programs/mandelbrot-rat/README.md) |    93 | Mandelbrot-set computation using rationals |
+| [`mazefun`](programs/mazefun/README.md)               |   181 | Maze generator                             |
+| [`mc-ray`](programs/mc-ray/README.md)                 |   737 | Monte-Carlo ray tracer                     |
+| [`minimax`](programs/minimax/README.md)               |   168 | Minimax game-tree search for Tic-Tac-Toe   |
+| [`mlyacc`](programs/mlyacc/README.md)                 | 5,573 | LALR(1) parser generator                   |
+| [`nbody`](programs/nbody/README.md)                   |   136 | O(n^2) N-body solver                       |
+| [`nucleic`](programs/nucleic/README.md)               | 2,920 |                                            |
 | [`pia`](programs/pia/README.md)                       |   xxx | (BROKEN)                                   |
-| [`pingpong`](programs/pingpong/README.md)             |   135 | Message-passing microbenchmark             |
-| [`plclub-ray`](programs/plclub-ray/README.md)         | 2,025 | A raytracer from the ICFP'20 Programming Contest |
-| [`ratio-regions`](programs/ratio-regions/README.md)   |   485 | Image segmentation/contour finding         |
+| [`pingpong`](programs/pingpong/README.md)             |   136 | Message-passing microbenchmark             |
+| [`plclub-ray`](programs/plclub-ray/README.md)         | 2,026 | A raytracer from the ICFP'20 Programming Contest |
+| [`ratio-regions`](programs/ratio-regions/README.md)   |   486 | Image segmentation/contour finding         |
 | [`ray`](programs/ray/README.md)                       |   xxx | A minimal ray tracer                       |
 | [`regex`](programs/regex/README.md)                   |   xxx | (BROKEN)                                   |
-| [`sat`](programs/sat/README.md)                       |    53 | Brute-force SAT solver                     |
-| [`simple`](programs/simple/README.md)                 |   760 | A spherical fluid-dynamics program         |
-| [`smith-nf`](programs/smith-nf/README.md)             |   371 | Computes the Smith Normal Form             |
-| [`stream-sieve`](programs/sieve/README.md)            |    57 | Functional stream implementation of Sieve of Eratosthenes |
-| [`tsp`](programs/tsp/README.md)                       |   302 | A Traveling-Sales-Person solver            |
-| [`twenty-four`](programs/twenty-four/README.md)       |   145 | CPS-style solver for the 24 puzzle         |
-| [`vliw`](programs/vliw/README.md)                     | 2,939 | A Very-Long-Instruction-Word instruction scheduler |
+| [`sat`](programs/sat/README.md)                       |    54 | Brute-force SAT solver                     |
+| [`simple`](programs/simple/README.md)                 |   761 | A spherical fluid-dynamics program         |
+| [`smith-nf`](programs/smith-nf/README.md)             |   372 | Computes the Smith Normal Form             |
+| [`stream-sieve`](programs/sieve/README.md)            |    58 | Functional stream implementation of Sieve of Eratosthenes |
+| [`tsp`](programs/tsp/README.md)                       |   303 | A Traveling-Sales-Person solver            |
+| [`twenty-four`](programs/twenty-four/README.md)       |   120 | CPS-style solver for the 24 puzzle         |
+| [`vliw`](programs/vliw/README.md)                     | 2,940 | A Very-Long-Instruction-Word instruction scheduler |
 
 ## Scripts
 
