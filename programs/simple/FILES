@@ -1,3 +1,5 @@
+../BASIS/array.sig
+../BASIS/array.sml
 control.sml
 array2.sml
 simple.sml

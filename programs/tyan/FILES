@@ -2,6 +2,8 @@
 ../BASIS/list.sml
 ../BASIS/array.sig
 ../BASIS/array.sml
+../BASIS/mono-vector.sig
+../BASIS/char-vector.sml
 ../BASIS/string.sig
 ../BASIS/string.sml
 util.sml
