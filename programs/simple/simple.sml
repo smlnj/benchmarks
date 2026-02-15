@@ -6,8 +6,13 @@
  * error: grid_max < 5
  *)
 
-functor Simple (val grid_max: int val step_count: int) : BMARK =
-  struct
+functor Simple (
+    val grid_max : int
+    val step_count : int
+    (* expected results for given parameters *)
+    val expectedDelta : int
+    val expected10000C : int
+  ) : BMARK = struct
 
     val name = "simple"
 
@@ -886,7 +891,7 @@ fun print_state ((v1,v2),(r,z),alpha,s,rho,p,q,epsilon,theta,deltat,c) = (
 	  val delta = Real.trunc delta'
 	  val c = Real.trunc (c' * 10000.0)
 	  in
-	    if (c = 6787 andalso delta = ~33093)
+	    if (c = expected10000C andalso delta = expectedDelta)
 	      then ()
 	      else Log.error ["*** ERROR ***\n"]
 	  end
