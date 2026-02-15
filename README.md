@@ -88,7 +88,7 @@ directory.
 | [`ray`](programs/ray/README.md)                       |   xxx | A minimal ray tracer                       |
 | [`regex`](programs/regex/README.md)                   |   xxx | (BROKEN)                                   |
 | [`sat`](programs/sat/README.md)                       |    54 | Brute-force SAT solver                     |
-| [`simple`](programs/simple/README.md)                 |   761 | A spherical fluid-dynamics program         |
+| [`simple`](programs/simple/README.md)                 |   769 | A spherical fluid-dynamics program         |
 | [`smith-nf`](programs/smith-nf/README.md)             |   372 | Computes the Smith Normal Form             |
 | [`stream-sieve`](programs/sieve/README.md)            |    58 | Functional stream implementation of Sieve of Eratosthenes |
 | [`tsp`](programs/tsp/README.md)                       |   303 | A Traveling-Sales-Person solver            |
