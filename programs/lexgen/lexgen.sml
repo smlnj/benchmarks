@@ -311,14 +311,14 @@ end;
 exception Error
 
 fun prErr x = (
-      TextIO.output (TextIO.stdErr, String.concat [
+      Log.error [
 	  "ml-lex: error, line ", (Int.toString (!LineNum)), ": ", x, "\n"
-	]);
+	];
       raise Error)
 fun prSynErr x = (
-      TextIO.output (TextIO.stdErr, String.concat [
+      Log.error [
 	  "ml-lex: syntax error, line ", (Int.toString (!LineNum)), ": ", x, "\n"
-	]);
+	];
       raise Error)
 
 exception SyntaxError; (* error in user's input file *)
@@ -907,7 +907,7 @@ fun maketable (fins:(int * (int list)) list,
 		  else (say ",\n"; makeTable(a',b')))
 	      end
 
-	fun msg x = TextIO.output(TextIO.stdOut, x)
+	fun msg x = Log.print x
 
   in (say "in Vector.fromList\n["; makeTable(rs,newfins); say "]\nend\n";
     msg ("\nNumber of states = " ^ (Int.toString (length trans)));
