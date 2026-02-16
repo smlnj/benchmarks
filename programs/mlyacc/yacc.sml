@@ -828,7 +828,7 @@ precedences of the rule and the terminal are equal.
 	    printSigs(values,names,fn s => TextIO.output(sigs,s));
 	    TextIO.closeOut sigs;
 	    TextIO.closeOut result;
-	    MakeTable.Errs.printSummary (fn s => TextIO.output(TextIO.stdOut,s)) errs
+	    MakeTable.Errs.printSummary Log.print errs
 	end;
         if verbose then
 	 let val f = TextIO.openOut (spec ^ ".desc")
