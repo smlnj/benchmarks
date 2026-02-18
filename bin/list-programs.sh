@@ -51,6 +51,7 @@ ALL="\
   boyer \
   count-graphs \
   cml-sieve \
+  fannkuch \
   fft \
   knuth-bendix \
   lexgen \
@@ -89,7 +90,7 @@ FP_DESC="programs that make significant use of floating-point arithmetic"
 LIST="count-graphs life minimax"
 LIST_DESC="programs that make significant use of lists"
 
-ARRAY="fft minimax simple smith-nf"
+ARRAY="fannkuch fft minimax simple smith-nf"
 ARRAY_DESC="programs that make significant use of arrays or vectors"
 
 BIGNUM="smith-nf"

@@ -62,14 +62,14 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | Directory                                             | LOC   | Short Description                          |
 | ----------------------------------------------------- | ----- | ------------------------------------------ |
 | [`aobench`](programs/aobench/README.md)               |   259 | A small ambient occlusion renderer         |
-| [`barnes-hut`](programs/barnes-hut/README.md)         |   820 | Hierarchical N-body solver **(BROKEN)**        |
+| [`barnes-hut`](programs/barnes-hut/README.md)         |   820 | Hierarchical N-body solver **(BROKEN)**    |
 | [`black-scholes`](programs/black-scholes/README.md)   |   128 | European-style option pricing              |
-| [`boyer`](programs/boyer/README.md)                   |   854 | Tautology checker                                   |
+| [`boyer`](programs/boyer/README.md)                   |   854 | Tautology checker                          |
 | [`cml-sieve`](programs/cml-sieve/README.md)           |   162 | Message-passing implementation of Sieve of Eratosthenes |
 | [`count-graphs`](programs/count-graphs/README.md)     |   401 | Enumerate directed graphs                  |
 | [`delta-blue`](programs/delta-blue/README.md)         |   703 | Delta-Blue incremental constraint solver **(BROKEN)** |
-| [`dlx`](programs/dlx/README.md)                       | 1,887 | DLX simulator **(BROKEN)**                     |
-| [`fannkuchredux`](programs/fannkuchredux/README.md)   |   xxx | **(BROKEN)**                                   |
+| [`dlx`](programs/dlx/README.md)                       | 1,887 | DLX simulator **(BROKEN)**                 |
+| [`fannkuch`](programs/fannkuch/README.md)             |    72 | Array permutations                         |
 | [`fft`](programs/fft/README.md)                       |   166 | Fast-Fourier-transform implementation      |
 | [`id-ray`](programs/id-ray/README.md)                 |   xxx | A ray tracer ported from Id                |
 | [`kcfa`](programs/kcfa/README.md)                     |   xxx | A reference implementation of kCFA **(BROKEN)** |
