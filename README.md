@@ -60,7 +60,7 @@ directory.
 | [`aobench`](programs/aobench/README.md)               |   259 | A small ambient occlusion renderer         |
 | [`barnes-hut`](programs/barnes-hut/README.md)         |   820 | Hierarchical N-body solver (BROKEN)        |
 | [`black-scholes`](programs/black-scholes/README.md)   |   128 | European-style option pricing              |
-| [`boyer`](programs/boyer/README.md)                   |   912 | (BROKEN)                                   |
+| [`boyer`](programs/boyer/README.md)                   |   854 | Tautology checker                                   |
 | [`cml-sieve`](programs/cml-sieve/README.md)           |   162 | Message-passing implementation of Sieve of Eratosthenes |
 | [`count-graphs`](programs/count-graphs/README.md)     |   401 |                                            |
 | [`delta-blue`](programs/delta-blue/README.md)         |   703 | Delta-Blue incremental constraint solver (BROKEN) |

@@ -48,6 +48,7 @@ sort_items() {
 ALL="\
   aobench \
   black-scholes \
+  boyer \
   count-graphs \
   cml-sieve \
   fft \
@@ -100,7 +101,7 @@ CML_DESC="multi-threaded message-passing programs"
 FUNCTOR="barnes-hut dlx mlyacc simple"
 FUNCTOR_DESC="programs that are assembled from functor applications"
 
-CLASSIC="lexgen life mlyacc simple vliw"
+CLASSIC="boyer lexgen life mlyacc simple vliw"
 CLASSIC_DESC="programs from the original SML/NJ benchmarking"
 
 SMLNJ="$CLASSIC boyer fft knuth-bendix logic mandelbrot ray tsp"
