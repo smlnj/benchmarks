@@ -29,7 +29,8 @@ will show the command line options.
 Each benchmark directory contains the following files (not all of which
 may be present):
 
-* `main.sml` -- a SML file that defines the `Main` structure.
+* `main.sml` -- a SML file that defines the `Main` structure; this structure
+  has the `BMARK` signature.
 
 * `sources.cm` -- a CM file for building the benchmark program.
 
@@ -44,6 +45,9 @@ may be present):
 * `ANSWER` -- an optional text file containing the correct output from
   running the `Main.testit` function.  Some benchmarks currently do not
   have test output; for these benchmarks, the `ANSWER` file is omitted.
+  The `BMARK` signature includes a `results` field that is a list of
+  additional outputs produced by the program (e.g., an image produced by
+  a ray tracer).
 
 * `DATA` -- an optional directory containing any input data files required
   by the benchmark program.
