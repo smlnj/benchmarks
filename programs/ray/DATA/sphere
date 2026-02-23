@@ -1,4 +1,4 @@
 100 0 0 0 8 8 8 color sphere
-/./TEST raytrace
+/./TEST.ppm raytrace
 stop
 

@@ -6,11 +6,13 @@
  * The interface between the interpreter and the ray tracer.
  *)
 
-structure Interface =
-  struct
-    local
-      open Objects
-    in
+structure Interface : sig
+
+    val rtInit : unit -> unit
+
+  end = struct
+
+    open Objects
 
   (* color pops three numbers and pushes a color object.
    * usage: red-value green-value blue-value color
@@ -44,5 +46,4 @@ structure Interface =
           Interp.installOperator("sphere", ps_sphere);
           Interp.installOperator("raytrace", ps_raytrace))
 
-    end (* local *)
   end

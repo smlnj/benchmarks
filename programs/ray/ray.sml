@@ -100,20 +100,22 @@ structure Ray =
 
     fun image objList (x, y) = shade (trace(camera(x, y), objList))
 
+    structure BinIO = Log.BinIO
+
+(* TODO: switch to PPM output *)
     fun picture (picName, objList) = let
-          val outStrm = TextIO.openOut picName
+          val outStrm = BinIO.openOut picName
           val image = image objList
-          val print = fn x => TextIO.output (outStrm, x)
-          fun putc c = TextIO.output1(outStrm, chr c)
+          fun put b = BinIO.output1 (outStrm, b)
           fun doPixel (i, j) = let
                 val x = (real i) / 512.0
                 val y = (real j) / 512.0
                 val (Color c) = image (x, y)
-                fun cvt x = if (x >= 1.0) then 255 else floor(256.0*x)
+                fun cvt x = if (x >= 1.0) then 0w255 else Word8.fromInt(floor(256.0*x))
                 in
-                  putc (cvt (#red c));
-                  putc (cvt (#grn c));
-                  putc (cvt (#blu c))
+                  put (cvt (#red c));
+                  put (cvt (#grn c));
+                  put (cvt (#blu c))
                 end
           fun lp_j j = if (j < 512)
                 then let
@@ -125,13 +127,11 @@ structure Ray =
                   end
                 else ()
           in
-            print "TYPE=dump\n";
-            print "WINDOW=0 0 512 512\n";
-            print "NCHAN=3\n";
-            print "CHAN=rgb\n";
-            print "\n";
+            BinIO.output (outStrm, Byte.stringToBytes (concat [
+                "P6\n512 512\n255\n"
+              ]));
             lp_j 0;
-            TextIO.closeOut outStrm
+            BinIO.closeOut outStrm
           end
 
     end (* local *)

@@ -4,8 +4,17 @@
  * All rights reserved.
  *)
 
-structure Interp =
-  struct
+structure Interp : sig
+
+    exception Stop
+
+    val installOperator : string * (Objects.object list -> Objects.object list) -> unit
+
+    val parse : TextIO.instream -> unit
+
+    val error : string -> Objects.object list -> 'a
+
+  end = struct
 
     local
       val exit = OS.Process.exit
@@ -17,14 +26,12 @@ structure Interp =
           of SOME c => c
            | NONE => raise NotAChar)
 
-     fun strToReal s =
-      (case Real.fromString s
-        of SOME r => r
-        | _ => raise NotAReal)
+      fun strToReal s =
+       (case Real.fromString s
+         of SOME r => r
+         | _ => raise NotAReal)
 
-    fun intToReal x =
-     (strToReal ((Int.toString x) ^ ".0"))
-
+      fun intToReal x = (strToReal ((Int.toString x) ^ ".0"))
 
       val explode = (fn x => map Char.toString (explode x))
       val implode = (fn x => implode (map fromStr x))
@@ -41,7 +48,7 @@ structure Interp =
             end
         | dictInsert _ = raise Fail "dictInsert"
       fun prObj outStrm obj = let
-            fun printf args = TextIO.output(outStrm, implode args)
+            fun printf args = Log.error args
             fun pr (NUMBER n) = printf["  ", Real.toString n, "\n"]
               | pr (NAME s) = printf["  ",  s, "\n"]
               | pr (LITERAL s) = printf["  ", s, "\n"]
@@ -62,7 +69,7 @@ structure Interp =
             | prStk (_, 0) = ()
             | prStk (obj::r, i) = (prObj TextIO.stdErr obj; prStk(r, i-1))
           in
-            TextIO.output(TextIO.stdErr, "ERROR: "^opName^"\n");
+            Log.error ["ERROR: ", opName, "\n"];
             prStk (stk, 10);
             raise (Fail opName)
           end
