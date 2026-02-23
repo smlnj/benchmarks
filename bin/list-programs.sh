@@ -68,6 +68,7 @@ ALL="\
   pingpong \
   plclub-ray \
   ratio-regions \
+  ray \
   sat \
   stream-sieve \
   simple \
@@ -84,7 +85,7 @@ BROKEN="\
   dlx \
   "
 
-FP="aobench barnes-hut black-scholes fft mandelbrot mc-ray nbody nucleic plclub-ray smith-nf tsp"
+FP="aobench barnes-hut black-scholes fft mandelbrot mc-ray nbody nucleic plclub-ray ray smith-nf tsp"
 FP_DESC="programs that make significant use of floating-point arithmetic"
 
 LIST="count-graphs life minimax"
@@ -102,7 +103,8 @@ CML_DESC="multi-threaded message-passing programs"
 FUNCTOR="barnes-hut dlx mlyacc simple"
 FUNCTOR_DESC="programs that are assembled from functor applications"
 
-CLASSIC="boyer lexgen life mlyacc simple vliw"
+# missing: barnes-hut
+CLASSIC="boyer cml-sieve knuth-bendix lexgen life mlyacc ray simple vliw"
 CLASSIC_DESC="programs from the original SML/NJ benchmarking"
 
 SMLNJ="$CLASSIC boyer fft knuth-bendix logic mandelbrot ray tsp"
