@@ -52,4 +52,5 @@ single-file/
 LOG-*
 REPORT-*
 programs/*/all.sml
+programs/**/*.ppm
 
