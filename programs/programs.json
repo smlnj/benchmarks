@@ -1,162 +1,204 @@
-[
-  { "name" : "barnes-hut",
-    "description" : "Hierarchical N-body solver (BROKEN)",
-    "tags" : ["fp","functor"],
-    "results" : []
-  },
-  { "name" : "black-scholes",
-    "description" : "European-style option pricing",
-    "tags" : ["smlnj"],
-    "results" : []
-  },
-  { "name" : "boyer",
-    "description" : "",
-    "tags" : ["smlnj"],
-    "results" : []
-  },
-  { "name" : "cml-sieve",
-    "description" : "Message-passing implementation of Sieve of Eratosthenes",
-    "tags" : [],
-    "results" : []
-  },
-  { "name" : "count-graphs",
-    "description" : "",
-    "tags" : [],
-    "results" : []
-  },
-  { "name" : "delta-blue",
-    "description" : "Delta-Blue incremental constraint solver (BROKEN)",
-    "tags" : [],
-    "results" : []
-  },
-  { "name" : "dlx",
-    "description" : "(BROKEN)",
-    "tags" : ["mlton","functor"],
-    "results" : []
-  },
-  { "name" : "fft",
-    "description" : "",
-    "tags" : ["array","fp","array","smlnj"],
-    "results" : []
-  },
-  { "name" : "knuth-bendix",
-    "description" : "Knuth-Bendix completion algorithm",
-    "tags" : ["smlnj"],
-    "results" : []
-  },
-  { "name" : "lexgen",
-    "description" : "Lexical-analyzer generator",
-    "tags" : ["classic","smlnj"],
-    "results" : []
-  },
-  { "name" : "life",
-    "description" : "Conway's game of life",
-    "tags" : ["list"],
-    "results" : []
-  },
-  { "name" : "logic",
-    "description" : "",
-    "tags" : ["smlnj"],
-    "results" : []
-  },
-  { "name" : "mandelbrot",
-    "description" : "Mandelbrot-set computation",
-    "tags" : ["fp","smlnj"],
-    "results" : []
-  },
-  { "name" : "mandelbrot-rat",
-    "description" : "Mandelbrot-set computation using rationals",
-    "tags" : [],
-    "results" : []
-  },
-  { "name" : "mazefun",
-    "description" : "Maze generator",
-    "tags" : ["larceny"],
-    "results" : []
-  },
-  { "name" : "mc-ray",
-    "description" : "Monte-Carlo ray tracer",
-    "tags" : ["fp"],
-    "results" : []
-  },
-  { "name" : "minimax",
-    "description" : "Minimax game-tree search for Tic-Tac-Toe",
-    "tags" : ["array","list"],
-    "results" : []
-  },
-  { "name" : "mlyacc",
-    "description" : "LALR(1) parser generator",
-    "tags" : ["classic","smlnj","functor"],
-    "results" : []
-  },
-  { "name" : "nbody",
-    "description" : "",
-    "tags" : [],
-    "results" : []
-  },
-  { "name" : "nucleic",
-    "description" : "",
-    "tags" : ["fp","classic","smlnj"],
-    "results" : []
-  },
-  { "name" : "pia",
-    "description" : "",
-    "tags" : [],
-    "results" : []
-  },
-  { "name" : "pingpong",
-    "description" : "",
-    "tags" : [],
-    "results" : []
-  },
-  { "name" : "plclub-ray",
-    "description" : "A raytracer from the ICFP'20 Programming Contest",
-    "tags" : ["fp"],
-    "results" : []
-  },
-  { "name" : "ratio-regions",
-    "description" : "Image segmentation/contour finding",
-    "tags" : ["mlton"],
-    "results" : []
-  },
-  { "name" : "ray",
-    "description" : "A minimal ray tracer",
-    "tags" : ["fp","smlnj"],
-    "results" : []
-  },
-  { "name" : "sat",
-    "description" : "Brute-force SAT solver",
-    "tags" : [],
-    "results" : []
-  },
-  { "name" : "simple",
-    "description" : "A spherical fluid-dynamics program",
-    "tags" : ["array","fp","classic","smlnj","functor"],
-    "results" : []
-  },
-  { "name" : "smith-nf",
-    "description" : "Computes the Smith Normal Form",
-    "tags" : ["array","bignum","mlton"],
-    "results" : []
-  },
-  { "name" : "stream-sieve",
-    "description" : "Functional stream implementation of Sieve of Eratosthenes",
-    "tags" : [],
-    "results" : []
-  },
-  { "name" : "tsp",
-    "description" : "A Traveling-Sales-Person solver",
-    "tags" : ["fp","smlnj"],
-    "results" : []
-  },
-  { "name" : "twenty-four",
-    "description" : "CPS-style solver for the 24 puzzle",
-    "tags" : [],
-    "results" : []
-  },
-  { "name" : "vliw",
-    "description" : "A Very-Long-Instruction-Word instruction scheduler",
-    "tags" : ["classic","smlnj"],
-    "results" : []
-  }
-]
+{
+  "tags" : [
+    { "tag" : "fp",
+      "description" : "programs that make significant use of floating-point arithmetic"
+    },
+    { "tag" : "list",
+      "description" : "programs that make significant use of lists"
+    },
+    { "tag" : "array",
+      "description" : "programs that make significant use of arrays and/or vectors"
+    },
+    { "tag" : "bignum",
+      "description" : "programs that make significant use of the IntInf.int type"
+    },
+    { "tag" : "cml",
+      "description" : "multi-threaded message-passing programs"
+    },
+    { "tag" : "functor",
+      "description" : "programs that are assembled from functor applications"
+    },
+    { "tag" : "ho",
+      "description" : "programs that are written in a higher-order style"
+    },
+    { "tag" : "larceny",
+      "description" : "programs from the Larceny bencmark suite"
+    },
+    { "tag" : "manticore",
+      "description" : "programs from the Manticore benchmark suite"
+    },
+    { "tag" : "programs from the Manticore benchmark suite",
+      "description" : "mlton"
+    },
+    { "tag" : "scheme",
+      "description" : "programs ported from Scheme and Racket (includes the Larceny bencmarks)"
+    },
+    { "tag" : "shootout",
+      "description" : "programs from the programming languages shootout benchmark suite"
+    },
+    { "tag" : "smlnj",
+      "description" : "programs from the original SML/NJ benchmarking suite"
+    }
+  ],
+  "programs" : [
+      { "name" : "barnes-hut",
+        "description" : "Hierarchical N-body solver (BROKEN)",
+        "tags" : ["fp","functor"],
+        "results" : []
+      },
+      { "name" : "black-scholes",
+        "description" : "European-style option pricing",
+        "tags" : ["smlnj"],
+        "results" : []
+      },
+      { "name" : "boyer",
+        "description" : "",
+        "tags" : ["smlnj"],
+        "results" : []
+      },
+      { "name" : "cml-sieve",
+        "description" : "Message-passing implementation of Sieve of Eratosthenes",
+        "tags" : ["cml","smlnj"],
+        "results" : []
+      },
+      { "name" : "count-graphs",
+        "description" : "",
+        "tags" : [],
+        "results" : []
+      },
+      { "name" : "delta-blue",
+        "description" : "Delta-Blue incremental constraint solver (BROKEN)",
+        "tags" : [],
+        "results" : []
+      },
+      { "name" : "dlx",
+        "description" : "(BROKEN)",
+        "tags" : ["mlton","functor"],
+        "results" : []
+      },
+      { "name" : "fft",
+        "description" : "",
+        "tags" : ["array","fp","array","smlnj"],
+        "results" : []
+      },
+      { "name" : "knuth-bendix",
+        "description" : "Knuth-Bendix completion algorithm",
+        "tags" : ["smlnj"],
+        "results" : []
+      },
+      { "name" : "lexgen",
+        "description" : "Lexical-analyzer generator",
+        "tags" : ["classic","smlnj"],
+        "results" : []
+      },
+      { "name" : "life",
+        "description" : "Conway's game of life",
+        "tags" : ["list"],
+        "results" : []
+      },
+      { "name" : "logic",
+        "description" : "",
+        "tags" : ["smlnj"],
+        "results" : []
+      },
+      { "name" : "mandelbrot",
+        "description" : "Mandelbrot-set computation",
+        "tags" : ["fp","smlnj"],
+        "results" : []
+      },
+      { "name" : "mandelbrot-rat",
+        "description" : "Mandelbrot-set computation using rationals",
+        "tags" : [],
+        "results" : []
+      },
+      { "name" : "mazefun",
+        "description" : "Maze generator",
+        "tags" : ["larceny"],
+        "results" : []
+      },
+      { "name" : "mc-ray",
+        "description" : "Monte-Carlo ray tracer",
+        "tags" : ["fp"],
+        "results" : []
+      },
+      { "name" : "minimax",
+        "description" : "Minimax game-tree search for Tic-Tac-Toe",
+        "tags" : ["array","list"],
+        "results" : []
+      },
+      { "name" : "mlyacc",
+        "description" : "LALR(1) parser generator",
+        "tags" : ["classic","smlnj","functor"],
+        "results" : []
+      },
+      { "name" : "nbody",
+        "description" : "",
+        "tags" : [],
+        "results" : []
+      },
+      { "name" : "nucleic",
+        "description" : "",
+        "tags" : ["fp","classic","smlnj"],
+        "results" : []
+      },
+      { "name" : "pia",
+        "description" : "",
+        "tags" : [],
+        "results" : []
+      },
+      { "name" : "pingpong",
+        "description" : "",
+        "tags" : [],
+        "results" : []
+      },
+      { "name" : "plclub-ray",
+        "description" : "A raytracer from the ICFP'20 Programming Contest",
+        "tags" : ["fp"],
+        "results" : []
+      },
+      { "name" : "ratio-regions",
+        "description" : "Image segmentation/contour finding",
+        "tags" : ["mlton"],
+        "results" : []
+      },
+      { "name" : "ray",
+        "description" : "A minimal ray tracer",
+        "tags" : ["fp","smlnj"],
+        "results" : []
+      },
+      { "name" : "sat",
+        "description" : "Brute-force SAT solver",
+        "tags" : [],
+        "results" : []
+      },
+      { "name" : "simple",
+        "description" : "A spherical fluid-dynamics program",
+        "tags" : ["array","fp","classic","smlnj","functor"],
+        "results" : []
+      },
+      { "name" : "smith-nf",
+        "description" : "Computes the Smith Normal Form",
+        "tags" : ["array","bignum","mlton"],
+        "results" : []
+      },
+      { "name" : "stream-sieve",
+        "description" : "Functional stream implementation of Sieve of Eratosthenes",
+        "tags" : [],
+        "results" : []
+      },
+      { "name" : "tsp",
+        "description" : "A Traveling-Sales-Person solver",
+        "tags" : ["fp","smlnj"],
+        "results" : []
+      },
+      { "name" : "twenty-four",
+        "description" : "CPS-style solver for the 24 puzzle",
+        "tags" : ["ho"],
+        "results" : []
+      },
+      { "name" : "vliw",
+        "description" : "A Very-Long-Instruction-Word instruction scheduler",
+        "tags" : ["classic","smlnj"],
+        "results" : []
+      }
+    ]
