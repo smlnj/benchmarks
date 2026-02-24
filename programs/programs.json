@@ -41,6 +41,11 @@
     }
   ],
   "programs" : [
+      { "name" : "aobench",
+        "description" : "",
+        "tags" : [],
+        "results" : []
+      },
       { "name" : "barnes-hut",
         "description" : "Hierarchical N-body solver (BROKEN)",
         "tags" : ["fp","functor"],
@@ -79,6 +84,16 @@
       { "name" : "fft",
         "description" : "",
         "tags" : ["array","fp","array","smlnj"],
+        "results" : []
+      },
+      { "name" : "id-ray",
+        "description" : "",
+        "tags" : [],
+        "results" : []
+      },
+      { "name" : "kcfa",
+        "description" : "",
+        "tags" : [],
         "results" : []
       },
       { "name" : "knuth-bendix",
@@ -146,6 +161,11 @@
         "tags" : [],
         "results" : []
       },
+      { "name" : "pidigits",
+        "description" : "",
+        "tags" : [],
+        "results" : []
+      },
       { "name" : "pingpong",
         "description" : "",
         "tags" : [],
@@ -164,6 +184,16 @@
       { "name" : "ray",
         "description" : "A minimal ray tracer",
         "tags" : ["fp","smlnj"],
+        "results" : []
+      },
+      { "name" : "regex",
+        "description" : "",
+        "tags" : [],
+        "results" : []
+      },
+      { "name" : "safe-for-space",
+        "description" : "",
+        "tags" : [],
         "results" : []
       },
       { "name" : "sat",
