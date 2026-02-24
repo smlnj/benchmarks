@@ -1,4 +1,6 @@
-  objects.sml
-  interp.sml
-  ray.sml
-  interface.sml
+../BASIS/string.sig
+../BASIS/string.sml
+objects.sml
+interp.sml
+ray.sml
+interface.sml

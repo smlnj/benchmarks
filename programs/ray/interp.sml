@@ -116,7 +116,7 @@ structure Interp : sig
           fun toke deferred = let
                 fun doChar "" = exit OS.Process.success
                   | doChar "%" = let
-                      fun lp "\n" = doChar(getc())
+                      fun lp "\\n" = doChar(getc())
                         | lp "" = exit OS.Process.success
                         | lp _ = lp(getc())
                       in
