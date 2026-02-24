@@ -3,7 +3,7 @@
  * COPYRIGHT (c) 2025 The Fellowship of SML/NJ (https://www.smlnj.org)
  * All rights reserved.
  *
- * Main structure for running raytracer as benchmark.
+ * Main structure for running the benchmark.
  *)
 
 structure Main : BMARK =
@@ -13,8 +13,8 @@ structure Main : BMARK =
 
     val results = ["out.ppm"]
 
-    fun trace () = let
-	  val strm = TextIO.openIn "DATA/sphere"
+    fun trace file = let
+	  val strm = TextIO.openIn file
 	  in
 	    Interface.rtInit ();
 	    Interp.parse strm;
@@ -24,11 +24,11 @@ structure Main : BMARK =
     fun doit () = let
           fun loop n = if n = 0
                 then ()
-                else (trace (); loop (n - 1))
+                else (trace "DATA/bmark.txt"; loop (n - 1))
           in
-            loop 100
+            loop 500
           end
 
-    fun testit _ = trace ()
+    fun testit _ = trace "DATA/test.txt"
 
   end
