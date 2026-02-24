@@ -93,7 +93,7 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | [`pingpong`](programs/pingpong/README.md)             |   136 | Message-passing microbenchmark             |
 | [`plclub-ray`](programs/plclub-ray/README.md)         | 2,026 | A raytracer from the ICFP'20 Programming Contest |
 | [`ratio-regions`](programs/ratio-regions/README.md)   |   486 | Image segmentation/contour finding         |
-| [`ray`](programs/ray/README.md)                       |   xxx | A minimal ray tracer                       |
+| [`ray`](programs/ray/README.md)                       |   352 | A minimal ray tracer                       |
 | [`regex`](programs/regex/README.md)                   |   xxx | **(BROKEN)**                                   |
 | [`sat`](programs/sat/README.md)                       |    54 | Brute-force SAT solver                     |
 | [`simple`](programs/simple/README.md)                 |   769 | A spherical fluid-dynamics program         |
