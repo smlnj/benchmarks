@@ -90,6 +90,7 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | [`nbody`](programs/nbody/README.md)                   |   136 | O(n^2) N-body solver                       |
 | [`nucleic`](programs/nucleic/README.md)               | 2,920 | Pseudoknot application from molecular biology |
 | [`pia`](programs/pia/README.md)                       |   xxx | **(BROKEN)**                                   |
+| [`pidigits`](programs/pidigits/README.md)             |    77 | Stream-based computation of digits of pi   |
 | [`pingpong`](programs/pingpong/README.md)             |   136 | Message-passing microbenchmark             |
 | [`plclub-ray`](programs/plclub-ray/README.md)         | 2,026 | A raytracer from the ICFP'20 Programming Contest |
 | [`ratio-regions`](programs/ratio-regions/README.md)   |   486 | Image segmentation/contour finding         |

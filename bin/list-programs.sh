@@ -85,22 +85,24 @@ BROKEN="\
   dlx \
   "
 
-FP="aobench barnes-hut black-scholes fft mandelbrot mc-ray nbody nucleic plclub-ray ray smith-nf tsp"
+# missing: barnes-hut
+FP="aobench black-scholes fft mandelbrot mc-ray nbody nucleic plclub-ray ray tsp"
 FP_DESC="programs that make significant use of floating-point arithmetic"
 
 LIST="count-graphs life minimax"
 LIST_DESC="programs that make significant use of lists"
 
 ARRAY="fannkuch fft minimax simple smith-nf"
-ARRAY_DESC="programs that make significant use of arrays or vectors"
+ARRAY_DESC="programs that make significant use of arrays and/or vectors"
 
-BIGNUM="smith-nf"
+BIGNUM="pidigits smith-nf"
 BIGNUM_DESC="programs that make significant use of the IntInf.int type"
 
 CML="cml-sieve"
 CML_DESC="multi-threaded message-passing programs"
 
-FUNCTOR="barnes-hut dlx mlyacc simple"
+# missing: barnes-hut
+FUNCTOR="dlx mlyacc simple"
 FUNCTOR_DESC="programs that are assembled from functor applications"
 
 # missing: barnes-hut
@@ -113,7 +115,7 @@ SMLNJ_DESC="programs from the previous SML/NJ bencmark suite"
 MANTICORE="cml-sieve minimax"
 MANTICORE_DESC="programs from the Manticore benchmark suite"
 
-MLTON="dlx ratio-regions smith-nf tyan"
+MLTON="dlx pidigits ratio-regions smith-nf tyan"
 MLTON_DESC="programs from the MLton bencmark suite"
 
 LARCENY="mazefun"
