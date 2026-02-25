@@ -9,8 +9,53 @@
 import argparse
 import json
 import os
+import sys
 import subprocess
 from datetime import datetime
+
+#========== Benchmark program and class information ==========
+#
+class ProgramInfo:
+  def __init__(self):
+    try:
+      prog_info_path = os.path.join(progdir, "programs.json")
+      with open(prog_info_path, "r", encoding="utf-8") as info_strm:
+        prog_info = json.load(info_strm)
+        self.classes = prog_info['classes']
+        self.programs = prog_info['programs']
+        self._class_names = { c['name'] for c in self.classes }
+        self._prog_names = { p['name'] for p in self.programs }
+    except json.JSONDecodeError as exn:
+      print(f'error loading {os.path.join(progdir, "programs.json")}\n')
+      print('  ' + exn.msg)
+      sys.exit()
+
+#json.JSONDecodeError(msg, doc, pos)
+
+  def is_class(self, name):
+    return (name in self._class_names)
+
+  def is_program(self, name):
+    return (name in self._prog_names)
+
+  def program_names(self):
+    return sorted(self._prog_names)
+
+  def get_class(self,name):
+    if (name in self._class_names):
+      for cls in self.classes:
+        if (name == cls['name']):
+          return (cls)
+    else:
+      return None
+
+  def get_program(self,name):
+    if (name in self._prog_names):
+      for p in self.programs:
+        if (name == p['name']):
+          return (p)
+    else:
+      return None
 
 #========== Initialization ==========
 #
@@ -25,24 +70,52 @@ rootdir = os.path.normpath(os.path.join(bindir, ".."))
 progdir = os.path.join(rootdir, "programs")
 resultdir = os.path.join(rootdir, "results")
 
+# default SML command
+#
+sml_cmd="sml"
+
 # timestamp suffix for output files
 #
 timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
 
 # load the benchmark info from the JSON file
 #
-try:
-  prog_info_path = os.path.join(progdir, "programs.json")
-  with open(prog_info_path, "r", encoding="utf-8") as info_strm:
-    prog_info = json.load(info_strm)
-except json.JSONDecodeError as exn:
-  print(f'error loading {os.path.join(progdir, "programs.json")}\n')
-  print('  ' + exn.msg)
-
-#json.JSONDecodeError(msg, doc, pos)
+prog_info = ProgramInfo()
 
 #========== Utility functions ==========
 #
+
+# construct a list of benchmark names from a list of benchmark classes
+#
+def get_benchmark_list(class_list):
+  # convert the list to a set classes
+  cls_set = set(class_list)
+  progs=[]
+  for p in prog_info.programs:
+    for cls in p['classes']:
+      if (cls in cls_set):
+        progs.append(p['name'])
+        break
+  return (progs)
+
+# given a list of programs and/or benchmark classes, return a sorted list of programs
+#
+def parse_program_list(args):
+  if (len(args.programs) == 0):
+    # no benchmarks is treated as all benchmarks
+    return (prog_info.program_names())
+  else:
+    progs=set()
+    classes=[]
+    for name in args.programs:
+      if (prog_info.is_class(name)):
+        classes.append(name)
+      elif (prog_info.is_program(name)):
+        progs.add(name)
+      else:
+        print("error: \"" + name + "\" is unknown")
+        sys.exit()
+    return sorted(progs.union(get_benchmark_list(classes)))
 
 # remove CM files to get a fresh build (except when in single-file mode)
 #
@@ -152,32 +225,50 @@ def create_arg_parser():
 
 #========== The 'run' command ==========
 #
+def do_run(args):
+  progs = parse_program_list(args)
+  print(progs)
+
+#========== The 'gc' command ==========
+#
+def do_gc(args):
+  progs = parse_program_list(args)
+  print(progs)
 
 #========== The 'compile' command ==========
 #
+def do_compile(args):
+  progs = parse_program_list(args)
+  print(progs)
 
-#========== Ths 'check' command ==========
+#========== The 'check' command ==========
 #
+def do_check(args):
+  progs = parse_program_list(args)
+  print(progs)
 
 #========== The 'list' command ==========
 #
 def do_list(args):
   if (args.classes):
     # list the classes
-    objs = prog_info['classes']
+    objs = prog_info.classes
+    title = "Benchmark classes:"
   else:
     # list the programs
-    objs = prog_info['programs']
+    objs = prog_info.programs
+    title = "Benchmarks:"
   if (args.compact):
     # list the names on a single line
-    names = ""
+    names = []
     for obj in objs:
-      names = (names + " " + obj['name']) if names != "" else obj['name']
-    print (names)
+      names.append(obj['name'])
+    print (" ".join(names))
   else:
     # list the names with their descriptions
+    print (title)
     for obj in objs:
-      print(obj['name'] + ":")
+      print("  " + obj['name'] + ":")
       if (obj['description'] != ""):
         print("    "+obj['description'])
       else:
@@ -191,11 +282,16 @@ args = create_arg_parser().parse_args()
 #
 if (args.cmd == 'run'):
   print("# run")
+  do_run(args)
+elif (args.cmd == 'gc'):
+  print("# gc")
+  do_gc(args)
 elif (args.cmd == 'compile'):
   print("# compile")
+  do_compile(args)
 elif (args.cmd == 'check'):
   print("# check")
+  do_check(args)
 elif (args.cmd == 'list'):
   print("# list")
   do_list(args)
-
