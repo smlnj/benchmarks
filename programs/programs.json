@@ -27,8 +27,8 @@
     { "name" : "manticore",
       "description" : "programs from the Manticore benchmark suite"
     },
-    { "name" : "programs from the Manticore benchmark suite",
-      "description" : "mlton"
+    { "name" : "mlton",
+      "description" : "programs from the mlton benchmark suite"
     },
     { "name" : "scheme",
       "description" : "programs ported from Scheme and Racket (includes the Larceny bencmarks)"
