@@ -23,7 +23,8 @@ structure Timing : sig
     val runOnce : string * (TextIO.outstream -> unit) -> unit
 
     (* `run (name, label, n, file, f)` opens `file` for appending and then calls
-     * the function `f` on it `n` times.
+     * the function `f` on it `n` times.  If the `file` is the string `"-"`, then
+     * the output is directed to stdOut.
      *)
     val run : string * string * int * string * (TextIO.outstream -> unit) -> unit
 
@@ -117,16 +118,15 @@ structure Timing : sig
             TextIO.closeOut outS
           end
 
-    fun run (name, label, nruns, outfile, doit) = let
-          val outS = TextIO.openAppend outfile
+    fun run' (name, label, nruns, outS, f) = let
           fun pr s = TextIO.output(outS, s)
           fun loop 0 = ()
 	    | loop 1 = (
-                doit outS;
+                f outS;
                 pr "\n")
 	    | loop i = (
                 pr "    ";
-		doit outS;
+		f outS;
 		pr ",\n";
 		loop(i-1))
           in
@@ -134,11 +134,19 @@ structure Timing : sig
             if (nruns = 1)
               then (
                 pr(concat["  \"", label, "\" : "]);
-                doit outS; pr "}\n")
+                f outS; pr "}\n")
               else (
                 pr(concat["  \"", label, "\" : [\n"]);
                 loop nruns;
-                pr "  ]\n}\n");
+                pr "  ]\n}\n")
+          end
+
+    fun run (name, label, nruns, "-", f) = run' (name, label, nruns, TextIO.stdOut, f)
+      | run (name, label, nruns, file, f) = let
+          val outS = TextIO.openAppend file
+          in
+            run' (name, label, nruns, outS, f)
+              handle ex => (TextIO.closeOut outS; raise ex);
             TextIO.closeOut outS
           end
 
