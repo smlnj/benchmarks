@@ -45,32 +45,32 @@
   ],
   "programs" : [
     { "name" : "aobench",
-      "description" : "",
+      "description" : "A small ambient occlusion renderer",
       "classes" : ["all"],
       "results" : []
     },
     { "name" : "barnes-hut",
       "description" : "Hierarchical N-body solver (BROKEN)",
-      "classes" : ["all", "fp","functor"],
+      "classes" : ["all","fp","functor"],
       "results" : []
     },
     { "name" : "black-scholes",
       "description" : "European-style option pricing",
-      "classes" : ["all", "smlnj"],
+      "classes" : ["all","smlnj"],
       "results" : []
     },
     { "name" : "boyer",
-      "description" : "",
-      "classes" : ["all", "smlnj"],
+      "description" : "Tautology checker",
+      "classes" : ["all","smlnj"],
       "results" : []
     },
     { "name" : "cml-sieve",
       "description" : "Message-passing implementation of Sieve of Eratosthenes",
-      "classes" : ["all", "cml","smlnj"],
+      "classes" : ["all","cml","smlnj"],
       "results" : []
     },
     { "name" : "count-graphs",
-      "description" : "",
+      "description" : "Enumerate directed graphs",
       "classes" : ["all"],
       "results" : []
     },
@@ -81,47 +81,57 @@
     },
     { "name" : "dlx",
       "description" : "(BROKEN)",
-      "classes" : ["all", "mlton","functor"],
+      "classes" : ["all","mlton","functor"],
+      "results" : []
+    },
+    { "name" : "fannkuch",
+      "description" : "Array permutations",
+      "classes" : ["all","array"],
       "results" : []
     },
     { "name" : "fft",
-      "description" : "",
-      "classes" : ["all", "array","fp","array","smlnj"],
+      "description" : "Fast-Fourier-transform implementation",
+      "classes" : ["all","fp","array","smlnj"],
       "results" : []
     },
     { "name" : "id-ray",
-      "description" : "",
+      "description" : "A ray tracer ported from Id",
+      "classes" : ["all"],
+      "results" : []
+    },
+    { "name" : "iter-pidigits",
+      "description" : "Computation of digits of pi ",
       "classes" : ["all"],
       "results" : []
     },
     { "name" : "kcfa",
-      "description" : "",
+      "description" : "A reference implementation of kCFA (BROKEN)",
       "classes" : ["all"],
       "results" : []
     },
     { "name" : "knuth-bendix",
       "description" : "Knuth-Bendix completion algorithm",
-      "classes" : ["all", "smlnj"],
+      "classes" : ["all","smlnj"],
       "results" : []
     },
     { "name" : "lexgen",
       "description" : "Lexical-analyzer generator",
-      "classes" : ["all", "classic","smlnj"],
+      "classes" : ["all","classic","smlnj"],
       "results" : []
     },
     { "name" : "life",
       "description" : "Conway's game of life",
-      "classes" : ["all", "list"],
+      "classes" : ["all","list"],
       "results" : []
     },
     { "name" : "logic",
       "description" : "",
-      "classes" : ["all", "smlnj"],
+      "classes" : ["all","smlnj"],
       "results" : []
     },
     { "name" : "mandelbrot",
       "description" : "Mandelbrot-set computation",
-      "classes" : ["all", "fp","smlnj"],
+      "classes" : ["all","fp","smlnj"],
       "results" : []
     },
     { "name" : "mandelbrot-rat",
@@ -131,32 +141,32 @@
     },
     { "name" : "mazefun",
       "description" : "Maze generator",
-      "classes" : ["all", "larceny"],
+      "classes" : ["all","larceny"],
       "results" : []
     },
     { "name" : "mc-ray",
       "description" : "Monte-Carlo ray tracer",
-      "classes" : ["all", "fp"],
+      "classes" : ["all","fp"],
       "results" : []
     },
     { "name" : "minimax",
       "description" : "Minimax game-tree search for Tic-Tac-Toe",
-      "classes" : ["all", "array","list"],
+      "classes" : ["all","array","list"],
       "results" : []
     },
     { "name" : "mlyacc",
       "description" : "LALR(1) parser generator",
-      "classes" : ["all", "classic","smlnj","functor"],
+      "classes" : ["all","classic","smlnj","functor"],
       "results" : []
     },
     { "name" : "nbody",
-      "description" : "",
+      "description" : "$O(n^2)$ N-body solver",
       "classes" : ["all"],
       "results" : []
     },
     { "name" : "nucleic",
-      "description" : "",
-      "classes" : ["all", "fp","classic","smlnj"],
+      "description" : "Pseudoknot application from molecular biology",
+      "classes" : ["all","fp","classic","smlnj"],
       "results" : []
     },
     { "name" : "pia",
@@ -165,28 +175,28 @@
       "results" : []
     },
     { "name" : "pidigits",
-      "description" : "",
-      "classes" : ["all"],
+      "description" : "Stream-based computation of digits of pi",
+      "classes" : ["all","bignum","ho"],
       "results" : []
     },
     { "name" : "pingpong",
-      "description" : "",
+      "description" : "Message-passing microbenchmark",
       "classes" : ["all"],
       "results" : []
     },
     { "name" : "plclub-ray",
       "description" : "A raytracer from the ICFP'20 Programming Contest",
-      "classes" : ["all", "fp"],
+      "classes" : ["all","fp"],
       "results" : []
     },
     { "name" : "ratio-regions",
       "description" : "Image segmentation/contour finding",
-      "classes" : ["all", "mlton"],
+      "classes" : ["all","mlton"],
       "results" : []
     },
     { "name" : "ray",
       "description" : "A minimal ray tracer",
-      "classes" : ["all", "fp","smlnj"],
+      "classes" : ["all","fp","smlnj"],
       "results" : []
     },
     { "name" : "regex",
@@ -195,7 +205,7 @@
       "results" : []
     },
     { "name" : "safe-for-space",
-      "description" : "",
+      "description" : "Test of closure-conversion space safety",
       "classes" : ["all"],
       "results" : []
     },
@@ -206,12 +216,12 @@
     },
     { "name" : "simple",
       "description" : "A spherical fluid-dynamics program",
-      "classes" : ["all", "array","fp","classic","smlnj","functor"],
+      "classes" : ["all","array","fp","classic","smlnj","functor"],
       "results" : []
     },
     { "name" : "smith-nf",
       "description" : "Computes the Smith Normal Form",
-      "classes" : ["all", "array","bignum","mlton"],
+      "classes" : ["all","array","bignum","mlton"],
       "results" : []
     },
     { "name" : "stream-sieve",
@@ -221,17 +231,17 @@
     },
     { "name" : "tsp",
       "description" : "A Traveling-Sales-Person solver",
-      "classes" : ["all", "fp","smlnj"],
+      "classes" : ["all","fp","smlnj"],
       "results" : []
     },
     { "name" : "twenty-four",
       "description" : "CPS-style solver for the 24 puzzle",
-      "classes" : ["all", "ho"],
+      "classes" : ["all","ho"],
       "results" : []
     },
     { "name" : "vliw",
       "description" : "A Very-Long-Instruction-Word instruction scheduler",
-      "classes" : ["all", "classic","smlnj"],
+      "classes" : ["all","classic","smlnj"],
       "results" : []
     }
   ]

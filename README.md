@@ -76,6 +76,7 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | [`fannkuch`](programs/fannkuch/README.md)             |    72 | Array permutations                         |
 | [`fft`](programs/fft/README.md)                       |   166 | Fast-Fourier-transform implementation      |
 | [`id-ray`](programs/id-ray/README.md)                 |   xxx | A ray tracer ported from Id                |
+| [`iter-pidigits`](programs/iter-pidigits/README.md)   |    53 | Computation of digits of pi                |
 | [`kcfa`](programs/kcfa/README.md)                     |   xxx | A reference implementation of kCFA **(BROKEN)** |
 | [`knuth-bendix`](programs/knuth-bendix/README.md)     |   434 | Knuth-Bendix completion algorithm          |
 | [`lexgen`](programs/lexgen/README.md)                 | 1,033 | Lexical-analyzer generator                 |
@@ -87,15 +88,15 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | [`mc-ray`](programs/mc-ray/README.md)                 |   737 | Monte-Carlo ray tracer                     |
 | [`minimax`](programs/minimax/README.md)               |   168 | Minimax game-tree search for Tic-Tac-Toe   |
 | [`mlyacc`](programs/mlyacc/README.md)                 | 5,573 | LALR(1) parser generator                   |
-| [`nbody`](programs/nbody/README.md)                   |   136 | O(n^2) N-body solver                       |
+| [`nbody`](programs/nbody/README.md)                   |   136 | $O(n^2)$ N-body solver                     |
 | [`nucleic`](programs/nucleic/README.md)               | 2,920 | Pseudoknot application from molecular biology |
-| [`pia`](programs/pia/README.md)                       |   xxx | **(BROKEN)**                                   |
+| [`pia`](programs/pia/README.md)                       |   xxx | **(BROKEN)**                               |
 | [`pidigits`](programs/pidigits/README.md)             |    77 | Stream-based computation of digits of pi   |
 | [`pingpong`](programs/pingpong/README.md)             |   136 | Message-passing microbenchmark             |
 | [`plclub-ray`](programs/plclub-ray/README.md)         | 2,026 | A raytracer from the ICFP'20 Programming Contest |
 | [`ratio-regions`](programs/ratio-regions/README.md)   |   486 | Image segmentation/contour finding         |
 | [`ray`](programs/ray/README.md)                       |   352 | A minimal ray tracer                       |
-| [`regex`](programs/regex/README.md)                   |   xxx | **(BROKEN)**                                   |
+| [`regex`](programs/regex/README.md)                   |   xxx | **(BROKEN)**                               |
 | [`sat`](programs/sat/README.md)                       |    54 | Brute-force SAT solver                     |
 | [`simple`](programs/simple/README.md)                 |   769 | A spherical fluid-dynamics program         |
 | [`smith-nf`](programs/smith-nf/README.md)             |   372 | Computes the Smith Normal Form             |

@@ -53,6 +53,7 @@ ALL="\
   cml-sieve \
   fannkuch \
   fft \
+  iter-pidigits \
   knuth-bendix \
   lexgen \
   life \
@@ -95,7 +96,7 @@ LIST_DESC="programs that make significant use of lists"
 ARRAY="fannkuch fft minimax simple smith-nf"
 ARRAY_DESC="programs that make significant use of arrays and/or vectors"
 
-BIGNUM="pidigits smith-nf"
+BIGNUM="iter-pidigits pidigits smith-nf"
 BIGNUM_DESC="programs that make significant use of the IntInf.int type"
 
 CML="cml-sieve"

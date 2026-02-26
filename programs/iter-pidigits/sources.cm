@@ -1,0 +1,19 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2026 The Fellowship of SML/NJ (https://smlnj.org)
+ * All rights reserved.
+ *)
+
+Library
+
+  structure Main
+
+is
+
+  $/basis.cm
+
+  ../../util/sources.cm
+
+  pi-digits.sml
+
+  main.sml
