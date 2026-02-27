@@ -110,7 +110,7 @@ FUNCTOR_DESC="programs that are assembled from functor applications"
 CLASSIC="boyer cml-sieve knuth-bendix lexgen life mlyacc ray simple vliw"
 CLASSIC_DESC="programs from the original SML/NJ benchmarking"
 
-SMLNJ="$CLASSIC boyer fft knuth-bendix logic mandelbrot ray tsp"
+SMLNJ="$CLASSIC fft logic mandelbrot tsp"
 SMLNJ_DESC="programs from the previous SML/NJ bencmark suite"
 
 MANTICORE="cml-sieve minimax"
