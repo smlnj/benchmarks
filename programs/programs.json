@@ -51,7 +51,7 @@
     },
     { "name" : "barnes-hut",
       "description" : "Hierarchical N-body solver (BROKEN)",
-      "classes" : ["all","fp","functor"],
+      "classes" : [],
       "results" : []
     },
     { "name" : "black-scholes",
@@ -76,12 +76,12 @@
     },
     { "name" : "delta-blue",
       "description" : "Delta-Blue incremental constraint solver (BROKEN)",
-      "classes" : ["all"],
+      "classes" : [],
       "results" : []
     },
     { "name" : "dlx",
       "description" : "(BROKEN)",
-      "classes" : ["all","mlton","functor"],
+      "classes" : [],
       "results" : []
     },
     { "name" : "fannkuch",
@@ -106,7 +106,7 @@
     },
     { "name" : "kcfa",
       "description" : "A reference implementation of kCFA (BROKEN)",
-      "classes" : ["all"],
+      "classes" : [],
       "results" : []
     },
     { "name" : "knuth-bendix",
@@ -170,8 +170,8 @@
       "results" : []
     },
     { "name" : "pia",
-      "description" : "",
-      "classes" : ["all"],
+      "description" : "(BROKEN)",
+      "classes" : [],
       "results" : []
     },
     { "name" : "pidigits",
@@ -200,8 +200,8 @@
       "results" : []
     },
     { "name" : "regex",
-      "description" : "",
-      "classes" : ["all"],
+      "description" : "(BROKEN)",
+      "classes" : [],
       "results" : []
     },
     { "name" : "safe-for-space",
