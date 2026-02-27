@@ -18,7 +18,7 @@ structure Timing : sig
     (* report the GC statistics for running a function; note that this measurement
      * requires version 110.99.7+ or 2024.3+
      *)
-    val gcStats : (unit -> unit) -> TextIO.outstream -> unit
+    val gcStats : string * (unit -> unit) -> TextIO.outstream -> unit
 
     val runOnce : string * (TextIO.outstream -> unit) -> unit
 
@@ -96,17 +96,18 @@ structure Timing : sig
     val reset = SMLofNJ.Internals.GC.resetCounters
     val read = SMLofNJ.Internals.GC.readCounters
     in
-    fun gcStats doit outS = let
+    fun gcStats (name, doit) outS = let
           val () = reset true
           val () = doit()
           val {nbAlloc, nStores, nbAlloc1, nbPromote, nGCs} = read()
           in
             TextIO.output (outS, String.concat[
-                 "\"gc-stats\" : { \"nursery-alloc\" : ", LargeInt.toString nbAlloc,
-                 ", \"gen1-alloc\" : ", LargeInt.toString nbAlloc1,
-                 ", \"gen1-promote\" : ", LargeInt.toString nbPromote,
-                 ", \"num-gcs\" : [", String.concatWithMap "," Int.toString nGCs, "] }"
-               ])
+                "{ \"program\" : \"", name, "\",",
+                "  \"gc-stats\" : { \"nursery-alloc\" : ", LargeInt.toString nbAlloc,
+                ", \"gen1-alloc\" : ", LargeInt.toString nbAlloc1,
+                ", \"gen1-promote\" : ", LargeInt.toString nbPromote,
+                ", \"num-gcs\" : [", String.concatWithMap "," Int.toString nGCs, "] } }"
+              ])
           end
     end (* local *)
 

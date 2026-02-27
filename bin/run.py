@@ -66,14 +66,26 @@ class ProgramInfo:
 #========== Logging compiler messages, etc ==========
 #
 class LogFile:
-  def __init__(self, file):
-    self._name = file
-    if (file == "none"):
+  def __init__(self, args):
+    if (args.cmd == "list"):
+      # we disable logging for the list command
+      #
       self._outS = None
-    elif (file == "-"):
-      self._outS = sys.stdout
     else:
-      self._outS = open(file, "a", buffering=1)
+      # set the log file name
+      #
+      if (isinstance(args.log, str)):
+        self._name = args.log
+      else:
+        self._name = args.log[0]
+      # set the log output stream based on the file name
+      #
+      if (self._name == "none"):
+        self._outS = None
+      elif (self._name == "-"):
+        self._outS = sys.stdout
+      else:
+        self._outS = open(file, "a", buffering=1)
 
   def __enter__(self):
     return (self)
@@ -159,7 +171,7 @@ def parse_program_list():
 
 # determine the path to the sml command and get the version tag
 #
-def resolve_sml_cmd():
+def resolve_sml_cmd(logf):
   if (cmdln_args.sml):
     sml_cmd = os.path.realpath(cmdln_args.sml)
   else:
@@ -169,11 +181,18 @@ def resolve_sml_cmd():
   # get the version
   process = subprocess.run([sml_cmd, "@SMLversion"], text=True, capture_output=True)
   sml_version=process.stdout.strip().removeprefix("sml ")
+  logf.say("# sml command: ", sml_cmd, "\n")
+  logf.say("# version: ", sml_version, "\n")
 
 # remove CM files to get a fresh build (except when in single-file mode)
 #
-def clean_cm():
-  print("TODO: clean_cm")
+def clean_cm(logf):
+  logf.say("# remove \".cm\" directories\n")
+  if (cmdln_args.progress):
+    print("removing \".cm\" directories")
+  shutil.rmtree(os.path.join(rootdir, "util/.cm"), ignore_errors=True)
+  for prog in prog_info.program_names():
+    shutil.rmtree(os.path.join(progdir, prog, ".cm"), ignore_errors=True)
 
 # concatenate the source files of a benchmark to create
 # the single source file "all.sml".
@@ -240,7 +259,7 @@ def add_exec_args(subparser,name,includeNRuns,includeOutput):
     "--log",
     nargs=1,
     default=f"LOG-{timestamp}",
-    help="specify the name of the logfile (none to disable)")
+    help="specify the name of the logfile ('-' for stdout and 'none' to disable)")
   subparser.add_argument(
     "-d", "--result-dir",
     nargs=1,
@@ -312,9 +331,9 @@ def create_arg_parser():
 # standard set up for commands that run the SML/NJ compiler; returns the list of
 # programs to run/compile/check
 #
-def sml_init():
-  resolve_sml_cmd()
-  clean_cm()
+def sml_init(logf):
+  resolve_sml_cmd(logf)
+  clean_cm(logf)
   return (parse_program_list())
 
 # create the top-level dictionary for the data
@@ -347,7 +366,7 @@ def output_results(results):
 #========== The 'run' command ==========
 #
 def do_run(logf):
-  progs = sml_init()
+  progs = sml_init(logf)
   results = make_data_dict()
   for prog in progs:
     tmp_filename = os.path.join(progdir, prog, "".join(["results-", timestamp, ".json"]))
@@ -372,26 +391,70 @@ def do_run(logf):
 #========== The 'gc' command ==========
 #
 def do_gc(logf):
-  progs = sml_init()
-  result = make_data_dict()
-  print(progs)
+  progs = sml_init(logf)
+  results = make_data_dict()
+  for prog in progs:
+    tmp_filename = os.path.join(progdir, prog, "".join(["results-", timestamp, ".json"]))
+    logf.say("# measuring GC stats for ", prog, "\n")
+    if (cmdln_args.progress):
+      print("running ", prog)
+    if (cmdln_args.single_file):
+      make_single_file(prog, cmdln_args.include_basis)
+      run_sml_cmd(program=prog, input=f"""\
+          use "all.sml";
+          Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
+        """)
+    else:
+      run_sml_cmd("sources.cm", program=prog, input=f"""\
+          Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
+        """)
+    # input the results from the tmp file
+    results["data"].append(load_json(tmp_filename))
+    os.remove(tmp_filename)
+  output_results(results)
 
 #========== The 'compile' command ==========
 #
+# QUESTION: does it make sense to include the compile time for the utility code?
+#
 def do_compile(logf):
-  progs = sml_init()
-  result = make_data_dict()
-  print(progs)
+  progs = sml_init(logf)
+  results = make_data_dict()
+  for prog in progs:
+    tmp_filename = os.path.join(progdir, prog, "".join(["results-", timestamp, ".json"]))
+    logf.say("# running ", prog, "\n")
+    if (cmdln_args.progress):
+      print("compiling ", prog)
+    data = []
+    for i in range(cmdln_args.nruns):
+      if (cmdln_args.single_file):
+        make_single_file(prog, cmdln_args.include_basis)
+        run_sml_cmd(program=prog, input=f"""\
+            use "all.sml";
+            Timing.runOnce ("{tmp_filename}", Timing.timeUse "all.sml");
+          """)
+      else:
+        # remove ../util/.cm and .cm directories
+        shutil.rmtree(os.path.join(rootdir, "util/.cm"), ignore_errors=True)
+        shutil.rmtree(os.path.join(progdir, prog, ".cm"), ignore_errors=True)
+        run_sml_cmd("sources.cm", program=prog, input=f"""\
+            Timing.runOnce ("{tmp_filename}", Timing.timeMake "sources.cm");
+          """)
+      # input the results from the tmp file
+      data.append(load_json(tmp_filename))
+      os.remove(tmp_filename)
+    results["data"].append({"program" : prog, "data" : data})
+  output_results(results)
 
 #========== The 'check' command ==========
 #
 def do_check(logf):
-  progs = sml_init()
+  progs = sml_init(logf)
   print(progs)
 
 #========== The 'list' command ==========
 #
-def do_list(logf):
+def do_list():
   if (cmdln_args.classes):
     # list the classes
     objs = prog_info.classes
@@ -420,7 +483,9 @@ def do_list(logf):
 #
 create_arg_parser().parse_args(namespace=cmdln_args)
 
-with LogFile(cmdln_args.log) as logf:
+print(cmdln_args)
+
+with LogFile(cmdln_args) as logf:
   if (cmdln_args.cmd == 'run'):
     logf.say("# run\n")
     do_run(logf)
@@ -435,4 +500,4 @@ with LogFile(cmdln_args.log) as logf:
     do_check(logf)
   elif (cmdln_args.cmd == 'list'):
     logf.say("# list\n")
-    do_list(logf)
+    do_list()
