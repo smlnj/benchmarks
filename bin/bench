@@ -18,6 +18,15 @@
 #       bench check [options] ...
 #
 
+# TODO:
+#  * allow a list of programs/classes as an argument to the 'list' command
+#
+#  * add 'cloc' as a command
+#
+#  * support for MLton and Poly/ML benchmarking
+#
+# also, see various "TODO"s in the source
+
 import argparse
 import json
 import os
