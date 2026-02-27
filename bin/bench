@@ -26,6 +26,15 @@ import subprocess
 import shutil
 from datetime import datetime
 
+# report an error and exit
+#
+def error(msg):
+  if isinstance(msg, list):
+    print("\n".join(msg), file=sys.stderr)
+  else:
+    print(msg, file=sys.stderr)
+  sys.exit(1)
+
 # helper function for loading data from a JSON file
 #
 def load_json(path):
@@ -33,9 +42,7 @@ def load_json(path):
     with open(path, "r", encoding="utf-8") as in_strm:
       contents = json.load(in_strm)
   except json.JSONDecodeError as exn:
-    print(f'error loading {path}\n')
-    print('  ' + exn.msg)
-    sys.exit()
+    error([f'error loading {path}', '  ' + exn.msg])
   return (contents)
 
 #========== Benchmark program and class information ==========
@@ -94,7 +101,7 @@ class LogFile:
       elif (self._name == "-"):
         self._outS = sys.stdout
       else:
-        self._outS = open(file, "a", buffering=1)
+        self._outS = open(self._name, "a", buffering=1)
 
   def __enter__(self):
     return (self)
@@ -128,7 +135,6 @@ resultdir = os.path.join(rootdir, "reports")
 # default SML command
 #
 sml_cmd = shutil.which("sml")
-sml_version = ""
 
 # timestamp suffix for output files
 #
@@ -173,8 +179,7 @@ def parse_program_list():
       elif (prog_info.is_program(name)):
         progs.add(name)
       else:
-        print("error: \"" + name + "\" is unknown")
-        sys.exit(1)
+        error("error: \"" + name + "\" is unknown")
     return sorted(progs.union(get_benchmark_list(classes)))
 
 # determine the version of SML/NJ
@@ -199,6 +204,9 @@ def get_poly_version():
 # determine the path to the sml command and get the version tag
 #
 def resolve_sml_cmd(logf):
+  global sml_system
+  global sml_cmd
+  global sml_version
   if (cmdln_args.sml):
     sml_system="SML/NJ"
     sml_cmd = os.path.realpath(cmdln_args.sml)
@@ -216,17 +224,15 @@ def resolve_sml_cmd(logf):
     sml_cmd = shutil.which("polyc")
     get_polyml_version()
   else:
-    print("error: SML system \"" + cmdln_args.system + "\" is unknown")
-    sys.exit(1)
-  logf.say("# sml system: ", sml_system, "\n")
-  logf.say("# sml command: ", sml_cmd, "\n")
-  logf.say("# version: ", sml_version, "\n")
-
+    error("error: SML system \"" + cmdln_args.system + "\" is unknown")
   # verify that the sml command exists and is executable
+  #
 #TODO
   # get the version
+  #
   process = subprocess.run([sml_cmd, "@SMLversion"], text=True, capture_output=True)
   sml_version=process.stdout.strip().removeprefix("sml ")
+  logf.say("# sml system: ", sml_system, "\n")
   logf.say("# sml command: ", sml_cmd, "\n")
   logf.say("# version: ", sml_version, "\n")
 
@@ -240,11 +246,71 @@ def clean_cm(logf):
   for prog in prog_info.program_names():
     shutil.rmtree(os.path.join(progdir, prog, ".cm"), ignore_errors=True)
 
+# append the contents of a source file to the end of another
+#
+def append_file(dir, srcfile, dst):
+  filename = os.path.realpath(os.path.join(dir, srcfile))
+  with open(filename, "r") as src:
+    dst.write(f"(******************** {srcfile} ********************)\n")
+    dst.write(src.read())
+
+def get_file_list(dir, includeBasis):
+  files=[]
+  if (os.path.exists(os.path.join(dir, "FILES"))):
+    with open(os.path.join(dir, "FILES"), "r") as inS:
+      while (True):
+        ln = inS.readline()
+        if (ln == ""):
+          break
+        ln = ln.strip()
+        if ((ln == "") or (ln[0] == "#")):
+          # blank or comment line
+          #
+          continue
+        if (includeBasis or ("BASIS" not in ln)):
+          files.append(ln)
+  return (files)
+
 # concatenate the source files of a benchmark to create
 # the single source file "all.sml".
 #
-def make_single_file(prog, includeBasis):
-  print("TODO: make_single_file")
+def make_single_file(mode, prog, includeBasis):
+  bmark_dir = os.path.join(progdir, prog)
+  # determine the output file name
+  #
+  need_local = False
+  if (mode == "SML/NJ"):
+    outfile = "all.sml"
+    need_local = True
+  elif (mode == "cloc"):
+    outfile = "all.sml"
+  elif (mode == "MLton"):
+    outfile = "all-mlton.sml"
+  elif (mode == "Poly/ML"):
+    outfile = "all-poly.sml"
+  else:
+    error(f"error: unknown mode '{mode}' for 'make_single_file'")
+  dstfile = os.path.join(bmark_dir, outfile)
+  # file header
+  #
+  with open(dstfile, "w") as dst:
+    dst.write(f"(* {outfile} -- all sources for {prog} *)\n")
+    if (need_local):
+      dst.write("local\n")
+    for file in get_file_list(bmark_dir, includeBasis):
+      append_file(bmark_dir, file, dst)
+    if (need_local):
+      dst.write("in\n")
+    append_file(bmark_dir, "main.sml", dst)
+    if (need_local):
+      dst.write("end\n")
+    elif (mode == "MLton"):
+      dst.write("""
+      val _ = (case CommandLine.arguments()
+               of "-test"::_ => Timing.testIt("-", Main.testit)
+                | _ => Timing.timeIt Main.doit TextIO.stdOut
+              (* end case *))
+      """)
 
 # run an sml command
 #
@@ -430,11 +496,12 @@ def do_run(logf):
     if (cmdln_args.progress):
       print("running ", prog)
     if (cmdln_args.single_file):
-      make_single_file(prog, cmdln_args.include_basis)
+      make_single_file(sml_system, prog, cmdln_args.include_basis)
       run_sml_cmd(program=prog, input=f"""\
           use "all.sml";
           Timing.run (Main.name, "runs", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
         """)
+      # TODO: remove all.sml
     else:
       run_sml_cmd("sources.cm", program=prog, input=f"""\
           Timing.run (Main.name, "runs", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
@@ -455,11 +522,12 @@ def do_gc(logf):
     if (cmdln_args.progress):
       print("running ", prog)
     if (cmdln_args.single_file):
-      make_single_file(prog, cmdln_args.include_basis)
+      make_single_file(sml_system, prog, cmdln_args.include_basis)
       run_sml_cmd(program=prog, input=f"""\
           use "all.sml";
           Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
         """)
+      # TODO: remove all.sml
     else:
       run_sml_cmd("sources.cm", program=prog, input=f"""\
           Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
@@ -483,14 +551,20 @@ def do_compile(logf):
     if (cmdln_args.progress):
       print("compiling ", prog)
     data = []
-    for i in range(cmdln_args.nruns):
-      if (cmdln_args.single_file):
-        make_single_file(prog, cmdln_args.include_basis)
+    if (cmdln_args.single_file):
+      make_single_file(sml_system, prog, cmdln_args.include_basis)
+      for i in range(cmdln_args.nruns):
         run_sml_cmd(program=prog, input=f"""\
             use "all.sml";
             Timing.runOnce ("{tmp_filename}", Timing.timeUse "all.sml");
           """)
-      else:
+        # input the results from the tmp file
+        #
+        data.append(load_json(tmp_filename))
+        os.remove(tmp_filename)
+      # TODO: remove all.sml
+    else:
+      for i in range(cmdln_args.nruns):
         # remove ../util/.cm and .cm directories
         #
         shutil.rmtree(os.path.join(rootdir, "util/.cm"), ignore_errors=True)
@@ -498,10 +572,10 @@ def do_compile(logf):
         run_sml_cmd("sources.cm", program=prog, input=f"""\
             Timing.runOnce ("{tmp_filename}", Timing.timeMake "sources.cm");
           """)
-      # input the results from the tmp file
-      #
-      data.append(load_json(tmp_filename))
-      os.remove(tmp_filename)
+        # input the results from the tmp file
+        #
+        data.append(load_json(tmp_filename))
+        os.remove(tmp_filename)
     results["data"].append({"program" : prog, "data" : data})
   output_results(results)
 
@@ -549,12 +623,12 @@ create_arg_parser().parse_args(namespace=cmdln_args)
 if (cmdln_args.cmd == 'list'):
   do_list()
 else:
-  # resolve the sml system
-  #
-  resolve_sml_cmd(logf)
-  # dispatch on the command
-  #
   with LogFile(cmdln_args) as logf:
+    # resolve the sml system
+    #
+    resolve_sml_cmd(logf)
+    # dispatch on the command
+    #
     if (cmdln_args.cmd == 'run'):
       logf.say("# run\n")
       do_run(logf)
