@@ -63,6 +63,30 @@ class ProgramInfo:
     else:
       return None
 
+#========== Logging compiler messages, etc ==========
+#
+class LogFile:
+  def __init__(self, file):
+    self._name = file
+    if (file == "none"):
+      self._outS = None
+    elif (file == "-"):
+      self._outS = sys.stdout
+    else:
+      self._outS = open(file, "a", buffering=1)
+
+  def __enter__(self):
+    return (self)
+
+  def __exit__(self, exc_type, exc_val, exc_tb):
+    if (self._outS and (self._name != "-")):
+      self._outS.close()
+    return False
+
+  def say(self, *args):
+    if (self._outS):
+      self._outS.write("".join(list(args)))
+
 #========== Initialization ==========
 #
 
@@ -159,7 +183,7 @@ def make_single_file(prog, includeBasis):
 
 # run an sml command
 #
-def run_sml_cmd(*sml_args, program, input):
+def run_sml_cmd(*sml_args, program, input, logf=None):
   cmd = [
       sml_cmd,
       "@SMLquiet",
@@ -167,17 +191,19 @@ def run_sml_cmd(*sml_args, program, input):
       "-Ccm.verbose=false",
       "-m", "../../util/sources.cm",
     ] + list(sml_args)
-  print("# " + " ".join(cmd))
+  if (logf):
+    logf.say("## ", " ".join(cmd), "\n")
   process = subprocess.run(
     cmd,
     input=input,
     text=True,
     stdout=subprocess.PIPE,
-    stderr=subprocess.DEVNULL,
+    stderr=subprocess.STDOUT,
     check=True,
     cwd=os.path.join(progdir, program),
     timeout=timeout)
-  return (process.stdout)
+  if (logf):
+    logf.say(process.stdout)
 
 #========== Functions for command-line argument processing ==========
 #
@@ -185,7 +211,7 @@ def run_sml_cmd(*sml_args, program, input):
 # function to add the standard arguments that control execution to a
 # command argument subparser
 #
-def add_exec_args(subparser,includeNRuns):
+def add_exec_args(subparser,name,includeNRuns,includeOutput):
   subparser.add_argument(
     "-a", "--alloc",
     nargs=1,
@@ -220,11 +246,12 @@ def add_exec_args(subparser,includeNRuns):
     nargs=1,
     default=resultdir,
     help=f"set the result directory (default: {resultdir})")
-  subparser.add_argument(
-    "-o", "--output",
-    nargs=1,
-    default=f"REPORT-{timestamp}.json",
-    help="set the name of the result JSON file")
+  if (includeOutput):
+    subparser.add_argument(
+      "-o", "--output",
+      nargs=1,
+      default=f"{name}-{timestamp}.json",
+      help="set the name of the result JSON file")
   subparser.add_argument(
     "--progress",
     action="store_true",
@@ -254,19 +281,19 @@ def create_arg_parser():
     dest="cmd")
   # time execution
   run = subparsers.add_parser("run")
-  add_exec_args(run, True)
+  add_exec_args(run, "run", True, True)
   add_programs_arg(run, "the benchmark programs and/or classes to run")
   # time execution
   gc = subparsers.add_parser("gc")
-  add_exec_args(gc, False)
+  add_exec_args(gc, "gc", False, True)
   add_programs_arg(gc, "the benchmark programs and/or classes to measure")
   # time compile times
   compile = subparsers.add_parser("compile")
-  add_exec_args(compile, True)
+  add_exec_args(compile, "compile", True, True)
   add_programs_arg(compile, "the benchmark programs and/or classes to compile")
   # check results
   check = subparsers.add_parser("check")
-  add_exec_args(check, False)
+  add_exec_args(check, "", False, False)
   add_programs_arg(check, "the benchmark programs and/or classes to check")
   # list the benchmark programs
   list = subparsers.add_parser("list")
@@ -319,13 +346,14 @@ def output_results(results):
 
 #========== The 'run' command ==========
 #
-def do_run():
+def do_run(logf):
   progs = sml_init()
   results = make_data_dict()
   for prog in progs:
     tmp_filename = os.path.join(progdir, prog, "".join(["results-", timestamp, ".json"]))
+    logf.say("# running ", prog, "\n")
     if (cmdln_args.progress):
-      print("running " + prog)
+      print("running ", prog)
     if (cmdln_args.single_file):
       make_single_file(prog, cmdln_args.include_basis)
       run_sml_cmd(program=prog, input=f"""\
@@ -343,27 +371,27 @@ def do_run():
 
 #========== The 'gc' command ==========
 #
-def do_gc():
+def do_gc(logf):
   progs = sml_init()
   result = make_data_dict()
   print(progs)
 
 #========== The 'compile' command ==========
 #
-def do_compile():
+def do_compile(logf):
   progs = sml_init()
   result = make_data_dict()
   print(progs)
 
 #========== The 'check' command ==========
 #
-def do_check():
+def do_check(logf):
   progs = sml_init()
   print(progs)
 
 #========== The 'list' command ==========
 #
-def do_list():
+def do_list(logf):
   if (cmdln_args.classes):
     # list the classes
     objs = prog_info.classes
@@ -392,20 +420,19 @@ def do_list():
 #
 create_arg_parser().parse_args(namespace=cmdln_args)
 
-# postprocess the arguments
-#
-if (cmdln_args.cmd == 'run'):
-  print("# run")
-  do_run()
-elif (cmdln_args.cmd == 'gc'):
-  print("# gc")
-  do_gc()
-elif (cmdln_args.cmd == 'compile'):
-  print("# compile")
-  do_compile()
-elif (cmdln_args.cmd == 'check'):
-  print("# check")
-  do_check()
-elif (cmdln_args.cmd == 'list'):
-  print("# list")
-  do_list()
+with LogFile(cmdln_args.log) as logf:
+  if (cmdln_args.cmd == 'run'):
+    logf.say("# run\n")
+    do_run(logf)
+  elif (cmdln_args.cmd == 'gc'):
+    logf.say("# gc\n")
+    do_gc(logf)
+  elif (cmdln_args.cmd == 'compile'):
+    logf.say("# compile\n")
+    do_compile(logf)
+  elif (cmdln_args.cmd == 'check'):
+    logf.say("# check\n")
+    do_check(logf)
+  elif (cmdln_args.cmd == 'list'):
+    logf.say("# list\n")
+    do_list(logf)
