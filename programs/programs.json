@@ -46,7 +46,7 @@
   "programs" : [
     { "name" : "aobench",
       "description" : "A small ambient occlusion renderer",
-      "classes" : ["all"],
+      "classes" : ["all","fp"],
       "results" : []
     },
     { "name" : "barnes-hut",
@@ -56,7 +56,7 @@
     },
     { "name" : "black-scholes",
       "description" : "European-style option pricing",
-      "classes" : ["all","smlnj"],
+      "classes" : ["all","fp","smlnj"],
       "results" : []
     },
     { "name" : "boyer",
@@ -71,7 +71,7 @@
     },
     { "name" : "count-graphs",
       "description" : "Enumerate directed graphs",
-      "classes" : ["all"],
+      "classes" : ["all","list"],
       "results" : []
     },
     { "name" : "delta-blue",
@@ -91,7 +91,7 @@
     },
     { "name" : "fft",
       "description" : "Fast-Fourier-transform implementation",
-      "classes" : ["all","fp","array","smlnj"],
+      "classes" : ["all","array","fp","smlnj"],
       "results" : []
     },
     { "name" : "id-ray",
@@ -116,7 +116,7 @@
     },
     { "name" : "lexgen",
       "description" : "Lexical-analyzer generator",
-      "classes" : ["all","classic","smlnj"],
+      "classes" : ["all","smlnj"],
       "results" : []
     },
     { "name" : "life",
@@ -141,7 +141,7 @@
     },
     { "name" : "mazefun",
       "description" : "Maze generator",
-      "classes" : ["all","larceny"],
+      "classes" : ["all","larceny","scheme"],
       "results" : []
     },
     { "name" : "mc-ray",
@@ -156,17 +156,17 @@
     },
     { "name" : "mlyacc",
       "description" : "LALR(1) parser generator",
-      "classes" : ["all","classic","smlnj","functor"],
+      "classes" : ["all","smlnj","functor"],
       "results" : []
     },
     { "name" : "nbody",
       "description" : "$O(n^2)$ N-body solver",
-      "classes" : ["all"],
+      "classes" : ["all","fp"],
       "results" : []
     },
     { "name" : "nucleic",
       "description" : "Pseudoknot application from molecular biology",
-      "classes" : ["all","fp","classic","smlnj"],
+      "classes" : ["all","fp","smlnj"],
       "results" : []
     },
     { "name" : "pia",
@@ -181,12 +181,12 @@
     },
     { "name" : "pingpong",
       "description" : "Message-passing microbenchmark",
-      "classes" : ["all"],
+      "classes" : ["all","cml","manticore"],
       "results" : []
     },
     { "name" : "plclub-ray",
       "description" : "A raytracer from the ICFP'20 Programming Contest",
-      "classes" : ["all","fp"],
+      "classes" : ["all","fp","mlton"],
       "results" : []
     },
     { "name" : "ratio-regions",
@@ -211,12 +211,12 @@
     },
     { "name" : "sat",
       "description" : "Brute-force SAT solver",
-      "classes" : ["all"],
+      "classes" : ["all","scheme"],
       "results" : []
     },
     { "name" : "simple",
       "description" : "A spherical fluid-dynamics program",
-      "classes" : ["all","array","fp","classic","smlnj","functor"],
+      "classes" : ["all","array","fp","functor","smlnj"],
       "results" : []
     },
     { "name" : "smith-nf",
@@ -226,12 +226,17 @@
     },
     { "name" : "stream-sieve",
       "description" : "Functional stream implementation of Sieve of Eratosthenes",
-      "classes" : ["all"],
+      "classes" : ["all","ho","scheme"],
       "results" : []
     },
     { "name" : "tsp",
       "description" : "A Traveling-Sales-Person solver",
       "classes" : ["all","fp","smlnj"],
+      "results" : []
+    },
+    { "name" : "tyan",
+      "description" : "Grobner Basis calculation",
+      "classes" : ["all","array","mlton"],
       "results" : []
     },
     { "name" : "twenty-four",
@@ -241,7 +246,7 @@
     },
     { "name" : "vliw",
       "description" : "A Very-Long-Instruction-Word instruction scheduler",
-      "classes" : ["all","classic","smlnj"],
+      "classes" : ["all","smlnj"],
       "results" : []
     }
   ]
