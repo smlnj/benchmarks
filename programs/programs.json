@@ -54,6 +54,11 @@
       "classes" : [],
       "results" : []
     },
+    { "name" : "binary-trees",
+      "description" : "GC stress test",
+      "classes" : ["all","gc"],
+      "results" : []
+    },
     { "name" : "black-scholes",
       "description" : "European-style option pricing",
       "classes" : ["all","fp","smlnj"],

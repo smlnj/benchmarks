@@ -67,6 +67,7 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | ----------------------------------------------------- | ----- | ------------------------------------------ |
 | [`aobench`](programs/aobench/README.md)               |   259 | A small ambient occlusion renderer         |
 | [`barnes-hut`](programs/barnes-hut/README.md)         |   820 | Hierarchical N-body solver **(BROKEN)**    |
+| [`binary-trees`](programs/binary-trees/README.md)     |    xx | GC stress test                             |
 | [`black-scholes`](programs/black-scholes/README.md)   |   128 | European-style option pricing              |
 | [`boyer`](programs/boyer/README.md)                   |   854 | Tautology checker                          |
 | [`cml-sieve`](programs/cml-sieve/README.md)           |   162 | Message-passing implementation of Sieve of Eratosthenes |
