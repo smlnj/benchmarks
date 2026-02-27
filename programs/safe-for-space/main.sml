@@ -10,6 +10,8 @@
 structure Main : BMARK =
   struct
 
+    val name = "safe-for-space"
+
     val results : string list = []
 
     exception Empty
@@ -47,7 +49,8 @@ structure Main : BMARK =
     (*
     val result = loop (N, [])
     *)
-    fun doit () = ignore (loop (10000, []))
-    val result = loop (5, [])
+    fun doit () = ignore (loop (100000, []))
+
+    fun testit () = (ignore (loop (50, [])); Log.print "OK\n")
 
   end
