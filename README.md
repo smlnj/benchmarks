@@ -13,16 +13,16 @@ code for others.
 
 ## Running the Benchmarks
 
-Each directory contains a script called runit. To invoke it, the shell
-variable SML must be set to the path for the SML/NJ compiler. 'runit'
-executed at the top level will create a file called LOG that contains
-the results of compiling and running each benchmark.
+The `bench` script in the `bin` directory supports various commands
+for running the benchmarks.
 
-Executing
+> bin/bench -h
 
-> bin/run.sh -help
+will show the list of commands, and
 
-will show the command line options.
+> bin/bench <cmd> -h
+
+will show the options for `<cmd>`.
 
 ## Benchmark Directory Structure
 

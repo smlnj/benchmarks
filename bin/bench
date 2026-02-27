@@ -3,7 +3,19 @@
 # COPYRIGHT (c) 2026 The Fellowship of SML/NJ (https://smlnj.org)
 # All rights reserved.
 #
-# usage: run.py [ options ] ( <benchmark> | <class> ) ...
+# usage: bench <cmd> ...
+#
+# where the commands are:
+#
+#       bench list [options]
+#
+#       bench compile [options] ...
+#
+#       bench run [options] ...
+#
+#       bench gc [options] ...
+#
+#       bench check [options] ...
 #
 
 import argparse
@@ -74,10 +86,7 @@ class LogFile:
     else:
       # set the log file name
       #
-      if (isinstance(args.log, str)):
-        self._name = args.log
-      else:
-        self._name = args.log[0]
+      self._name = args.log
       # set the log output stream based on the file name
       #
       if (self._name == "none"):
@@ -120,7 +129,6 @@ resultdir = os.path.join(rootdir, "reports")
 #
 sml_cmd = shutil.which("sml")
 sml_version = ""
-sml_system = "SML/NJ" # eventually other systems, such as mlton or polyml
 
 # timestamp suffix for output files
 #
@@ -166,16 +174,54 @@ def parse_program_list():
         progs.add(name)
       else:
         print("error: \"" + name + "\" is unknown")
-        sys.exit()
+        sys.exit(1)
     return sorted(progs.union(get_benchmark_list(classes)))
+
+# determine the version of SML/NJ
+#
+def get_smlnj_version():
+  process = subprocess.run([sml_cmd, "@SMLversion"], text=True, capture_output=True)
+  return (process.stdout.strip().removeprefix("sml "))
+
+# determine the version of MLton
+#
+def get_mlton_version():
+  process = subprocess.run([sml_cmd], text=True, capture_output=True)
+  return (process.stdout.strip().removeprefix("mlton "))
+
+# determine the version of Poly/ML
+#
+def get_poly_version():
+  poly_cmd = os.path.join(os.path.dirname(sml_cmd), "poly")
+  process = subprocess.run([poly_cmd], text=True, capture_output=True)
+  return (process.stdout.strip().removeprefix("Poly/ML ").removesuffix(" Release"))
 
 # determine the path to the sml command and get the version tag
 #
 def resolve_sml_cmd(logf):
   if (cmdln_args.sml):
+    sml_system="SML/NJ"
     sml_cmd = os.path.realpath(cmdln_args.sml)
-  else:
+    get_smlnj_version()
+  elif (cmdln_args.system == "smlnj"):
+    sml_system="SML/NJ"
     sml_cmd = shutil.which("sml")
+    get_smlnj_version()
+  elif (cmdln_args.system == "mlton"):
+    sml_system="MLton"
+    sml_cmd = shutil.which("mlton")
+    get_mlton_version()
+  elif (cmdln_args.system == "poly"):
+    sml_system="Poly/ML"
+    sml_cmd = shutil.which("polyc")
+    get_polyml_version()
+  else:
+    print("error: SML system \"" + cmdln_args.system + "\" is unknown")
+    sys.exit(1)
+  logf.say("# sml system: ", sml_system, "\n")
+  logf.say("# sml command: ", sml_cmd, "\n")
+  logf.say("# version: ", sml_version, "\n")
+
   # verify that the sml command exists and is executable
 #TODO
   # get the version
@@ -233,14 +279,14 @@ def run_sml_cmd(*sml_args, program, input, logf=None):
 def add_exec_args(subparser,name,includeNRuns,includeOutput):
   subparser.add_argument(
     "-a", "--alloc",
-    nargs=1,
+    action="store",
     default="512k",
     help="specify size of the allocation nursery (default 512k)")
   subparser.add_argument(
     "--sml",
-    nargs=1,
-    default=sml_cmd,
-    help=f"specify the path to the SML/NJ executable (default {sml_cmd})")
+    action="store",
+    default=None,
+    help="specify the path to the SML/NJ executable (default sml)")
   if (includeNRuns):
     subparser.add_argument(
       "-n", "--nruns",
@@ -257,24 +303,30 @@ def add_exec_args(subparser,name,includeNRuns,includeOutput):
     help="include a copy of the Basis source code in the compile")
   subparser.add_argument(
     "--log",
-    nargs=1,
+    action="store",
     default=f"LOG-{timestamp}",
     help="specify the name of the logfile ('-' for stdout and 'none' to disable)")
   subparser.add_argument(
     "-d", "--result-dir",
-    nargs=1,
+    action="store",
     default=resultdir,
-    help=f"set the result directory (default: {resultdir})")
+    help=f"specify the result directory (default: {resultdir})")
   if (includeOutput):
     subparser.add_argument(
       "-o", "--output",
-      nargs=1,
+      action="store",
       default=f"{name}-{timestamp}.json",
-      help="set the name of the result JSON file")
+      help="specify the name of the result JSON file")
   subparser.add_argument(
     "--progress",
     action="store_true",
     help="print progress messages to stdout")
+  subparser.add_argument(
+    "--system",
+    action="store",
+    default="smlnj",
+    metavar="[smlnj,mlton,poly]",
+    help="specify the SML system to benchmark (default: smlnj)")
   subparser.add_argument(
     "-C",
     action="append",
@@ -299,22 +351,27 @@ def create_arg_parser():
     required=True,
     dest="cmd")
   # time execution
+  #
   run = subparsers.add_parser("run")
   add_exec_args(run, "run", True, True)
   add_programs_arg(run, "the benchmark programs and/or classes to run")
-  # time execution
+  # gc stats
+  #
   gc = subparsers.add_parser("gc")
   add_exec_args(gc, "gc", False, True)
   add_programs_arg(gc, "the benchmark programs and/or classes to measure")
   # time compile times
+  #
   compile = subparsers.add_parser("compile")
   add_exec_args(compile, "compile", True, True)
   add_programs_arg(compile, "the benchmark programs and/or classes to compile")
   # check results
+  #
   check = subparsers.add_parser("check")
   add_exec_args(check, "", False, False)
   add_programs_arg(check, "the benchmark programs and/or classes to check")
   # list the benchmark programs
+  #
   list = subparsers.add_parser("list")
   list.add_argument(
     "-compact",
@@ -332,7 +389,6 @@ def create_arg_parser():
 # programs to run/compile/check
 #
 def sml_init(logf):
-  resolve_sml_cmd(logf)
   clean_cm(logf)
   return (parse_program_list())
 
@@ -409,6 +465,7 @@ def do_gc(logf):
           Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
         """)
     # input the results from the tmp file
+    #
     results["data"].append(load_json(tmp_filename))
     os.remove(tmp_filename)
   output_results(results)
@@ -435,12 +492,14 @@ def do_compile(logf):
           """)
       else:
         # remove ../util/.cm and .cm directories
+        #
         shutil.rmtree(os.path.join(rootdir, "util/.cm"), ignore_errors=True)
         shutil.rmtree(os.path.join(progdir, prog, ".cm"), ignore_errors=True)
         run_sml_cmd("sources.cm", program=prog, input=f"""\
             Timing.runOnce ("{tmp_filename}", Timing.timeMake "sources.cm");
           """)
       # input the results from the tmp file
+      #
       data.append(load_json(tmp_filename))
       os.remove(tmp_filename)
     results["data"].append({"program" : prog, "data" : data})
@@ -457,20 +516,24 @@ def do_check(logf):
 def do_list():
   if (cmdln_args.classes):
     # list the classes
+    #
     objs = prog_info.classes
     title = "Benchmark classes:"
   else:
     # list the programs
+    #
     objs = prog_info.programs
     title = "Benchmarks:"
   if (cmdln_args.compact):
     # list the names on a single line
+    #
     names = []
     for obj in objs:
       names.append(obj['name'])
     print (" ".join(names))
   else:
     # list the names with their descriptions
+    #
     print (title)
     for obj in objs:
       print("  " + obj['name'] + ":")
@@ -483,21 +546,24 @@ def do_list():
 #
 create_arg_parser().parse_args(namespace=cmdln_args)
 
-print(cmdln_args)
-
-with LogFile(cmdln_args) as logf:
-  if (cmdln_args.cmd == 'run'):
-    logf.say("# run\n")
-    do_run(logf)
-  elif (cmdln_args.cmd == 'gc'):
-    logf.say("# gc\n")
-    do_gc(logf)
-  elif (cmdln_args.cmd == 'compile'):
-    logf.say("# compile\n")
-    do_compile(logf)
-  elif (cmdln_args.cmd == 'check'):
-    logf.say("# check\n")
-    do_check(logf)
-  elif (cmdln_args.cmd == 'list'):
-    logf.say("# list\n")
-    do_list()
+if (cmdln_args.cmd == 'list'):
+  do_list()
+else:
+  # resolve the sml system
+  #
+  resolve_sml_cmd(logf)
+  # dispatch on the command
+  #
+  with LogFile(cmdln_args) as logf:
+    if (cmdln_args.cmd == 'run'):
+      logf.say("# run\n")
+      do_run(logf)
+    elif (cmdln_args.cmd == 'gc'):
+      logf.say("# gc\n")
+      do_gc(logf)
+    elif (cmdln_args.cmd == 'compile'):
+      logf.say("# compile\n")
+      do_compile(logf)
+    elif (cmdln_args.cmd == 'check'):
+      logf.say("# check\n")
+      do_check(logf)
