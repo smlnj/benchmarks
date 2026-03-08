@@ -1,7 +1,9 @@
 #include <stdio.h>
-#include <stdint.h>
+#include <inttypes.h>
 
+#ifndef NSTEPS
 #define NSTEPS 5000000000ll
+#endif
 
 double run (int64_t nSteps)
 {
@@ -18,6 +20,6 @@ double run (int64_t nSteps)
 
 int main ()
 {
-    printf ("This should be an approximation of pi: %13.11f\n", run (NSTEPS));
+    printf ("This should be an approximation of pi: %13.11f (%" PRId64 " steps)\n", run (NSTEPS), NSTEPS);
 }
 

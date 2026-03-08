@@ -4,7 +4,7 @@
  * All rights reserved.
  *)
 
-structure Main (*: BMARK*) =
+structure Main : BMARK =
   struct
 
     val name = "f-arith"
@@ -33,6 +33,7 @@ structure Main (*: BMARK*) =
 
     fun testit () = run 100000000
 
-    fun doit () = run 5000000000
+    (* takes roughly 6-7 seconds on 3.6GHz Intel Core i9 *)
+    fun doit () = run 3000000000
 
   end
