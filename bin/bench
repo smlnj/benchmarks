@@ -33,6 +33,7 @@ import os
 import sys
 import subprocess
 import shutil
+import tempfile
 from datetime import datetime
 
 # report an error and exit
@@ -95,8 +96,8 @@ class ProgramInfo:
 #
 class LogFile:
   def __init__(self, args):
-    if (args.cmd == "list"):
-      # we disable logging for the list command
+    if ((args.cmd == "list") or (args.cmd == "cloc")):
+      # we disable logging for the list and cloc commands
       #
       self._outS = None
     else:
@@ -144,6 +145,10 @@ resultdir = os.path.join(rootdir, "reports")
 # default SML command
 #
 sml_cmd = shutil.which("sml")
+
+# cloc program
+#
+cloc_cmd = shutil.which("cloc")
 
 # timestamp suffix for output files
 #
@@ -320,6 +325,7 @@ def make_single_file(mode, prog, includeBasis):
                 | _ => Timing.timeIt Main.doit TextIO.stdOut
               (* end case *))
       """)
+  return (outfile)
 
 # run an sml command
 #
@@ -445,6 +451,39 @@ def create_arg_parser():
   check = subparsers.add_parser("check")
   add_exec_args(check, "", False, False)
   add_programs_arg(check, "the benchmark programs and/or classes to check")
+  # count lines of code
+  #
+  cloc = subparsers.add_parser("cloc")
+  cloc.add_argument(
+    "--csv",
+    action="store_true",
+    help="generate output in CSV format")
+  cloc.add_argument(
+    "--json",
+    action="store_true",
+    help="generate output in JSON format")
+  cloc.add_argument(
+    "--md",
+    action="store_true",
+    help="generate output in Markdown table format")
+  cloc.add_argument(
+    "--yaml",
+    action="store_true",
+    help="generate output in YAML format")
+  cloc.add_argument(
+    "--xml",
+    action="store_true",
+    help="generate output in XML format")
+  cloc.add_argument(
+    "-o", "--output",
+    action="store",
+    default=f"-",
+    help="specify the name of the result file (default stdout)")
+  cloc.add_argument(
+    "--include-basis",
+    action="store_true",
+    help="include a copy of the Basis source code in the compile")
+  add_programs_arg(cloc, "the benchmark programs and/or classes to count")
   # list the benchmark programs
   #
   list = subparsers.add_parser("list")
@@ -505,9 +544,9 @@ def do_run(logf):
     if (cmdln_args.progress):
       print("running ", prog)
     if (cmdln_args.single_file):
-      make_single_file(sml_system, prog, cmdln_args.include_basis)
+      file = make_single_file(sml_system, prog, cmdln_args.include_basis)
       run_sml_cmd(program=prog, input=f"""\
-          use "all.sml";
+          use "{file}";
           Timing.run (Main.name, "runs", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
         """)
       # TODO: remove all.sml
@@ -532,8 +571,8 @@ def do_gc(logf):
       print("running ", prog)
     if (cmdln_args.single_file):
       make_single_file(sml_system, prog, cmdln_args.include_basis)
-      run_sml_cmd(program=prog, input=f"""\
-          use "all.sml";
+      file = run_sml_cmd(program=prog, input=f"""\
+          use "{file}";
           Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
         """)
       # TODO: remove all.sml
@@ -561,17 +600,17 @@ def do_compile(logf):
       print("compiling ", prog)
     data = []
     if (cmdln_args.single_file):
-      make_single_file(sml_system, prog, cmdln_args.include_basis)
+      file = make_single_file(sml_system, prog, cmdln_args.include_basis)
       for i in range(cmdln_args.nruns):
         run_sml_cmd(program=prog, input=f"""\
-            use "all.sml";
+            use "{file}";
             Timing.runOnce ("{tmp_filename}", Timing.timeUse "all.sml");
           """)
         # input the results from the tmp file
         #
         data.append(load_json(tmp_filename))
         os.remove(tmp_filename)
-      # TODO: remove all.sml
+      # TODO: remove {file}
     else:
       for i in range(cmdln_args.nruns):
         # remove ../util/.cm and .cm directories
@@ -593,6 +632,61 @@ def do_compile(logf):
 def do_check(logf):
   progs = sml_init(logf)
   print(progs)
+
+#========== The 'cloc' command ==========
+#
+def do_count():
+  if (not cloc_cmd):
+    error("cloc not found in PATH")
+  clocargs=[
+    cloc_cmd,
+    '--force-lang="Standard ML"',
+    '--hide-rate',
+    '--by-file',
+    '--skip-uniqueness',
+    '--quiet'
+  ]
+  # determine the output format (if specified)
+  #
+  if (cmdln_args.csv):
+    clocargs.append("--csv")
+  if (cmdln_args.json):
+    clocargs.append("--json")
+  if (cmdln_args.md):
+    clocargs.append("--md")
+  if (cmdln_args.yaml):
+    clocargs.append("--yaml")
+  if (cmdln_args.xml):
+    clocargs.append("--xml")
+  # determine the output file
+  #
+  if (cmdln_args.output != "-"):
+    clocargs.append(f"--report-file={os.path.realpath(cmdln_args.output)}")
+  progs = parse_program_list()
+  # put sources in a temporary directory
+  with tempfile.TemporaryDirectory() as tmpdir:
+    files = []
+    for p in progs:
+      # concatenate p's sources and put them into the tmpdir
+      #
+      file = make_single_file("cloc", p, cmdln_args.include_basis)
+      src = os.path.join(progdir, p, file)
+      dst = os.path.join(tmpdir, p)
+      shutil.move (src, dst)
+      clocargs.append(p)
+    # run cloc in the tmpdir.
+    # Note: because of the quotes around "Standard ML", we have to convert the
+    #   list of commands to a string
+    #
+    cmd = " ".join(clocargs)
+    process = subprocess.run(
+      cmd,
+      shell=True,
+      text=True,
+      capture_output=True,
+      cwd=tmpdir)
+    if (cmdln_args.output == "-"):
+      print(process.stdout)
 
 #========== The 'list' command ==========
 #
@@ -631,6 +725,8 @@ create_arg_parser().parse_args(namespace=cmdln_args)
 
 if (cmdln_args.cmd == 'list'):
   do_list()
+elif (cmdln_args.cmd == "cloc"):
+  do_count()
 else:
   with LogFile(cmdln_args) as logf:
     # resolve the sml system
@@ -650,3 +746,5 @@ else:
     elif (cmdln_args.cmd == 'check'):
       logf.say("# check\n")
       do_check(logf)
+    else:
+      error("unrecognized command")
