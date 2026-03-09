@@ -47,7 +47,7 @@
     { "name" : "aobench",
       "description" : "A small ambient occlusion renderer",
       "classes" : ["all","fp"],
-      "results" : []
+      "results" : ["out.ppm"]
     },
     { "name" : "barnes-hut",
       "description" : "Hierarchical N-body solver (BROKEN)",
@@ -94,6 +94,11 @@
       "classes" : ["all","array"],
       "results" : []
     },
+    { "name" : "f-arith",
+      "description" : "calculation of pi using McLauren series",
+      "classes" : ["all","fp"],
+      "results" : []
+    },
     { "name" : "fft",
       "description" : "Fast-Fourier-transform implementation",
       "classes" : ["all","array","fp","smlnj"],
@@ -102,7 +107,7 @@
     { "name" : "id-ray",
       "description" : "A ray tracer ported from Id",
       "classes" : ["all"],
-      "results" : []
+      "results" : ["out.ppm"]
     },
     { "name" : "iter-pidigits",
       "description" : "Computation of digits of pi ",
@@ -122,7 +127,7 @@
     { "name" : "lexgen",
       "description" : "Lexical-analyzer generator",
       "classes" : ["all","smlnj"],
-      "results" : []
+      "results" : ["ml.lex.sml"]
     },
     { "name" : "life",
       "description" : "Conway's game of life",
@@ -162,7 +167,7 @@
     { "name" : "mlyacc",
       "description" : "LALR(1) parser generator",
       "classes" : ["all","smlnj","functor"],
-      "results" : []
+      "results" : ["ml.grm.sig","ml.grm.sml"]
     },
     { "name" : "nbody",
       "description" : "$O(n^2)$ N-body solver",
@@ -192,7 +197,7 @@
     { "name" : "plclub-ray",
       "description" : "A raytracer from the ICFP'20 Programming Contest",
       "classes" : ["all","fp","mlton"],
-      "results" : []
+      "results" : ["chess.ppm"]
     },
     { "name" : "ratio-regions",
       "description" : "Image segmentation/contour finding",
@@ -202,7 +207,7 @@
     { "name" : "ray",
       "description" : "A minimal ray tracer",
       "classes" : ["all","fp","smlnj"],
-      "results" : []
+      "results" : ["out.ppm"]
     },
     { "name" : "regex",
       "description" : "(BROKEN)",
