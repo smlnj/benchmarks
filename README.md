@@ -75,7 +75,7 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | [`delta-blue`](programs/delta-blue/README.md)         |   703 | Delta-Blue incremental constraint solver **(BROKEN)** |
 | [`dlx`](programs/dlx/README.md)                       | 1,887 | DLX simulator **(BROKEN)**                 |
 | [`fannkuch`](programs/fannkuch/README.md)             |    72 | Array permutations                         |
-| [`f-arith`](programs/f-arith/README.md)               |    25 | Calculation of pi using McLauren series    |
+| [`f-arith`](programs/f-arith/README.md)               |    25 | Calculation of pi using Maclaurin series   |
 | [`fft`](programs/fft/README.md)                       |   166 | Fast-Fourier-transform implementation      |
 | [`id-ray`](programs/id-ray/README.md)                 |   xxx | A ray tracer ported from Id                |
 | [`iter-pidigits`](programs/iter-pidigits/README.md)   |    53 | Computation of digits of pi                |
