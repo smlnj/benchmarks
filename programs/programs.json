@@ -95,7 +95,7 @@
       "results" : []
     },
     { "name" : "f-arith",
-      "description" : "calculation of pi using McLauren series",
+      "description" : "Calculation of pi using McLauren series",
       "classes" : ["all","fp"],
       "results" : []
     },

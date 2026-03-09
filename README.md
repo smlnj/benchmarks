@@ -67,7 +67,7 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | ----------------------------------------------------- | ----- | ------------------------------------------ |
 | [`aobench`](programs/aobench/README.md)               |   259 | A small ambient occlusion renderer         |
 | [`barnes-hut`](programs/barnes-hut/README.md)         |   820 | Hierarchical N-body solver **(BROKEN)**    |
-| [`binary-trees`](programs/binary-trees/README.md)     |    xx | GC stress test                             |
+| [`binary-trees`](programs/binary-trees/README.md)     |    48 | GC stress test                             |
 | [`black-scholes`](programs/black-scholes/README.md)   |   128 | European-style option pricing              |
 | [`boyer`](programs/boyer/README.md)                   |   854 | Tautology checker                          |
 | [`cml-sieve`](programs/cml-sieve/README.md)           |   162 | Message-passing implementation of Sieve of Eratosthenes |
@@ -75,6 +75,7 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | [`delta-blue`](programs/delta-blue/README.md)         |   703 | Delta-Blue incremental constraint solver **(BROKEN)** |
 | [`dlx`](programs/dlx/README.md)                       | 1,887 | DLX simulator **(BROKEN)**                 |
 | [`fannkuch`](programs/fannkuch/README.md)             |    72 | Array permutations                         |
+| [`f-arith`](programs/f-arith/README.md)               |    25 | Calculation of pi using McLauren series    |
 | [`fft`](programs/fft/README.md)                       |   166 | Fast-Fourier-transform implementation      |
 | [`id-ray`](programs/id-ray/README.md)                 |   xxx | A ray tracer ported from Id                |
 | [`iter-pidigits`](programs/iter-pidigits/README.md)   |    53 | Computation of digits of pi                |
