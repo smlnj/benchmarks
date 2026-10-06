@@ -182,8 +182,9 @@ def get_benchmark_list(class_list):
 #
 def parse_program_list():
   if (len(cmdln_args.programs) == 0):
-    # no benchmarks is treated as all benchmarks
-    return (prog_info.program_names())
+    # no benchmarks is treated as the "all" class, which excludes the
+    # broken programs
+    return sorted(get_benchmark_list(["all"]))
   else:
     progs=set()
     classes=[]
@@ -224,28 +225,29 @@ def resolve_sml_cmd(logf):
   if (cmdln_args.sml):
     sml_system="SML/NJ"
     sml_cmd = os.path.realpath(cmdln_args.sml)
-    get_smlnj_version()
   elif (cmdln_args.system == "smlnj"):
     sml_system="SML/NJ"
     sml_cmd = shutil.which("sml")
-    get_smlnj_version()
   elif (cmdln_args.system == "mlton"):
     sml_system="MLton"
     sml_cmd = shutil.which("mlton")
-    get_mlton_version()
   elif (cmdln_args.system == "poly"):
     sml_system="Poly/ML"
     sml_cmd = shutil.which("polyc")
-    get_polyml_version()
   else:
     error("error: SML system \"" + cmdln_args.system + "\" is unknown")
   # verify that the sml command exists and is executable
   #
-#TODO
+  if ((not sml_cmd) or (not os.path.isfile(sml_cmd)) or (not os.access(sml_cmd, os.X_OK))):
+    error(f"error: {sml_system} command not found")
   # get the version
   #
-  process = subprocess.run([sml_cmd, "@SMLversion"], text=True, capture_output=True)
-  sml_version=process.stdout.strip().removeprefix("sml ")
+  if (sml_system == "SML/NJ"):
+    sml_version = get_smlnj_version()
+  elif (sml_system == "MLton"):
+    sml_version = get_mlton_version()
+  else:
+    sml_version = get_poly_version()
   logf.say("# sml system: ", sml_system, "\n")
   logf.say("# sml command: ", sml_cmd, "\n")
   logf.say("# version: ", sml_version, "\n")
@@ -327,29 +329,67 @@ def make_single_file(mode, prog, includeBasis):
       """)
   return (outfile)
 
-# run an sml command
+# exception raised when a benchmark program fails to compile or run
 #
-def run_sml_cmd(*sml_args, program, input, logf=None):
+class BenchmarkFailure(Exception):
+  pass
+
+# the programs that have failed
+#
+failures = []
+
+# report a failed program; the remaining programs are still run
+#
+def report_failure(logf, prog, exn):
+  failures.append(prog)
+  logf.say(f"# FAILED {prog}: {exn}\n")
+  print(f"error: {prog} failed: {exn}", file=sys.stderr)
+
+# run an sml command; the command and its output are written to the log
+#
+def run_sml_cmd(*sml_args, program, input, logf):
   cmd = [
       sml_cmd,
       "@SMLquiet",
       f"@SMLalloc={cmdln_args.alloc}",
       "-Ccm.verbose=false",
+    ] + [f"-C{ctl}" for ctl in (cmdln_args.C or [])] + [
       "-m", "../../util/sources.cm",
     ] + list(sml_args)
-  if (logf):
-    logf.say("## ", " ".join(cmd), "\n")
-  process = subprocess.run(
-    cmd,
-    input=input,
-    text=True,
-    stdout=subprocess.PIPE,
-    stderr=subprocess.STDOUT,
-    check=True,
-    cwd=os.path.join(progdir, program),
-    timeout=timeout)
-  if (logf):
-    logf.say(process.stdout)
+  logf.say("## ", " ".join(cmd), "\n")
+  try:
+    process = subprocess.run(
+      cmd,
+      input=input,
+      text=True,
+      stdout=subprocess.PIPE,
+      stderr=subprocess.STDOUT,
+      cwd=os.path.join(progdir, program),
+      timeout=timeout)
+  except subprocess.TimeoutExpired as exn:
+    # the partial output is bytes, even though `text` is set
+    output = exn.output or ""
+    if isinstance(output, bytes):
+      output = output.decode(errors="replace")
+    logf.say(output)
+    raise BenchmarkFailure(f"timed out after {timeout} seconds")
+  logf.say(process.stdout)
+  if (process.returncode != 0):
+    raise BenchmarkFailure(f"sml exited with status {process.returncode}")
+
+# load and remove the results file written by the SML code.  Note that SML/NJ
+# exits with status 0 even on an uncaught exception, so a missing or malformed
+# results file is how we detect that a program failed.
+#
+def read_results(filename):
+  try:
+    with open(filename, "r", encoding="utf-8") as in_strm:
+      return (json.load(in_strm))
+  except (OSError, json.JSONDecodeError):
+    raise BenchmarkFailure("did not produce valid results")
+  finally:
+    if (os.path.exists(filename)):
+      os.remove(filename)
 
 #========== Functions for command-line argument processing ==========
 #
@@ -513,7 +553,8 @@ def make_data_dict():
       "timestamp" : timestamp,
       "sml-command" : sml_cmd,
       "sml-system" : sml_system,
-      "sml-options" : None,     # TODO
+      "sml-version" : sml_version,
+      "sml-options" : " ".join(f"-C{ctl}" for ctl in cmdln_args.C) if cmdln_args.C else None,
       "single-file" : cmdln_args.single_file,
       "include-basis" : cmdln_args.include_basis,
       "mode" : cmdln_args.cmd,
@@ -543,20 +584,22 @@ def do_run(logf):
     logf.say("# running ", prog, "\n")
     if (cmdln_args.progress):
       print("running ", prog)
-    if (cmdln_args.single_file):
-      file = make_single_file(sml_system, prog, cmdln_args.include_basis)
-      run_sml_cmd(program=prog, input=f"""\
-          use "{file}";
-          Timing.run (Main.name, "runs", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
-        """)
-      # TODO: remove all.sml
-    else:
-      run_sml_cmd("sources.cm", program=prog, input=f"""\
-          Timing.run (Main.name, "runs", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
-        """)
-    # input the results from the tmp file
-    results["data"].append(load_json(tmp_filename))
-    os.remove(tmp_filename)
+    try:
+      if (cmdln_args.single_file):
+        file = make_single_file(sml_system, prog, cmdln_args.include_basis)
+        run_sml_cmd(program=prog, logf=logf, input=f"""\
+            use "{file}";
+            Timing.run ("{prog}", "runs", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
+          """)
+        # TODO: remove all.sml
+      else:
+        run_sml_cmd("sources.cm", program=prog, logf=logf, input=f"""\
+            Timing.run ("{prog}", "runs", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
+          """)
+      # input the results from the tmp file
+      results["data"].append(read_results(tmp_filename))
+    except (BenchmarkFailure, OSError) as exn:
+      report_failure(logf, prog, exn)
   output_results(results)
 
 #========== The 'gc' command ==========
@@ -569,21 +612,23 @@ def do_gc(logf):
     logf.say("# measuring GC stats for ", prog, "\n")
     if (cmdln_args.progress):
       print("running ", prog)
-    if (cmdln_args.single_file):
-      make_single_file(sml_system, prog, cmdln_args.include_basis)
-      file = run_sml_cmd(program=prog, input=f"""\
-          use "{file}";
-          Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
-        """)
-      # TODO: remove all.sml
-    else:
-      run_sml_cmd("sources.cm", program=prog, input=f"""\
-          Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
-        """)
-    # input the results from the tmp file
-    #
-    results["data"].append(load_json(tmp_filename))
-    os.remove(tmp_filename)
+    try:
+      if (cmdln_args.single_file):
+        file = make_single_file(sml_system, prog, cmdln_args.include_basis)
+        run_sml_cmd(program=prog, logf=logf, input=f"""\
+            use "{file}";
+            Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
+          """)
+        # TODO: remove all.sml
+      else:
+        run_sml_cmd("sources.cm", program=prog, logf=logf, input=f"""\
+            Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
+          """)
+      # input the results from the tmp file
+      #
+      results["data"].append(read_results(tmp_filename))
+    except (BenchmarkFailure, OSError) as exn:
+      report_failure(logf, prog, exn)
   output_results(results)
 
 #========== The 'compile' command ==========
@@ -599,32 +644,35 @@ def do_compile(logf):
     if (cmdln_args.progress):
       print("compiling ", prog)
     data = []
-    if (cmdln_args.single_file):
-      file = make_single_file(sml_system, prog, cmdln_args.include_basis)
-      for i in range(cmdln_args.nruns):
-        run_sml_cmd(program=prog, input=f"""\
-            use "{file}";
-            Timing.runOnce ("{tmp_filename}", Timing.timeUse "all.sml");
-          """)
-        # input the results from the tmp file
-        #
-        data.append(load_json(tmp_filename))
-        os.remove(tmp_filename)
-      # TODO: remove {file}
-    else:
-      for i in range(cmdln_args.nruns):
-        # remove ../util/.cm and .cm directories
-        #
-        shutil.rmtree(os.path.join(rootdir, "util/.cm"), ignore_errors=True)
-        shutil.rmtree(os.path.join(progdir, prog, ".cm"), ignore_errors=True)
-        run_sml_cmd("sources.cm", program=prog, input=f"""\
-            Timing.runOnce ("{tmp_filename}", Timing.timeMake "sources.cm");
-          """)
-        # input the results from the tmp file
-        #
-        data.append(load_json(tmp_filename))
-        os.remove(tmp_filename)
-    results["data"].append({"program" : prog, "data" : data})
+    try:
+      if (cmdln_args.single_file):
+        file = make_single_file(sml_system, prog, cmdln_args.include_basis)
+        for i in range(cmdln_args.nruns):
+          run_sml_cmd(program=prog, logf=logf, input=f"""\
+              Timing.runOnce ("{tmp_filename}", Timing.timeUse "{file}");
+            """)
+          # input the results from the tmp file
+          #
+          data.append(read_results(tmp_filename))
+        # TODO: remove {file}
+      else:
+        for i in range(cmdln_args.nruns):
+          # remove ../util/.cm and .cm directories
+          #
+          shutil.rmtree(os.path.join(rootdir, "util/.cm"), ignore_errors=True)
+          shutil.rmtree(os.path.join(progdir, prog, ".cm"), ignore_errors=True)
+          # Note: "sources.cm" must not be passed on the command line, since
+          #   then it would be compiled before the timer is started
+          #
+          run_sml_cmd(program=prog, logf=logf, input=f"""\
+              Timing.runOnce ("{tmp_filename}", Timing.timeMake "sources.cm");
+            """)
+          # input the results from the tmp file
+          #
+          data.append(read_results(tmp_filename))
+      results["data"].append({"program" : prog, "data" : data})
+    except (BenchmarkFailure, OSError) as exn:
+      report_failure(logf, prog, exn)
   output_results(results)
 
 #========== The 'check' command ==========
@@ -748,3 +796,9 @@ else:
       do_check(logf)
     else:
       error("unrecognized command")
+    # the results for the other programs have been output, but we still want
+    # a non-zero exit status if any programs failed
+    #
+    if (failures):
+      logf.say(f"# {len(failures)} program(s) failed: {' '.join(failures)}\n")
+      error(f"error: {len(failures)} program(s) failed: {' '.join(failures)}")

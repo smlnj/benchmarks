@@ -77,9 +77,11 @@ structure Timing : sig
     fun timeMake file outS = let
 	  val t0 = start()
 	  in
-	    CM.make file;
-	    output (outS, stop t0);
-	    TextIO.flushOut outS
+	    if CM.make file
+	      then (
+		output (outS, stop t0);
+		TextIO.flushOut outS)
+	      else raise Fail(concat["CM.make \"", file, "\" failed"])
 	  end
 
     fun timeIt doit outS = let
