@@ -166,24 +166,27 @@ timeout = 5 * 60
 #
 
 # construct a list of benchmark names from a list of benchmark classes
+# We exclude programs in the "broken" class, unless it is in `class_list`.
 #
 def get_benchmark_list(class_list):
   # convert the list to a set classes
   cls_set = set(class_list)
+  include_broken = ('broken' in cls_set)
   progs=[]
   for p in prog_info.programs:
-    for cls in p['classes']:
-      if (cls in cls_set):
-        progs.append(p['name'])
-        break
+    if (include_broken or ('broken' not in p['classes'])):
+      for cls in p['classes']:
+        if (cls in cls_set):
+          progs.append(p['name'])
+          break
   return (progs)
 
 # given a list of programs and/or benchmark classes, return a sorted list of programs
 #
 def parse_program_list():
   if (len(cmdln_args.programs) == 0):
-    # no benchmarks is treated as all benchmarks
-    return (prog_info.program_names())
+    # no benchmarks is treated as all non-broken benchmarks
+    return [p['name'] for p in prog_info.programs if ('broken' not in p['classes'])]
   else:
     progs=set()
     classes=[]
