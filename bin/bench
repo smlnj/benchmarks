@@ -223,7 +223,7 @@ def resolve_sml_cmd(logf):
   global sml_version
   if (cmdln_args.sml):
     sml_system="SML/NJ"
-    sml_cmd = os.path.realpath(cmdln_args.sml)
+    sml_cmd = os.path.abspath(cmdln_args.sml)
     get_smlnj_version()
   elif (cmdln_args.system == "smlnj"):
     sml_system="SML/NJ"
