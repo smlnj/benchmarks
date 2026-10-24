@@ -30,6 +30,7 @@
 import argparse
 import json
 import os
+import platform
 import sys
 import subprocess
 import shutil
@@ -514,6 +515,11 @@ def sml_init(logf):
 def make_data_dict():
   return {
       "timestamp" : timestamp,
+      "machine" : {
+          "name" : platform.node().removesuffix(".local"),
+          "arch" : platform.machine(),
+          "os" : platform.system()
+        },
       "sml-command" : sml_cmd,
       "sml-system" : sml_system,
       "sml-options" : None,     # TODO
