@@ -12,6 +12,8 @@ structure Log : sig
     (* run a command with output directed to the specified log stream *)
     val withOutput : TextIO.outstream -> (unit -> unit) -> (unit -> unit)
 
+    val withLogOut : (TextIO.outstream -> unit) -> (unit -> unit)
+
     (* output to the current output *)
     val print : string -> unit
     val say : string list -> unit
@@ -40,6 +42,11 @@ structure Log : sig
           logS := SOME outS;
           f() handle ex => (logS := NONE; raise ex);
           logS := NONE)
+
+    fun withLogOut f () = (case !logS
+           of NONE => raise Fail "no log output stream"
+            | SOME outS => f outS
+          (* end case *))
 
     fun print s = (case !logS
            of SOME outS => TextIO.output(outS, s)

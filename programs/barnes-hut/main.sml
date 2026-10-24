@@ -40,7 +40,7 @@ structure Main : BMARK =
 
     fun doit () = loop 10
 
-    fun testit outS = let
+    fun testit' outS = let
           val nbody = 256 (* smaller problem for testing *)
           val bodies = BarnesHut3D.testdata nbody
 	  fun output {nstep, tnow, n2bcalc, nbccalc, selfint} = BH.DataIO.output{
@@ -58,4 +58,7 @@ structure Main : BMARK =
 		dtime=dtime, eps=eps, tol=tol, rsize=rsize, rmin=rmin
 	      }
           end
+
+    val testit = Log.withLogOut testit'
+
   end;
