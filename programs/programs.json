@@ -41,6 +41,9 @@
     },
     { "name" : "smlnj",
       "description" : "programs from the original SML/NJ benchmarking suite"
+    },
+    { "name" : "broken",
+      "description" : "programs that are currently broken for some reason"
     }
   ],
   "programs" : [
@@ -50,8 +53,8 @@
       "results" : ["out.ppm"]
     },
     { "name" : "barnes-hut",
-      "description" : "Hierarchical N-body solver (BROKEN)",
-      "classes" : [],
+      "description" : "Hierarchical N-body solver",
+      "classes" : ["broken"],
       "results" : []
     },
     { "name" : "binary-trees",
@@ -80,13 +83,13 @@
       "results" : []
     },
     { "name" : "delta-blue",
-      "description" : "Delta-Blue incremental constraint solver (BROKEN)",
-      "classes" : [],
+      "description" : "Delta-Blue incremental constraint solver",
+      "classes" : ["broken"],
       "results" : []
     },
     { "name" : "dlx",
-      "description" : "(BROKEN)",
-      "classes" : [],
+      "description" : "",
+      "classes" : ["broken"],
       "results" : []
     },
     { "name" : "fannkuch",
@@ -115,8 +118,8 @@
       "results" : []
     },
     { "name" : "kcfa",
-      "description" : "A reference implementation of kCFA (BROKEN)",
-      "classes" : [],
+      "description" : "A reference implementation of kCFA",
+      "classes" : ["broken"],
       "results" : []
     },
     { "name" : "knuth-bendix",
@@ -180,8 +183,8 @@
       "results" : []
     },
     { "name" : "pia",
-      "description" : "(BROKEN)",
-      "classes" : [],
+      "description" : "",
+      "classes" : ["broken"],
       "results" : []
     },
     { "name" : "pidigits",
@@ -210,8 +213,8 @@
       "results" : ["out.ppm"]
     },
     { "name" : "regex",
-      "description" : "(BROKEN)",
-      "classes" : [],
+      "description" : "",
+      "classes" : ["broken"],
       "results" : []
     },
     { "name" : "safe-for-space",
