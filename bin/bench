@@ -158,9 +158,9 @@ timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
 #
 prog_info = ProgramInfo()
 
-# default timeout (5 minutes)
+# default timeout for a single run (1 minute)
 #
-timeout = 5 * 60
+timeoutPerRun = 60
 
 #========== Utility functions ==========
 #
@@ -332,7 +332,7 @@ def make_single_file(mode, prog, includeBasis):
 
 # run an sml command
 #
-def run_sml_cmd(*sml_args, program, input, logf=None):
+def run_sml_cmd(*sml_args, program, input, timeout=None, logf=None):
   cmd = [
       sml_cmd,
       "@SMLquiet",
@@ -551,12 +551,12 @@ def do_run(logf):
       run_sml_cmd(program=prog, input=f"""\
           use "{file}";
           Timing.run (Main.name, "runs", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
-        """)
+        """, timeout=timeoutPerRun*cmdln_args.nruns)
       # TODO: remove all.sml
     else:
       run_sml_cmd("sources.cm", program=prog, input=f"""\
           Timing.run (Main.name, "runs", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
-        """)
+        """, timeout=timeoutPerRun*cmdln_args.nruns)
     # input the results from the tmp file
     results["data"].append(load_json(tmp_filename))
     os.remove(tmp_filename)
@@ -577,12 +577,12 @@ def do_gc(logf):
       file = run_sml_cmd(program=prog, input=f"""\
           use "{file}";
           Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
-        """)
+        """, timeout=timeoutPerRun)
       # TODO: remove all.sml
     else:
       run_sml_cmd("sources.cm", program=prog, input=f"""\
           Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
-        """)
+        """, timeout=timeoutPerRun)
     # input the results from the tmp file
     #
     results["data"].append(load_json(tmp_filename))
