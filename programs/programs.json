@@ -106,12 +106,12 @@
     },
     { "name" : "id-ray",
       "description" : "A ray tracer ported from Id",
-      "classes" : ["all"],
+      "classes" : ["all","fp"],
       "results" : ["out.ppm"]
     },
     { "name" : "iter-pidigits",
       "description" : "Computation of digits of pi ",
-      "classes" : ["all"],
+      "classes" : ["all","bignum"],
       "results" : []
     },
     { "name" : "kcfa",
