@@ -93,6 +93,14 @@ class ProgramInfo:
     else:
       return None
 
+  # is a given program in a given benchmark class
+  def is_program_in_class(self, program_name, class_name):
+    prog = self.get_program(program_name)
+    if (prog):
+      return (class_name in prog['classes'])
+    else:
+      return False
+
 #========== Logging compiler messages, etc ==========
 #
 class LogFile:
@@ -434,7 +442,7 @@ def add_programs_arg(subparser, help):
 
 def create_arg_parser():
   parser = argparse.ArgumentParser(
-    prog="run.py",
+    prog="bench",
     description="Script for running SML benchmarks")
   subparsers=parser.add_subparsers(
     title="commands",
@@ -497,13 +505,18 @@ def create_arg_parser():
   #
   list = subparsers.add_parser("list")
   list.add_argument(
-    "-compact",
+    "--compact",
     action="store_true",
     help="produce a compact listing on a single line")
   list.add_argument(
-    "-classes",
+    "--classes",
     action="store_true",
     help="list the benchmark classes")
+  # get information about classes and programs
+  #
+  info = subparsers.add_parser("info")
+  add_programs_arg(info, "the benchmark programs and/or classes to describe")
+  #
   return (parser)
 
 #==========
@@ -739,12 +752,44 @@ def do_list():
       else:
         print("    <no description>")
 
+#========== The 'info' command ==========
+#
+def do_info():
+  for name in cmdln_args.programs:
+    if prog_info.is_program(name):
+      obj = prog_info.get_program(name)
+      print(f"{name}:")
+      if (obj['description'] != ""):
+        print(f"  description: {obj['description']}")
+      else:
+        print("  description: <none>")
+      print(f"  classes: {', '.join(obj['classes'])}")
+    elif (prog_info.is_class(name)):
+      obj = prog_info.get_class(name)
+      print(f"class {name}:")
+      if (obj['description'] != ""):
+        print(f"  description: {obj['description']}")
+      else:
+        print("  description: <none>")
+      progs = []
+      for p in prog_info.program_names():
+        if prog_info.is_program_in_class(p, name):
+          progs.append(p)
+      if (progs):
+        print(f"  programs: {', '.join(progs)}")
+      else:
+        print("  programs: <none>")
+    else:
+      error("error: \"" + name + "\" is unknown")
+
 # set up the command-line option parsing
 #
 create_arg_parser().parse_args(namespace=cmdln_args)
 
 if (cmdln_args.cmd == 'list'):
   do_list()
+elif (cmdln_args.cmd == "info"):
+  do_info()
 elif (cmdln_args.cmd == "cloc"):
   do_count()
 else:
