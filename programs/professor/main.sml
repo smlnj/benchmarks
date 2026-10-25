@@ -1,6 +1,7 @@
 (* main.sml
  *
- * Written by Niels Hallenberg.
+ * From the MLKit banchmarks (https://github.com/melsman/mlkit-bench).  The original
+ * program was written by Niels Hallenberg.
  *
  * Modified for the SML/NJ Benchmark Suite by John Reppy
  *)
