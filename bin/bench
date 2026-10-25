@@ -21,8 +21,6 @@
 # TODO:
 #  * allow a list of programs/classes as an argument to the 'list' command
 #
-#  * add 'cloc' as a command
-#
 #  * support for MLton and Poly/ML benchmarking
 #
 # also, see various "TODO"s in the source
@@ -65,8 +63,6 @@ class ProgramInfo:
     self.programs = prog_info['programs']
     self._class_names = { c['name'] for c in self.classes }
     self._prog_names = { p['name'] for p in self.programs }
-
-#json.JSONDecodeError(msg, doc, pos)
 
   def is_class(self, name):
     return (name in self._class_names)
@@ -161,7 +157,8 @@ cloc_cmd = shutil.which("cloc")
 
 # timestamp suffix for output files
 #
-timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+now = datetime.now()
+timestamp = now.strftime("%Y%m%d-%H%M%S")
 
 # load the benchmark info from the JSON file
 #
@@ -541,7 +538,7 @@ def make_data_dict():
   if (cmdln_args.label):
     data_dict['label'] = cmdln_args.label
   data_dict |= {
-      "timestamp" : timestamp,
+      "date" : now.strftime("%Y-%m-%d"),
       "machine" : machine,
       "sml-command" : sml_cmd,
       "sml-system" : sml_system,
