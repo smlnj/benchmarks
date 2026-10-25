@@ -96,6 +96,7 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | [`pidigits`](programs/pidigits/README.md)             |    77 | Stream-based computation of digits of pi   |
 | [`pingpong`](programs/pingpong/README.md)             |   136 | Message-passing microbenchmark             |
 | [`plclub-ray`](programs/plclub-ray/README.md)         | 2,026 | A raytracer from the ICFP'20 Programming Contest |
+| [`professor`](programs/professor/README.md)           |   220 | A solver for a simple puzzle game          |
 | [`ratio-regions`](programs/ratio-regions/README.md)   |   486 | Image segmentation/contour finding         |
 | [`ray`](programs/ray/README.md)                       |   352 | A minimal ray tracer                       |
 | [`regex`](programs/regex/README.md)                   |   xxx | **(BROKEN)**                               |
