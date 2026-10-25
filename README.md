@@ -111,6 +111,7 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | [`twenty-four`](programs/twenty-four/README.md)       |   120 | CPS-style solver for the 24 puzzle         |
 | [`tyan`](programs/tyan/README.md)                     |   500 | Grobner Basis calculation                  |
 | [`vliw`](programs/vliw/README.md)                     | 2,940 | A Very-Long-Instruction-Word instruction scheduler |
+| [`zebra`](programs/zebra/README.md)                   |   205 | A solver for a word puzzle                 |
 
 ### Benchmark Classes
 

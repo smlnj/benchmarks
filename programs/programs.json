@@ -252,19 +252,24 @@
       "classes" : ["all","fp","smlnj"],
       "results" : []
     },
-    { "name" : "tyan",
-      "description" : "Grobner Basis calculation",
-      "classes" : ["all","array","mlton"],
-      "results" : []
-    },
     { "name" : "twenty-four",
       "description" : "CPS-style solver for the 24 puzzle",
       "classes" : ["all","ho"],
       "results" : []
     },
+    { "name" : "tyan",
+      "description" : "Grobner Basis calculation",
+      "classes" : ["all","array","mlton"],
+      "results" : []
+    },
     { "name" : "vliw",
       "description" : "A Very-Long-Instruction-Word instruction scheduler",
       "classes" : ["all","smlnj"],
+      "results" : []
+    },
+    { "name" : "zebra",
+      "description" : "A solver for a word puzzle",
+      "classes" : ["all","mlton"],
       "results" : []
     }
   ]
