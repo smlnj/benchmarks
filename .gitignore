@@ -53,4 +53,7 @@ LOG-*
 REPORT-*
 programs/*/all.sml
 programs/**/*.ppm
+programs/lexgen/DATA/ml.lex.sml
+programs/mlyacc/DATA/ml.grm.sig
+programs/mlyacc/DATA/ml.grm.sml
 
