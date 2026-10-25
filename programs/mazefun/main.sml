@@ -1,10 +1,10 @@
 (* main.sml
  *
- * COPYRIGHT (c) 2024 The Fellowship of SML/NJ (https://www.smlnj.org)
+ * COPYRIGHT (c) 2024 The Fellowship of SML/NJ (https://smlnj.org)
  * All rights reserved.
  *
  * This is an SML port of the larceny "mazefun" benchmark written by
- * Marc Feeley (http://www.larcenists.org/R7src/mazefun.scm).  The port
+ * Marc Feeley (https://www.larcenists.org/R7src/mazefun.scm).  The port
  * was done by Kavon Farvardin as part of the Manticore project.
  *)
 

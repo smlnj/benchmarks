@@ -202,6 +202,11 @@
       "classes" : ["all","fp","mlton"],
       "results" : ["chess.ppm"]
     },
+    { "name" : "professor",
+      "description" : "Computing a solution to a simple puzzle game",
+      "classes" : ["all","list"],
+      "results" : []
+    },
     { "name" : "ratio-regions",
       "description" : "Image segmentation/contour finding",
       "classes" : ["all","mlton"],
