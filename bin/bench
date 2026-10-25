@@ -402,6 +402,11 @@ def add_exec_args(subparser,name,includeNRuns,includeOutput):
       action="store",
       default=f"{name}-{timestamp}.json",
       help="specify the name of the result JSON file")
+    subparser.add_argument(
+      "--label",
+      action="store",
+      default=None,
+      help="specify a label to be included as a component of the results object")
   subparser.add_argument(
     "--progress",
     action="store_true",
@@ -513,13 +518,18 @@ def sml_init(logf):
 # create the top-level dictionary for the data
 #
 def make_data_dict():
-  return {
+  # the host machine description
+  machine = {
+      "name" : platform.node().removesuffix(".local"),
+      "arch" : platform.machine(),
+      "os" : platform.system()
+    }
+  data_dict = {}
+  if (cmdln_args.label):
+    data_dict['label'] = cmdln_args.label
+  data_dict |= {
       "timestamp" : timestamp,
-      "machine" : {
-          "name" : platform.node().removesuffix(".local"),
-          "arch" : platform.machine(),
-          "os" : platform.system()
-        },
+      "machine" : machine,
       "sml-command" : sml_cmd,
       "sml-system" : sml_system,
       "sml-options" : None,     # TODO
@@ -529,6 +539,7 @@ def make_data_dict():
       "alloc" : cmdln_args.alloc,
       "data" : []
     }
+  return data_dict
 
 # output the results as a JSON file
 #
