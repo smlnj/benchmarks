@@ -1,5 +1,4 @@
 ../BASIS/mono-vector.sig
 ../BASIS/char-vector.sml
-stream.sml
 pi-digits.sml
 
