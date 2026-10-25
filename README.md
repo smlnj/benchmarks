@@ -9,7 +9,10 @@ Lal George at Bell Laboratories in the late 1990s.
 
 This version of the benchmark suite adds many additional programs,
 increases the problem sizes for some programs, and modernizes the
-code for others.
+code for others.  Where it make sense, we have broken up monolithic
+programs into multiple modules contained in separate files.  The
+benchmarking script provides a mechanism for re-combining these
+modules into a single compilation unit.
 
 ## Running the Benchmarks
 
@@ -37,7 +40,7 @@ may be present):
 * additional SML source files for the benchmark.
 
 * `FILES` -- an optional list of additional source files (other than
-  `main.sml`) in compilation order.  The `bin/make-single-file.sh` script
+  `main.sml`) in compilation order.  The `--single-file` option
   uses this list to construct a single-file version of the program.
   This file is omitted for benchmarks that have `main.sml` as their
   only source file.
@@ -77,7 +80,7 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | [`fannkuch`](programs/fannkuch/README.md)             |    72 | Array permutations                         |
 | [`f-arith`](programs/f-arith/README.md)               |    25 | Calculation of pi using Maclaurin series   |
 | [`fft`](programs/fft/README.md)                       |   166 | Fast-Fourier-transform implementation      |
-| [`id-ray`](programs/id-ray/README.md)                 |   xxx | A ray tracer ported from Id                |
+| [`id-ray`](programs/id-ray/README.md)                 |   409 | A ray tracer ported from Id                |
 | [`iter-pidigits`](programs/iter-pidigits/README.md)   |    53 | Computation of digits of pi                |
 | [`kcfa`](programs/kcfa/README.md)                     |   xxx | A reference implementation of kCFA **(BROKEN)** |
 | [`knuth-bendix`](programs/knuth-bendix/README.md)     |   434 | Knuth-Bendix completion algorithm          |
@@ -109,19 +112,19 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | [`tyan`](programs/tyan/README.md)                     |   500 | Grobner Basis calculation                  |
 | [`vliw`](programs/vliw/README.md)                     | 2,940 | A Very-Long-Instruction-Word instruction scheduler |
 
-## Scripts
+### Benchmark Classes
 
-In addition to the `run.sh` script, there are a couple of other utility scripts in
-the `bin` directory.
+Each benchmark program is tagged with one or more "classes".  These classes are
+used to easily specify a subset of the benchmarks.  For example,
 
-### `cloc.sh`
+```console
+bin/bench run fp
+```
 
-The `cloc.sh` script can be used to count the number of source lines in
-the benchmark programs.  It uses the [`cloc`](https://github.com/AlDanial/cloc)
-program and reports the number of blank, comment, and code lines.
+will run the benchmarks that use floating-point arithmetic.  A list of the benchmark
+classes is available with the command
 
-### `make-single-file.sh`
-
-The `make-single-file.sh` script is used to create a single compilation unit for the
-benchmark sources.  It is used by the `cloc.sh` and `run.sh`
+```console
+bin/bench list --classes
+```
 
