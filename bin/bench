@@ -26,14 +26,14 @@
 # also, see various "TODO"s in the source
 
 import argparse
+from datetime import datetime
 import json
 import os
 import platform
-import sys
-import subprocess
 import shutil
+import subprocess
+import sys
 import tempfile
-from datetime import datetime
 
 # report an error and exit
 #
@@ -53,6 +53,19 @@ def load_json(path):
   except json.JSONDecodeError as exn:
     error([f'error loading {path}', '  ' + exn.msg])
   return (contents)
+
+# helper function for writing a dict as JSON to a file
+#
+def dump_json(obj, path, compact=False):
+  try:
+    with open(path, "w") as out:
+      if compact:
+        json.dump(obj, out, indent=None, allow_nan=True, separators=(',', ':'))
+      else:
+        json.dump(obj, out, indent=2, allow_nan=True, separators=(', ', ' : '))
+  except Exception:
+    print(json.dumps(obj, indent=2))
+    raise
 
 #========== Benchmark program and class information ==========
 #
@@ -208,20 +221,20 @@ def parse_program_list():
 # determine the version of SML/NJ
 #
 def get_smlnj_version():
-  process = subprocess.run([sml_cmd, "@SMLversion"], text=True, capture_output=True)
+  process = subprocess.run([sml_cmd, "@SMLversion"], text=True, capture_output=True, check=True)
   return (process.stdout.strip().removeprefix("sml "))
 
 # determine the version of MLton
 #
 def get_mlton_version():
-  process = subprocess.run([sml_cmd], text=True, capture_output=True)
+  process = subprocess.run([sml_cmd], text=True, capture_output=True, check=True)
   return (process.stdout.strip().removeprefix("mlton "))
 
 # determine the version of Poly/ML
 #
 def get_poly_version():
   poly_cmd = os.path.join(os.path.dirname(sml_cmd), "poly")
-  process = subprocess.run([poly_cmd], text=True, capture_output=True)
+  process = subprocess.run([poly_cmd], text=True, capture_output=True, check=True)
   return (process.stdout.strip().removeprefix("Poly/ML ").removesuffix(" Release"))
 
 # determine the path to the sml command and get the version tag
@@ -245,7 +258,7 @@ def resolve_sml_cmd(logf):
   elif (cmdln_args.system == "poly"):
     sml_system="Poly/ML"
     sml_cmd = shutil.which("polyc")
-    get_polyml_version()
+    get_poly_version()
   else:
     error("error: SML system \"" + cmdln_args.system + "\" is unknown")
   # verify that the sml command exists and is executable
@@ -253,7 +266,7 @@ def resolve_sml_cmd(logf):
 #TODO
   # get the version
   #
-  process = subprocess.run([sml_cmd, "@SMLversion"], text=True, capture_output=True)
+  process = subprocess.run([sml_cmd, "@SMLversion"], text=True, capture_output=True, check=True)
   sml_version=process.stdout.strip().removeprefix("sml ")
   logf.say("# sml system: ", sml_system, "\n")
   logf.say("# sml command: ", sml_cmd, "\n")
@@ -412,6 +425,10 @@ def add_exec_args(subparser,name,includeNRuns,includeOutput):
       action="store",
       default=None,
       help="specify a label to be included as a component of the results object")
+    subparser.add_argument(
+      "--compact",
+      action="store_true",
+      help="generate compact JSON output (no whitespace)")
   subparser.add_argument(
     "--progress",
     action="store_true",
@@ -435,7 +452,7 @@ def add_programs_arg(subparser, help):
     "programs",
     nargs="*",
     action="extend",
-    help="the benchmark programs and/or classes to run")
+    help=help)
 
 def create_arg_parser():
   parser = argparse.ArgumentParser(
@@ -491,7 +508,7 @@ def create_arg_parser():
   cloc.add_argument(
     "-o", "--output",
     action="store",
-    default=f"-",
+    default="-",
     help="specify the name of the result file (default stdout)")
   cloc.add_argument(
     "--include-basis",
@@ -545,7 +562,7 @@ def make_data_dict():
       "sml-options" : None,     # TODO
       "single-file" : cmdln_args.single_file,
       "include-basis" : cmdln_args.include_basis,
-      "mode" : cmdln_args.cmd,
+      "modes" : [cmdln_args.cmd],
       "alloc" : cmdln_args.alloc,
       "data" : []
     }
@@ -554,14 +571,9 @@ def make_data_dict():
 # output the results as a JSON file
 #
 def output_results(results):
-  try:
-    os.makedirs(cmdln_args.result_dir, exist_ok=True)
-    result_filename = os.path.join(cmdln_args.result_dir, cmdln_args.output)
-    with open(result_filename, "w") as result_file:
-      json.dump(results, result_file, indent=2)
-  except Exception as e:
-    print(json.dumps(results, indent=2))
-    raise
+  os.makedirs(cmdln_args.result_dir, exist_ok=True)
+  result_filename = os.path.join(cmdln_args.result_dir, cmdln_args.output)
+  dump_json(results, result_filename, compact=cmdln_args.compact)
 
 #========== The 'run' command ==========
 #
@@ -569,7 +581,7 @@ def do_run(logf):
   progs = sml_init(logf)
   results = make_data_dict()
   for prog in progs:
-    tmp_filename = os.path.join(progdir, prog, "".join(["results-", timestamp, ".json"]))
+    tmp_filename = os.path.join(progdir, prog, f"results-{timestamp}.json")
     logf.say("# running ", prog, "\n")
     if (cmdln_args.progress):
       print("running ", prog)
@@ -577,12 +589,12 @@ def do_run(logf):
       file = make_single_file(sml_system, prog, cmdln_args.include_basis)
       run_sml_cmd(program=prog, input=f"""\
           use "{file}";
-          Timing.run (Main.name, "runs", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
+          Timing.run (Main.name, "run-times", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
         """, timeout=timeoutPerRun*cmdln_args.nruns)
       # TODO: remove all.sml
     else:
       run_sml_cmd("sources.cm", program=prog, input=f"""\
-          Timing.run (Main.name, "runs", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
+          Timing.run (Main.name, "run-times", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
         """, timeout=timeoutPerRun*cmdln_args.nruns)
     # input the results from the tmp file
     results["data"].append(load_json(tmp_filename))
@@ -595,13 +607,13 @@ def do_gc(logf):
   progs = sml_init(logf)
   results = make_data_dict()
   for prog in progs:
-    tmp_filename = os.path.join(progdir, prog, "".join(["results-", timestamp, ".json"]))
+    tmp_filename = os.path.join(progdir, prog, f"results-{timestamp}.json")
     logf.say("# measuring GC stats for ", prog, "\n")
     if (cmdln_args.progress):
       print("running ", prog)
     if (cmdln_args.single_file):
-      make_single_file(sml_system, prog, cmdln_args.include_basis)
-      file = run_sml_cmd(program=prog, input=f"""\
+      file = make_single_file(sml_system, prog, cmdln_args.include_basis)
+      run_sml_cmd(program=prog, input=f"""\
           use "{file}";
           Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
         """, timeout=timeoutPerRun)
@@ -624,7 +636,7 @@ def do_compile(logf):
   progs = sml_init(logf)
   results = make_data_dict()
   for prog in progs:
-    tmp_filename = os.path.join(progdir, prog, "".join(["results-", timestamp, ".json"]))
+    tmp_filename = os.path.join(progdir, prog, f"results-{timestamp}.json")
     logf.say("# running ", prog, "\n")
     if (cmdln_args.progress):
       print("compiling ", prog)
@@ -654,7 +666,7 @@ def do_compile(logf):
         #
         data.append(load_json(tmp_filename))
         os.remove(tmp_filename)
-    results["data"].append({"program" : prog, "data" : data})
+    results["data"].append({"program" : prog, "compile-times" : data})
   output_results(results)
 
 #========== The 'check' command ==========
@@ -695,7 +707,6 @@ def do_count():
   progs = parse_program_list()
   # put sources in a temporary directory
   with tempfile.TemporaryDirectory() as tmpdir:
-    files = []
     for p in progs:
       # concatenate p's sources and put them into the tmpdir
       #
@@ -714,7 +725,8 @@ def do_count():
       shell=True,
       text=True,
       capture_output=True,
-      cwd=tmpdir)
+      cwd=tmpdir,
+      check=True)
     if (cmdln_args.output == "-"):
       print(process.stdout)
 

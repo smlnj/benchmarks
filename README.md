@@ -129,3 +129,74 @@ classes is available with the command
 bin/bench list --classes
 ```
 
+## Data File Format
+
+The benchmarking framework produces its results as JSON files by default.
+Each file typically contains an object representing one or more experiments.
+The object has a number of common fields that describe the experimental
+set up:
+
+* `date` -- this field contains the date of the measurements in the format
+  "`YYYY-MM-DD`".  When files are merged, the more recent date is retained.
+
+* `machine` -- this field is a JSON object that describes the properties of
+  the machine used to collect the measurements.
+
+* `sml-command` -- the absolute path to the SML command used to run the experiments.
+
+* `sml-system` -- the Standard ML system being measured.
+
+* `sml-options` -- an array of control-settings for the compiler.
+
+* `single-file` -- a boolean that specifies if the `--single-file` option
+  was specified.
+
+* `include-basis` -- a boolean that specifies if the `--include-basis` option
+  was specified.
+
+* `modes` -- an array of strings specifying the different measurements
+  reported in the file.  The items in this list can have the following values:
+    - `"run"` -- execution-time measurements
+    - `"gc"` -- garbage-collector measurements
+    - `"compile"` -- compile-time measurements
+    - `"run-w-stats"` -- execution timing measurements with computed statistics
+    - `"compile-w-stats"` -- execution-time measurements with computed statistics
+
+* `alloc` -- the specified size of the allocation space.
+
+In addition, there is a `data` field that is a list of objects, one per Benchmark.
+Each of these objects contains a `program` field that holds the name of the
+benchmark, plus one or more additional fields that hold measurements or summary
+information.  The possible additional fields are:
+
+* `run-times` -- this field is an array of execution-time measurements.
+  Each measurement is a JSON object with the following fields:
+    - `real` -- the total real (wall clock) time for the run
+    - `total` -- the total (cpu plus gc) timing information
+    - `cpu` -- the total cpu (aka non-GC) timing information
+    - `gc` -- the tital GC timing information
+  Timing information is represented as a JSON object with three fields:
+    - `t` -- the total time (_i.e._, the sum of the other two fields)
+    - `u` -- the reported user-space CPU time
+    - `s` -- the reported system CPU time
+
+* `gc-stats` -- this field is a JSON object with counting statistics for the
+  garbage collector.  Its fields are
+    - `nursery-alloc` -- the number of bytes of allocation in the nursery
+    - `num-stores` -- an optional field that specifies the number of store-list
+      objects allocated
+    - `gen1-alloc` -- the number of bytes of allocation in the first generation
+    - `gen1-promote` -- the number of bytes of data promoted from the
+    - `num-gcs` -- an array of integers that reports the number of collections of
+      each generation.  The first entry in the array is the number of minor
+      collections.
+
+* `compile-times` -- this field is an array of compile-time measurements.
+  Each measurement is a JSON object with the same fields as the `run-times`
+  objects described above.
+
+* `run-time-stats` -- this is a JSON object with summary information computed
+  from the `run-times` data.
+
+* `compile-time-stats` -- this is a JSON object with summary information computed
+  from the `compile-times` data.
