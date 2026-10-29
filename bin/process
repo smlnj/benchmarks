@@ -1,0 +1,271 @@
+#!/usr/bin/env python3
+#
+# COPYRIGHT (c) 2026 The Fellowship of SML/NJ (https://smlnj.org)
+# All rights reserved.
+#
+# program for processing the output of the `bench` program.
+#
+# usage: process <cmd> ...
+#
+# where the commands are:
+#
+#       process stats [options] ...     -- compute summary statistics for benchmark results
+#
+#       process plot [options] ...      -- generate various kinds of plots (as SVG files)
+#
+#       process merge [options] ...     -- merge data sets
+#
+#       process compare [options] ...   -- compute normalized values using a baseline
+#
+
+import sys
+import os
+
+import argparse
+import json
+
+# report an error and exit
+#
+def error(msg):
+  if isinstance(msg, list):
+    print("\n".join(msg), file=sys.stderr)
+  else:
+    print(msg, file=sys.stderr)
+  sys.exit(1)
+
+# helper function for loading data from a JSON file
+#
+def load_json(path):
+  try:
+    with open(path, "r", encoding="utf-8") as in_strm:
+      contents = json.load(in_strm)
+  except json.JSONDecodeError as exn:
+    error([f'error loading {path}', '  ' + exn.msg])
+  return (contents)
+
+# helper function for writing a dict as JSON to a file
+#
+def dump_json(obj, path, compact=False):
+  indent = None if compact else 2
+  separators = (',', ':') if compact else (', ', ' : ')
+  try:
+    if (path == '-'):
+      json.dump(obj, sys.stdout, indent=indent, allow_nan=True, separators=separators)
+    else:
+      with open(path, "w") as out:
+        json.dump(obj, out, indent=indent, allow_nan=True, separators=separators)
+  except Exception:
+    print(json.dumps(obj, indent=2))
+    raise
+
+#========== Benchmark program and class information ==========
+#
+class ProgramInfo:
+  def __init__(self):
+    prog_info = load_json(os.path.join(progdir, "programs.json"))
+    self.classes = prog_info['classes']
+    self.programs = prog_info['programs']
+    self._class_names = { c['name'] for c in self.classes }
+    self._prog_names = { p['name'] for p in self.programs }
+
+  def is_class(self, name):
+    return (name in self._class_names)
+
+  def is_program(self, name):
+    return (name in self._prog_names)
+
+  def program_names(self):
+    return sorted(self._prog_names)
+
+  def get_class(self,name):
+    if (name in self._class_names):
+      for cls in self.classes:
+        if (name == cls['name']):
+          return (cls)
+    else:
+      return None
+
+  def get_program(self,name):
+    if (name in self._prog_names):
+      for p in self.programs:
+        if (name == p['name']):
+          return (p)
+    else:
+      return None
+
+  # is a given program in a given benchmark class
+  def is_program_in_class(self, program_name, class_name):
+    prog = self.get_program(program_name)
+    if (prog):
+      return (class_name in prog['classes'])
+    else:
+      return False
+
+#========== Initialization ==========
+#
+
+# holder for command-line arguments
+#
+cmdln_args = argparse.Namespace()
+
+# absolute path to `benchmarks/bin` directory
+#
+bindir = os.path.dirname(os.path.abspath(__file__))
+
+# add the `bindir` to the search path so that we can find library code
+#
+sys.path.append(bindir)
+
+# absolute path to `benchmarks` directory
+#
+rootdir = os.path.normpath(os.path.join(bindir, ".."))
+progdir = os.path.join(rootdir, "programs")
+resultdir = os.path.join(rootdir, "reports")
+
+# load the benchmark info from the JSON file
+#
+prog_info = ProgramInfo()
+
+#========== Functions for command-line argument processing ==========
+#
+
+def create_arg_parser():
+  parser = argparse.ArgumentParser(
+    prog="process",
+    description="Script for processing the results of SML benchmarks")
+  subparsers=parser.add_subparsers(
+    title="commands",
+    required=True,
+    dest="cmd")
+  # compute statistics
+  #
+  stats = subparsers.add_parser("stats")
+  stats.add_argument(
+    "files",
+    nargs="*",
+    action="extend",
+    help="the result files for which to compute statistics")
+  # generate plots
+  #
+  plot = subparsers.add_parser("plot")
+  plot.add_argument(
+    "files",
+    nargs="*",
+    action="extend",
+    help="the result files to plot")
+  # merge results
+  #
+  merge = subparsers.add_parser("merge")
+  merge.add_argument(
+    "-o", "--output",
+    action="store",
+    default="-",
+    help="specify the name of the merged file")
+  merge.add_argument(
+    "files",
+    nargs="*",
+    action="extend",
+    help="the result files to merge")
+  # compare results against a baseline
+  #
+  compare = subparsers.add_parser("compare")
+  compare.add_argument(
+    "files",
+    nargs="*",
+    action="extend",
+    help="the result files for which to generate comparisons")
+
+  return (parser)
+
+#========== Fucntions for computing statistics ==========
+#
+
+#========== The 'stats' command ==========
+#
+def do_stats():
+  return
+
+#========== The 'plot' command ==========
+#
+from datadraw import DataDraw, write_svgfile
+
+def do_plot():
+  dd = DataDraw()
+
+#========== The 'merge' command ==========
+#
+def do_merge():
+  # load the files to merge
+  #
+  data_files = []
+  for f in cmdln_args.files:
+    if not (os.path.isabs(f)):
+      # first look for `f` relative to the current directory and, if that fails,
+      # look in the results direcrory
+      #
+      if os.path.exists(os.path.abspath(f)):
+        f = os.path.abspath(f)
+      elif os.path.exists(os.path.join(resultdir, f)):
+        f = os.path.join(resultdir, f)
+    data = load_json(f)
+    data['filename'] = f
+    data_files.append(data)
+
+  if len(data_files) < 2:
+    error("merge command requires at least two files")
+
+  hdr_keys = [
+      'machine', 'sml-command', 'sml-system', 'sml-options',
+      'single-file', 'include-basis'
+    ]
+
+  # we need to check the compatibility of the data files.  We require that
+  # the header information (machine, sml-command, sml-system, etc.) be the
+  # same for all of the files
+  modes = set(data_files[0]['modes'])
+  for i in range(1, len(data_files)):
+    data = data_files[i]
+    modes.union(set(data['modes']))
+    for key in hdr_keys:
+       if (data_files[0][key] != data[key]):
+          error(f"merge command: input files differ on '{key}' field")
+
+  # set up a dictionary to hold the result of the merging
+  #
+  merged = {
+      'machine' : data_files[0]['machine'],
+      'sml-command' : data_files[0]['sml-command'],
+      'sml-system' : data_files[0]['sml-system'],
+      'sml-options' : data_files[0]['sml-options'],
+      'single-file' : data_files[0]['single-file'],
+      'include-basis' : data_files[0]['include-basis'],
+      'modes' : list(modes)
+    }
+
+  # TODO: merge the files
+
+  dump_json(merged)
+
+
+#========== The 'compare' command ==========
+#
+def do_compare():
+  return
+
+#========== Main program ==========
+#
+
+# set up the command-line option parsing
+#
+create_arg_parser().parse_args(namespace=cmdln_args)
+
+if (cmdln_args.cmd == 'stats'):
+  do_stats()
+elif (cmdln_args.cmd == "plot"):
+  do_plot()
+elif (cmdln_args.cmd == "merge"):
+  do_merge()
+elif (cmdln_args.cmd == "compare"):
+  do_compare()
+else:
+  error("unrecognized command")
