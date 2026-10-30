@@ -38,33 +38,52 @@ structure Timing : sig
     structure TR = Timer
     structure T = Time
 
-    type timing = {usr:T.time, gc:T.time, sys:T.time, real:T.time}
+    (* a total time broken down into user-space and system times *)
+    type timing = {t : T.time, usr : T.time, sys : T.time}
+
+    type times = {real:T.time, cpu : timing, gc : timing}
+
+    fun mkTiming {usr, sys} = {t = Time.+(usr, sys), usr = usr, sys = sys}
+
+    fun addTiming (ct1 : timing, ct2 : timing) = {
+          t = Time.+(#t ct1, #t ct2),
+          usr = Time.+(#usr ct1, #usr ct2),
+          sys = Time.+(#sys ct1, #sys ct2)
+        }
 
     fun pad (s, n) = StringCvt.padLeft #" " n s
 
     fun start () = (
 	  SMLofNJ.Internals.GC.doGC 1000;
-         {realt = TR.startRealTimer(), timer = TR.startCPUTimer()})
+          {realt = TR.startRealTimer(), timer = TR.startCPUTimer()})
 
-    fun stop {realt, timer} = let
+    fun stop {realt, timer} : times = let
           val rt = TR.checkRealTimer realt
-          val {usr, sys} = TR.checkCPUTimer timer
-	  val gc = TR.checkGCTime timer
+          val {gc, nongc} = TR.checkCPUTimes timer
 	  in
-	    {usr=usr, gc=gc, sys=sys, real=rt}
+            { real = rt, cpu = mkTiming nongc, gc = mkTiming gc }
 	  end
 
-    (* convert a time value to a string, padded on the left to 8 characters *)
-    fun timeToStr time = pad (Time.toString time, 6)
+    (* convert a time value to a string with 100uS precision  *)
+    val timeToStr = Time.fmt 4
 
     (* output timing statistics as a JSON object *)
-    fun output (strm, {usr, gc, sys, real} : timing) =
-	  TextIO.output (strm, String.concat[
-               "{\"usr\" : ", timeToStr usr,
-               ", \"sys\" : ", timeToStr sys,
-               ", \"gc\" : ", timeToStr gc,
-               ", \"real\" : ", timeToStr real, "}"
-             ])
+    fun output (strm, {real, cpu, gc} : times) = let
+          fun timingToStr (t : timing) = concat[
+                  "{\"t\" : ", timeToStr(#t t),
+                  ", \"u\" : ", timeToStr(#usr t),
+                  ", \"s\" : ", timeToStr(#sys t),
+                  "}"
+                ]
+          in
+            TextIO.output (strm, String.concat[
+                 "{\"real\" : ", timeToStr real,
+                 ", \"total\" : ", timingToStr(addTiming(cpu, gc)),
+                 ", \"cpu\" : ", timingToStr cpu,
+                 ", \"gc\" : ", timingToStr gc,
+                 "}"
+               ])
+          end
 
     fun timeUse file outS = let
 	  val t0 = start()
@@ -104,6 +123,10 @@ structure Timing : sig
             TextIO.output (outS, String.concat[
                 "{ \"program\" : \"", name, "\",",
                 "  \"gc-stats\" : { \"nursery-alloc\" : ", LargeInt.toString nbAlloc,
+                case nStores
+                  of SOME n => ", \"num-stores\" : " ^ LargeInt.toString n
+                   | _ => ""
+                (* end case *),
                 ", \"gen1-alloc\" : ", LargeInt.toString nbAlloc1,
                 ", \"gen1-promote\" : ", LargeInt.toString nbPromote,
                 ", \"num-gcs\" : [", String.concatWithMap "," Int.toString nGCs, "] } }"
