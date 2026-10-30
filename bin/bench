@@ -19,6 +19,12 @@
 #
 
 # TODO:
+#  * add `--exclude` option to exclude specific benchmarks
+#
+#  * make the script more robust in the face of failures:
+#      - don't crash the script (DONE)
+#      - put the output into the LOG
+#
 #  * allow a list of programs/classes as an argument to the 'list' command
 #
 #  * support for MLton and Poly/ML benchmarking
@@ -109,6 +115,27 @@ class ProgramInfo:
       return (class_name in prog['classes'])
     else:
       return False
+
+#========== Managing intermediate files ==========
+#
+# This class defines a context manager for ensuring that a file shared
+# with the SML code (e.g., `all.sml`) is deleted when there is an error.
+#
+class NamedFile:
+  def __init__(self, name, suppress_exn=True):
+    self._name = name
+    self._suppress = suppress_exn
+
+  def __enter__(self):
+    return (self)
+
+  def __exit__(self, exc_type, exc_val, exc_tb):
+    if (os.path.exists(self._name)):
+      os.remove(self._name)
+    return self._suppress
+
+  def name(self):
+    return self._name
 
 #========== Logging compiler messages, etc ==========
 #
@@ -358,17 +385,22 @@ def run_sml_cmd(*sml_args, program, input, timeout=None, logf=None):
     ] + list(sml_args)
   if (logf):
     logf.say("## ", " ".join(cmd), "\n")
-  process = subprocess.run(
-    cmd,
-    input=input,
-    text=True,
-    stdout=subprocess.PIPE,
-    stderr=subprocess.STDOUT,
-    check=True,
-    cwd=os.path.join(progdir, program),
-    timeout=timeout)
-  if (logf):
-    logf.say(process.stdout)
+  try:
+    process = subprocess.run(
+      cmd,
+      input=input,
+      text=True,
+      stdout=subprocess.PIPE,
+      stderr=subprocess.STDOUT,
+      check=True,
+      cwd=os.path.join(progdir, program),
+      timeout=timeout)
+  except:
+    print(f"!! {program} failed !!\n")
+    raise
+  finally:
+    if (logf):
+      logf.say(process.stdout)
 
 #========== Functions for command-line argument processing ==========
 #
@@ -527,7 +559,7 @@ def create_arg_parser():
   #
   info = subparsers.add_parser("info")
   add_programs_arg(info, "the benchmark programs and/or classes to describe")
-  #
+
   return (parser)
 
 #==========
@@ -547,6 +579,8 @@ def make_data_dict():
       "name" : platform.node().removesuffix(".local"),
       "arch" : platform.machine(),
       "os" : platform.system()
+# NOTE: on macOS, the output of the command `sysctl -n machdep.cpu.brand_string`
+# will tell us more detail about the processor
     }
   data_dict = {}
   if (cmdln_args.label):
@@ -578,25 +612,27 @@ def output_results(results):
 def do_run(logf):
   progs = sml_init(logf)
   results = make_data_dict()
+
   for prog in progs:
     tmp_filename = os.path.join(progdir, prog, f"results-{timestamp}.json")
-    logf.say("# running ", prog, "\n")
-    if (cmdln_args.progress):
-      print("running ", prog)
-    if (cmdln_args.single_file):
-      file = make_single_file(sml_system, prog, cmdln_args.include_basis)
-      run_sml_cmd(program=prog, input=f"""\
-          use "{file}";
-          Timing.run (Main.name, "run-times", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
-        """, timeout=timeoutPerRun*cmdln_args.nruns)
-      # TODO: remove all.sml
-    else:
-      run_sml_cmd("sources.cm", program=prog, input=f"""\
-          Timing.run (Main.name, "run-times", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
-        """, timeout=timeoutPerRun*cmdln_args.nruns)
-    # input the results from the tmp file
-    results["data"].append(load_json(tmp_filename))
-    os.remove(tmp_filename)
+    with NamedFile(tmp_filename):
+      logf.say("# running ", prog, "\n")
+      if (cmdln_args.progress):
+        print("running ", prog)
+      if (cmdln_args.single_file):
+        file = make_single_file(sml_system, prog, cmdln_args.include_basis)
+        with NamedFile(file, suppress_exn=False):
+          run_sml_cmd(program=prog, input=f"""\
+              use "{file}";
+              Timing.run (Main.name, "run-times", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
+            """, timeout=timeoutPerRun*cmdln_args.nruns)
+      else:
+        run_sml_cmd("sources.cm", program=prog, input=f"""\
+            Timing.run (Main.name, "run-times", {cmdln_args.nruns}, "{tmp_filename}", Timing.timeIt Main.doit);
+          """, timeout=timeoutPerRun*cmdln_args.nruns)
+      # input the results from the tmp file
+      results["data"].append(load_json(tmp_filename))
+
   output_results(results)
 
 #========== The 'gc' command ==========
@@ -604,26 +640,28 @@ def do_run(logf):
 def do_gc(logf):
   progs = sml_init(logf)
   results = make_data_dict()
+
   for prog in progs:
     tmp_filename = os.path.join(progdir, prog, f"results-{timestamp}.json")
-    logf.say("# measuring GC stats for ", prog, "\n")
-    if (cmdln_args.progress):
-      print("running ", prog)
-    if (cmdln_args.single_file):
-      file = make_single_file(sml_system, prog, cmdln_args.include_basis)
-      run_sml_cmd(program=prog, input=f"""\
-          use "{file}";
-          Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
-        """, timeout=timeoutPerRun)
-      # TODO: remove all.sml
-    else:
-      run_sml_cmd("sources.cm", program=prog, input=f"""\
-          Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
-        """, timeout=timeoutPerRun)
-    # input the results from the tmp file
-    #
-    results["data"].append(load_json(tmp_filename))
-    os.remove(tmp_filename)
+    with NamedFile(tmp_filename):
+      logf.say("# measuring GC stats for ", prog, "\n")
+      if (cmdln_args.progress):
+        print("running ", prog)
+      if (cmdln_args.single_file):
+        file = make_single_file(sml_system, prog, cmdln_args.include_basis)
+        with NamedFile(file, suppress_exn=False):
+          run_sml_cmd(program=prog, input=f"""\
+              use "{file}";
+              Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
+            """, timeout=timeoutPerRun)
+      else:
+        run_sml_cmd("sources.cm", program=prog, input=f"""\
+            Timing.runOnce ("{tmp_filename}", Timing.gcStats (\"{prog}\", Main.doit));
+          """, timeout=timeoutPerRun)
+      # input the results from the tmp file
+      #
+      results["data"].append(load_json(tmp_filename))
+
   output_results(results)
 
 #========== The 'compile' command ==========
