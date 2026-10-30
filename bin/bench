@@ -246,28 +246,25 @@ def resolve_sml_cmd(logf):
   if (cmdln_args.sml):
     sml_system="SML/NJ"
     sml_cmd = os.path.abspath(cmdln_args.sml)
-    get_smlnj_version()
+    sml_version = get_smlnj_version()
   elif (cmdln_args.system == "smlnj"):
     sml_system="SML/NJ"
     sml_cmd = shutil.which("sml")
-    get_smlnj_version()
+    sml_version = get_smlnj_version()
   elif (cmdln_args.system == "mlton"):
     sml_system="MLton"
     sml_cmd = shutil.which("mlton")
-    get_mlton_version()
+    sml_version = get_mlton_version()
   elif (cmdln_args.system == "poly"):
     sml_system="Poly/ML"
     sml_cmd = shutil.which("polyc")
-    get_poly_version()
+    sml_version = get_poly_version()
   else:
     error("error: SML system \"" + cmdln_args.system + "\" is unknown")
   # verify that the sml command exists and is executable
   #
 #TODO
-  # get the version
-  #
-  process = subprocess.run([sml_cmd, "@SMLversion"], text=True, capture_output=True, check=True)
-  sml_version=process.stdout.strip().removeprefix("sml ")
+
   logf.say("# sml system: ", sml_system, "\n")
   logf.say("# sml command: ", sml_cmd, "\n")
   logf.say("# version: ", sml_version, "\n")
@@ -559,6 +556,7 @@ def make_data_dict():
       "machine" : machine,
       "sml-command" : sml_cmd,
       "sml-system" : sml_system,
+      "sml_version" : sml_version,
       "sml-options" : None,     # TODO
       "single-file" : cmdln_args.single_file,
       "include-basis" : cmdln_args.include_basis,
