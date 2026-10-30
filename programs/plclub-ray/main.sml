@@ -12,8 +12,7 @@ structure Main : BMARK =
     val results : string list = ["chess.ppm"]
 
     fun runOnce gmlFile =
-       Eval.f (Program.read (TextIO.openIn("DATA" ^ gmlFile)))
-       handle _ => ()
+       Eval.f (Program.read (TextIO.openIn("DATA/" ^ gmlFile)))
 
     fun run n = let
           fun loop n = if n = 0 then () else (runOnce "bmark.gml"; loop(n-1))
@@ -25,6 +24,6 @@ structure Main : BMARK =
             (runOnce "test.gml"; "OK\n")
               handle ex => exnMessage ex ^ "\n")
 
-    fun doit () = run 10
+    fun doit () = run 5
 
    end
