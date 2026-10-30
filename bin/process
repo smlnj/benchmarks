@@ -18,11 +18,11 @@
 #       process compare [options] ...   -- compute normalized values using a baseline
 #
 
-import sys
-import os
-
 import argparse
 import json
+import os
+import statistics
+import sys
 
 # report an error and exit
 #
@@ -57,6 +57,21 @@ def dump_json(obj, path, compact=False):
   except Exception:
     print(json.dumps(obj, indent=2))
     raise
+
+# helper function to load results files.  If the file is specified as a relative
+# path, then we first look relative to the current directory, and then relative
+# to the `reports` directory
+#
+def load_result_file(f):
+  if not (os.path.isabs(f)):
+    # first look for `f` relative to the current directory and, if that fails,
+    # look in the results direcrory
+    #
+    if os.path.exists(os.path.abspath(f)):
+      f = os.path.abspath(f)
+    elif os.path.exists(os.path.join(resultdir, f)):
+      f = os.path.join(resultdir, f)
+  return load_json(f)
 
 #========== Benchmark program and class information ==========
 #
@@ -177,8 +192,30 @@ def create_arg_parser():
 
   return (parser)
 
-#========== Fucntions for computing statistics ==========
+#========== Functions for computing statistics ==========
 #
+
+# given a list of two or more measurements, compute various statistics
+#
+def compute_stats(samples):
+  nSamples = len(samples)
+  mean = statistics.fmean(samples)
+  min_sample = min(samples)
+  max_sample = max(samples)
+  stdev = statistics.stdev(samples, mean)
+#  stderr = stdev / (nSamples*nSamples)
+#   if (nSamples > 30):
+#     # When the sample size is large, the samples' standard deviation
+#     # approximates the population's standard deviation.
+#     interval = stats.norm.interval(0.95, loc=mean, scale=stderr)
+#   else:
+#     # When the sample size is small, the samples' transformed value t
+#     # follows Student’s t-distribution with (n - 1) degrees of freedom.
+#     interval = stats.t.interval(0.95, nSamples - 1, loc=mean, scale=stderr)
+  return {
+      'range' : (min_sample, max_sample),
+      'mean' : mean, 'stdev' : stdev
+    }
 
 #========== The 'stats' command ==========
 #
@@ -189,25 +226,80 @@ def do_stats():
 #
 from datadraw import DataDraw, write_svgfile
 
+# generate an SVG plot
+#
+# NOTE: for now we just plot the average per-program real-time numbers
+#
+def plot(dd, data):
+  # get the list of program names in the data set
+  #
+  progs = [ p['program'] for p in data['data'] ]
+
+  # get the range of times
+  #
+  times = [ compute_stats([sample['real'] for sample in p['run-times']])
+    for p in data['data'] ]
+  # get the range of times
+  #
+  t_min = 0
+  t_max = 0
+  for t in times:
+    t_max = max(t_max, t['mean'])
+
+  # compute the width based on the number of programs
+  #
+  left_margin = 50
+  right_margin = 30
+  top_margin = 10
+  bottom_margin = 90
+  width = len(progs) * 25 + left_margin + right_margin
+  height = 250 + top_margin + bottom_margin
+  dd.svgbegin(width, height)
+
+  # the X axis corresponds to the programs
+  #
+  dd.setspace('X', svgrange=(left_margin, width-right_margin), categorical=dd.catinfo(progs))
+
+  # the Y axis is the timing data
+  #
+  dd.setspace('Y', svgrange=(bottom_margin, height-top_margin), datarange=(t_min, t_max))
+
+  # render the axes
+  #
+  dd.axis('X', tics=-8, stubrotate=40)
+  dd.axis('Y', axisline=False, grid=True)
+  dd.plotlabels(xlabel="Programs", xlabelpos=-80, ylabel="Time (s)", ylabelpos=-25)
+
+  # plot data values
+  #
+  for p, t in zip(progs, times):
+    dd.bar(p, t['mean'], width=12, color='#8a8')
+
+  dd.rect(color=None, outline=True, x1=0, y1=0, x2=width, y2=height)
+
+  return dd.svgresult()
+
 def do_plot():
   dd = DataDraw()
 
+  for f in cmdln_args.files:
+    data = load_result_file(f)
+    write_svgfile(plot(dd, data), f"{f.removesuffix('.json')}.svg")
+
 #========== The 'merge' command ==========
 #
+
+# merge the data for a program info an existing data object.
+#
+def merge_program_data(acc_obj, obj):
+  return
+
 def do_merge():
   # load the files to merge
   #
   data_files = []
   for f in cmdln_args.files:
-    if not (os.path.isabs(f)):
-      # first look for `f` relative to the current directory and, if that fails,
-      # look in the results direcrory
-      #
-      if os.path.exists(os.path.abspath(f)):
-        f = os.path.abspath(f)
-      elif os.path.exists(os.path.join(resultdir, f)):
-        f = os.path.join(resultdir, f)
-    data = load_json(f)
+    data = load_result_file(f)
     data['filename'] = f
     data_files.append(data)
 
@@ -215,34 +307,60 @@ def do_merge():
     error("merge command requires at least two files")
 
   hdr_keys = [
-      'machine', 'sml-command', 'sml-system', 'sml-options',
-      'single-file', 'include-basis'
+      'machine', 'sml-command', 'sml-system', 'sml-version', 'sml-options',
+      'single-file', 'include-basis', 'alloc'
     ]
 
   # we need to check the compatibility of the data files.  We require that
   # the header information (machine, sml-command, sml-system, etc.) be the
-  # same for all of the files
+  # same for all of the files.
   modes = set(data_files[0]['modes'])
   for i in range(1, len(data_files)):
     data = data_files[i]
     modes.union(set(data['modes']))
     for key in hdr_keys:
-       if (data_files[0][key] != data[key]):
+       if (data_files[0].get(key, None) != data.get(key, None)):
           error(f"merge command: input files differ on '{key}' field")
+
+  # check the `modes`
+  #
+# TODO: once the `stats` command is implemented, we could recompute the statistics
+# after the merge
+  if ('run-times-w-stats' in modes or 'compile-times-w-stats' in modes):
+    error("merge: unable to merge files with statistics")
 
   # set up a dictionary to hold the result of the merging
   #
   merged = {
+      'date' : data_files[0]['date'],
       'machine' : data_files[0]['machine'],
       'sml-command' : data_files[0]['sml-command'],
       'sml-system' : data_files[0]['sml-system'],
+      'sml-version' : data_files[0]['sml-version'],
       'sml-options' : data_files[0]['sml-options'],
       'single-file' : data_files[0]['single-file'],
       'include-basis' : data_files[0]['include-basis'],
-      'modes' : list(modes)
+      'modes' : list(modes),
+      'alloc' : data_files[0]['alloc']
     }
 
-  # TODO: merge the files
+  # merge the data from the files
+  #
+  progs = {}
+  for data in data_files:
+    for d in data['data']:
+      p = d['program']
+      if p in progs:
+        # need to merge `d` into `progs[p]`
+        merge_program_data(progs[p], d)
+      else:
+        progs[p] = d
+
+  # add the merged program data to the `merged` dictionary
+  #
+  for p in prog_info.programs():
+    if p in progs:
+      merged[p] = progs[p]
 
   dump_json(merged)
 
