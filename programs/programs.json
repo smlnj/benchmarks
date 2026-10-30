@@ -271,6 +271,11 @@
       "description" : "A solver for a word puzzle",
       "classes" : ["all","mlton"],
       "results" : []
+    },
+    { "name" : "zern",
+      "description" : "A BlurFit routine using the the Levenberg-Marquardt algorithm",
+      "classes" : ["all","array","fp","mlton"],
+      "results" : []
     }
   ]
 }

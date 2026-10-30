@@ -112,6 +112,7 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | [`tyan`](programs/tyan/README.md)                     |   500 | Grobner Basis calculation                  |
 | [`vliw`](programs/vliw/README.md)                     | 2,940 | A Very-Long-Instruction-Word instruction scheduler |
 | [`zebra`](programs/zebra/README.md)                   |   205 | A solver for a word puzzle                 |
+| [`zern`](programs/zern/README.md)                     |   502 | A BlurFit routine using the the Levenberg-Marquardt algorithm |
 
 ### Benchmark Classes
 
