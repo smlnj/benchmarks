@@ -92,6 +92,11 @@
       "classes" : ["broken"],
       "results" : []
     },
+    { "name" : "elimination",
+      "description" : "Model-elimination-based prover",
+      "classes" : ["all","mlton"],
+      "results" : []
+    },
     { "name" : "fannkuch",
       "description" : "Array permutations",
       "classes" : ["all","array"],

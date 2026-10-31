@@ -68,7 +68,7 @@ https://github.com/smlnj/benchmarks/issues) for details).
 
 | Directory                                             | LOC   | Short Description                          |
 | ----------------------------------------------------- | ----- | ------------------------------------------ |
-| [`aobench`](programs/aobench/README.md)               |   259 | A small ambient occlusion renderer         |
+| [`aobench`](programs/aobench/README.md)               |   252 | A small ambient occlusion renderer         |
 | [`barnes-hut`](programs/barnes-hut/README.md)         |   820 | Hierarchical N-body solver **(BROKEN)**    |
 | [`binary-trees`](programs/binary-trees/README.md)     |    48 | GC stress test                             |
 | [`black-scholes`](programs/black-scholes/README.md)   |   128 | European-style option pricing              |
@@ -77,6 +77,7 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | [`count-graphs`](programs/count-graphs/README.md)     |   401 | Enumerate directed graphs                  |
 | [`delta-blue`](programs/delta-blue/README.md)         |   703 | Delta-Blue incremental constraint solver **(BROKEN)** |
 | [`dlx`](programs/dlx/README.md)                       | 1,887 | DLX simulator **(BROKEN)**                 |
+| [`elimination`](programs/elimination/README.md)       | 5,135 | Model-elimination-based prover             |
 | [`fannkuch`](programs/fannkuch/README.md)             |    72 | Array permutations                         |
 | [`f-arith`](programs/f-arith/README.md)               |    25 | Calculation of pi using Maclaurin series   |
 | [`fft`](programs/fft/README.md)                       |   166 | Fast-Fourier-transform implementation      |
@@ -98,11 +99,12 @@ https://github.com/smlnj/benchmarks/issues) for details).
 | [`pia`](programs/pia/README.md)                       |   xxx | **(BROKEN)**                               |
 | [`pidigits`](programs/pidigits/README.md)             |    77 | Stream-based computation of digits of pi   |
 | [`pingpong`](programs/pingpong/README.md)             |   136 | Message-passing microbenchmark             |
-| [`plclub-ray`](programs/plclub-ray/README.md)         | 2,026 | A raytracer from the ICFP'20 Programming Contest |
+| [`plclub-ray`](programs/plclub-ray/README.md)         | 2,025 | A raytracer from the ICFP'20 Programming Contest |
 | [`professor`](programs/professor/README.md)           |   220 | A solver for a simple puzzle game          |
 | [`ratio-regions`](programs/ratio-regions/README.md)   |   486 | Image segmentation/contour finding         |
 | [`ray`](programs/ray/README.md)                       |   352 | A minimal ray tracer                       |
 | [`regex`](programs/regex/README.md)                   |   xxx | **(BROKEN)**                               |
+| [`safe-for-space`](programs/safe-for-space/README.md) |    33 | Test of closure-conversion space safety    |
 | [`sat`](programs/sat/README.md)                       |    54 | Brute-force SAT solver                     |
 | [`simple`](programs/simple/README.md)                 |   769 | A spherical fluid-dynamics program         |
 | [`smith-nf`](programs/smith-nf/README.md)             |   372 | Computes the Smith Normal Form             |
