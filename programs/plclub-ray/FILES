@@ -1,3 +1,9 @@
+../BASIS/list.sig
+../BASIS/list.sml
+../BASIS/array.sig
+../BASIS/array.sml
+../BASIS/string.sig
+../BASIS/string.sml
 caml.sml
 math.sml
 matrix.sml
